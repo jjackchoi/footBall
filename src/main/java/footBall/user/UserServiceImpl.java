@@ -19,6 +19,6 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public List<UserResponse> userAllFind(){
-        return sqlSession.selectList("userMapper.allFind");
+        return sqlSession.selectList("UserMapper.allFind");
     }
 }

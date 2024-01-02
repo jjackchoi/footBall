@@ -20,7 +20,7 @@
 
     <!--유저 회원가입-->
     <insert id="register" parameterType="footBall.user.UserRequest" useGeneratedKeys="true" keyProperty="userSeq">
-        insert into board(
+        insert into user(
             <include refid="userColumns"/>
         )
         value(

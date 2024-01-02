@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserMapper">
+
+    <!--유저 테이블 전체 칼럼-->
+    <sql id="userColumns">
+         user_seq
+        ,user_id
+        ,user_pswd
+        ,user_name
+        ,user_birth
+        ,user_phone
+        ,user_address
+        ,user_auth
+        ,user_del_yn
+        ,user_reg_date
+        ,user_mod_date
+    </sql>
+
+    <!--유저 회원가입-->
+    <insert id="register" parameterType="footBall.user.UserRequest" useGeneratedKeys="true" keyProperty="userSeq">
+        insert into board(
+            <include refid="userColumns"/>
+        )
+        value(
+             #{userSeq}
+            ,#{userId}
+            ,#{userPswd}
+            ,#{userName}
+            ,#{userBirth}
+            ,#{userPhone}
+            ,#{userAddress}
+            ,0
+            ,0
+            ,now()
+            ,null
+        )
+    </insert>
+
+    <!--유저 전체조회-->
+    <select id="allFind" resultType="footBall.user.UserResponse">
+        select
+            <include refid="userColumns"/>
+        from
+            user
+        where
+            user_del_yn = 0
+        order by
+            user_seq desc
+    </select>
+</mapper>

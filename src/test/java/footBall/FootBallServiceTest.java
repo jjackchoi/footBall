@@ -14,14 +14,16 @@ public class FootBallServiceTest {
     @Test
     void registerTest(){
         UserRequest userRequest = new UserRequest();
-        userRequest.setUserId("parkhyenwoo");
-        userRequest.setUserPswd("1234");
-        userRequest.setUserName("박현우");
-        userRequest.setUserBirth("19960529");
-        userRequest.setUserPhone("01012345678");
-        userRequest.setUserAddress("서울특별시 금천구 독산동");
+        userRequest.setFbUserEmail("parkhyenwoo@naver.com");
+        userRequest.setFbUserPswd("1234");
+        userRequest.setFbUserNickname("우리현우");
+        userRequest.setFbUserName("박현우");
+        userRequest.setFbUserBirth("19960529");
+        userRequest.setFbUserPhone("01087147733");
+        userRequest.setFbUserAddress("서울특별시 금천구 독산동");
         System.out.println(userServiceImpl.userAllFind().size());
         userServiceImpl.userRegister(userRequest);
+        System.out.println(userRequest.toString());
         System.out.println(userServiceImpl.userAllFind().size());
     }
 }

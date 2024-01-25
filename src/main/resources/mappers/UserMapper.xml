@@ -5,32 +5,34 @@
 
     <!--유저 테이블 전체 칼럼-->
     <sql id="userColumns">
-         user_seq
-        ,user_id
-        ,user_pswd
-        ,user_name
-        ,user_birth
-        ,user_phone
-        ,user_address
-        ,user_auth
-        ,user_del_yn
-        ,user_reg_date
-        ,user_mod_date
+         fb_user_id
+        ,fb_user_email
+        ,fb_user_pswd
+        ,fb_user_nickname
+        ,fb_user_name
+        ,fb_user_birth
+        ,fb_user_phone
+        ,fb_user_address
+        ,fb_user_auth
+        ,fb_user_del_yn
+        ,fb_user_reg_date
+        ,fb_user_mod_date
     </sql>
 
     <!--유저 회원가입-->
-    <insert id="register" parameterType="footBall.user.UserRequest" useGeneratedKeys="true" keyProperty="userSeq">
-        insert into user(
+    <insert id="register" parameterType="footBall.user.UserRequest" useGeneratedKeys="true" keyProperty="fbUserId">
+        insert into fb_user(
             <include refid="userColumns"/>
         )
         value(
-             #{userSeq}
-            ,#{userId}
-            ,#{userPswd}
-            ,#{userName}
-            ,#{userBirth}
-            ,#{userPhone}
-            ,#{userAddress}
+             #{fbUserId}
+            ,#{fbUserEmail}
+            ,#{fbUserPswd}
+            ,#{fbUserNickname}
+            ,#{fbUserName}
+            ,#{fbUserBirth}
+            ,#{fbUserPhone}
+            ,#{fbUserAddress}
             ,0
             ,0
             ,now()
@@ -43,10 +45,10 @@
         select
             <include refid="userColumns"/>
         from
-            user
+            fb_user
         where
-            user_del_yn = 0
+            fb_user_del_yn = 0
         order by
-            user_seq desc
+            fb_user_id desc
     </select>
 </mapper>

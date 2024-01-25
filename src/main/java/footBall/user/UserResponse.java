@@ -7,17 +7,17 @@ import java.time.LocalDateTime;
 @Data
 public class UserResponse {
 
-    private Long FB_USER_ID;                 //	유저 ID
-    private String FB_USER_EMAIL;            //	유저 이메일
-    private String FB_USER_PSWD;             //	유저 비밀번호
-    private String FB_USER_NICKNAME;         //	유저 닉네임
-    private String FB_USER_NAME;             //	유저 이름
-    private String FB_USER_BIRTH;            //	유저 생년월일
-    private String FB_USER_PHONE;            //	유저 휴대폰번호
-    private String FB_USER_ADDRESS;          //	유저 주소
-    private boolean FB_USER_AUTH;            //	유저 권한
-    private boolean FB_USER_DEL_YN;          //	유저 삭제여부
-    private LocalDateTime FB_USER_REG_DATE;  //	유저 등록일
-    private LocalDateTime FB_USER_MOD_DATE;  //	유저 수정일
+    private Long fbUserId;                 //	유저 ID
+    private String fbUserEmail;            //	유저 이메일
+    private String fbUserPswd;             //	유저 비밀번호
+    private String fbUserNickname;         //	유저 닉네임
+    private String fbUserName;             //	유저 이름
+    private String fbUserBirth;            //	유저 생년월일
+    private String fbUserPhone;            //	유저 휴대폰번호
+    private String fbUserAddress;          //	유저 주소
+    private boolean fbUserAuth;            //	유저 권한
+    private boolean fbUserDelYn;          //	유저 삭제여부
+    private LocalDateTime fbUserRegDate;  //	유저 등록일
+    private LocalDateTime fbUserModDate;  //	유저 수정일
 
 }

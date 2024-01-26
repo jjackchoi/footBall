@@ -43,4 +43,8 @@ public class UserController {
         return "redirect:/";
     }
 
+    @GetMapping("/test")
+    public String testLayout(){
+        return "layout/basic";
+    }
 }

@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 @Data
 public class UserResponse {
 
-    private Long fbUserId;                 //	유저 ID
+    private int fbUserId;                 //	유저 ID
     private String fbUserEmail;            //	유저 이메일
     private String fbUserPswd;             //	유저 비밀번호
     private String fbUserNickname;         //	유저 닉네임

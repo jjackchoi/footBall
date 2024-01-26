@@ -10,5 +10,5 @@ public interface UserService {
     // 이메일로 유저 조회
     UserResponse getUserByEmail(UserRequest dto);
     // 로그인
-    Long login(UserRequest dto);
+    int login(UserRequest dto);
 }

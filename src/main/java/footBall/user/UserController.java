@@ -24,7 +24,7 @@ public class UserController {
     // 로그인 페이지
     @GetMapping("/login")
     public String login(HttpSession session){
-        Long id = (Long) session.getAttribute("userId");
+        Integer id = (Integer) session.getAttribute("userId");
         if(id != null){
             return "redirect:/";
         }
@@ -35,8 +35,8 @@ public class UserController {
     @PostMapping("/login")
     public String loginDo(UserRequest dto, HttpSession session){
         log.info(dto.toString());
-        Long id = userService.login(dto);
-        if(id == null){ // 로그인 실패 시
+        int id = userService.login(dto);
+        if(id == 0){ // 로그인 실패 시
             return "redirect:/login";
         }
         session.setAttribute("userId", id);

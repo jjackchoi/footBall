@@ -28,10 +28,10 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public Long login(UserRequest dto) {
+    public int login(UserRequest dto) {
         UserResponse userDto = sqlSession.selectOne("UserMapper.getUserByEmail", dto);
         if (userDto.getFbUserPswd().equals(dto.getFbUserPswd()))
             return userDto.getFbUserId();
-        return null;
+        return 0;
     }
 }

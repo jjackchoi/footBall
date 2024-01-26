@@ -21,9 +21,9 @@ public class FootBallServiceTest {
         userRequest.setFbUserBirth("19960529");
         userRequest.setFbUserPhone("01087147733");
         userRequest.setFbUserAddress("서울특별시 금천구 독산동");
-        System.out.println(userServiceImpl.userAllFind().size());
+        System.out.println(userServiceImpl.getAllUser().size());
         userServiceImpl.userRegister(userRequest);
         System.out.println(userRequest.toString());
-        System.out.println(userServiceImpl.userAllFind().size());
+        System.out.println(userServiceImpl.getAllUser().size());
     }
 }

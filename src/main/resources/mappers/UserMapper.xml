@@ -40,8 +40,19 @@
         )
     </insert>
 
+    <!--이메일로 유저 조회-->
+    <select id="getUserByEmail" parameterType="footBall.user.UserRequest" resultType="footBall.user.UserResponse">
+        select
+            <include refid="userColumns"/>
+        from
+            fb_user
+        where 1=1
+        and fb_user_email = #{fbUserEmail}
+        and fb_user_del_yn = 0
+    </select>
+
     <!--유저 전체조회-->
-    <select id="allFind" resultType="footBall.user.UserResponse">
+    <select id="getAllUser" resultType="footBall.user.UserResponse">
         select
             <include refid="userColumns"/>
         from

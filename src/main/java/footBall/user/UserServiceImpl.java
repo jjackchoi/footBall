@@ -18,7 +18,20 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public List<UserResponse> userAllFind(){
-        return sqlSession.selectList("UserMapper.allFind");
+    public List<UserResponse> getAllUser(){
+        return sqlSession.selectList("UserMapper.getAllUser");
+    }
+
+    @Override
+    public UserResponse getUserByEmail(UserRequest dto) {
+        return sqlSession.selectOne("UserMapper.getUserByEmail", dto);
+    }
+
+    @Override
+    public Long login(UserRequest dto) {
+        UserResponse userDto = sqlSession.selectOne("UserMapper.getUserByEmail", dto);
+        if (userDto.getFbUserPswd().equals(dto.getFbUserPswd()))
+            return userDto.getFbUserId();
+        return null;
     }
 }

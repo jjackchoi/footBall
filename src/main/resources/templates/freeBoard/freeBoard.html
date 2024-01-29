@@ -11,6 +11,9 @@
     <link href="../css/styles.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"
             crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body class="sb-nav-fixed">
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
@@ -85,7 +88,7 @@
                             <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne"
                                  data-bs-parent="#sidenavAccordionPages">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="../login.html">Login</a>
+                                    <a class="nav-link" href="login.html">Login</a>
                                     <a class="nav-link" href="register.html">Register</a>
                                     <a class="nav-link" href="password.html">Forgot Password</a>
                                 </nav>
@@ -165,14 +168,19 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
+                            <tr th:each="post : ${posts}">
                                 <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
                                     <label class="form-check-label" for="flexCheckDefault">
-                                    </label></td>
-                                <td>최승민</td>
-                                <td>바보규태</td>
-                                <td>규태형때문에 게임 짐</td>
-                                <td>2024/01/26</td>
+                                    </label>
+                                </td>
+                                <td th:text="${post.getFreeBoardAuthor()}"></td>
+                                <td>
+                                    <a th:href="@{'/freeBoard/details/' + ${post.freeBoardId}}">
+                                        <span th:text="${post.freeBoardTitle}"></span>
+                                    </a>
+                                </td>
+                                <td th:text="${post.getFreeBoardText()}"></td>
+                                <td th:text="${post.getFreeBoardRegDate()}"></td>
                             </tr>
                             </tbody>
                         </table>
@@ -205,10 +213,10 @@
                         <div class="modal-body">
                             <!-- 글 작성 폼 -->
                             <form id="postForm">
-                                <label for="postContent">제목</label>
-                                <input id="postTitle" name="postContent" class="form-control">
-                                <label for="postContent">내용</label>
-                                <textarea id="postContent" name="postContent" rows="8" class="form-control"></textarea>
+                                <label for="freeBoardTitle">제목</label>
+                                <input id="freeBoardTitle" name="freeBoardTitle" class="form-control">
+                                <label for="freeBoardText">내용</label>
+                                <textarea id="freeBoardText" name="freeBoardText" rows="8" class="form-control"></textarea>
                             </form>
                         </div>
                         <div class="modal-footer">
@@ -220,20 +228,19 @@
             </div>
 
             <!-- 부트스트랩 및 jQuery 스크립트 추가 (필요에 따라) -->
-            <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 
             <!-- 글 작성 완료 시 실행되는 스크립트 -->
-            <script th:inline="javascript">
+            <script>
                 function submitPostForm() {
-                    var postContent = $('#postContent').val();
+                    var freeBoardTitle = $('#freeBoardTitle').val();
+                    var freeBoardText = $('#freeBoardText').val();
 
                     // 글 작성 완료 후 서버로 데이터 전송 (Ajax를 사용하여 비동기 처리)
                     $.ajax({
                         type: 'POST',
-                        url: '/write', // 실제로 데이터를 저장하는 엔드포인트로 변경해야 합니다.
-                        data: {content: postContent},
+                        url: '/freeBoard/create', // 실제로 데이터를 저장하는 엔드포인트로 변경해야 합니다.
+                        data: {freeBoardTitle: freeBoardTitle,freeBoardText:freeBoardText},
                         success: function () {
                             // 작성 완료 후 팝업 닫기
                             $('#writePostModal').modal('hide');

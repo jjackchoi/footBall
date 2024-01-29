@@ -15,4 +15,8 @@ public class FreeBoardServiceImpl implements FreeBoardService{
     public List<FreeBoardResponse> findAll() {
         return sqlSession.selectList("FreeBoardMapper.findAll");
     }
+    @Override
+    public int boardCreate(FreeBoardRequest dto) {
+        return sqlSession.insert("FreeBoardMapper.boardCreate",dto);
+    }
 }

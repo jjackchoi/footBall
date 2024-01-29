@@ -26,4 +26,27 @@
         order by
             free_board_id desc
     </select>
+
+    <insert id="boardCreate" parameterType="footBall.freeBoard.FreeBoardRequest">
+        INSERT INTO FREE_BOARD (
+                                 FB_USER_ID
+                               ,FREE_BOARD_AUTHOR
+                               ,FREE_BOARD_TITLE
+                               ,FREE_BOARD_TEXT
+                               ,FREE_BOARD_REG_DATE
+                               ,FREE_BOARD_MOD_DATE
+                               ,FREE_BOARD_DEL_YN)
+        VALUES (
+                 (SELECT FB_USER_ID
+                  FROM FB_USER
+                  WHERE FB_USER_ID = #{fbUserId} )
+               ,(SELECT FB_USER_NAME
+                 FROM FB_USER
+                 WHERE FB_USER_ID = #{fbUserId} )
+               ,#{freeBoardTitle}
+               ,#{freeBoardText}
+               ,NOW()
+               ,NOW()
+               ,'N');
+    </insert>
 </mapper>

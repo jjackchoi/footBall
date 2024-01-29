@@ -142,6 +142,7 @@
             const pswd = document.getElementById('inputPassword').value;
             const pswdConfirm = document.getElementById('inputPasswordConfirm').value;
             const name = document.getElementById('inputName').value;
+            const nickname = document.getElementById('inputNick').value;
             <!--이메일-->
             if(!validateEmail(email)){
                 document.getElementById('email-error').textContent = "유효하지 않은 이메일 양식입니다.";
@@ -171,6 +172,8 @@
                 document.getElementById('name-error').textContent = "";
                 console.log("정규식 통과");
             }
+            <!--닉네임-->
+            checkNicknameAvailability(nickname);
 
             document.getElementById('saveBtn').disabled = true;
             form.action = '/signup';
@@ -195,6 +198,25 @@
             const nameRegex = /^[가-힣a-zA-Z]+$/;
             return nameRegex.test(name);
         }
+
+        <!--닉네임 중복 검사-->
+        function checkNicknameAvailability(nickname) {
+        fetch(`/freeBoard`)
+            .then(response => response.json())
+            .then(data => {
+                if (data) {
+                    document.getElementById('nickname-error').textContent = "사용 가능한 닉네임입니다!";
+                    event.preventDefault();
+                    return false;
+                } else {
+                    document.getElementById('nickname-error').textContent = "사용 불가한 닉네임입니다.";
+                    event.preventDefault();
+                    return false;
+                }
+            })
+            .catch(error => console.error('Error',error));
+        };
+
 
     /*]]>*/
 </script>

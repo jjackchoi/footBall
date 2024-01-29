@@ -240,7 +240,8 @@
                     $.ajax({
                         type: 'POST',
                         url: '/freeBoard/create', // 실제로 데이터를 저장하는 엔드포인트로 변경해야 합니다.
-                        data: {freeBoardTitle: freeBoardTitle,freeBoardText:freeBoardText},
+                        data: {freeBoardTitle : freeBoardTitle,
+                               freeBoardText : freeBoardText},
                         success: function () {
                             // 작성 완료 후 팝업 닫기
                             $('#writePostModal').modal('hide');

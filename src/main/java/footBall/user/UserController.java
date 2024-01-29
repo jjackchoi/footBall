@@ -5,10 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @Slf4j
@@ -27,10 +24,9 @@ public class UserController {
     // 회원가입 닉네임 중복검사
     @ResponseBody
     @GetMapping("/checkNickname")
-    public ResponseEntity<?>  checkNickname(@RequestBody UserRequest dto){
-        log.info(dto.toString());
-        System.out.println(dto);
-        UserResponse target = userService.getUserByNickname(dto);
+    public ResponseEntity<?>  checkNickname(@RequestParam(value = "nickname") String nickname){
+        log.info(nickname);
+        UserResponse target = userService.getUserByNickname(nickname);
         boolean response = false;
         if (target == null){
             response = true;

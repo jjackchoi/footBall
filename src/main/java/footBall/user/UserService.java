@@ -8,7 +8,7 @@ public interface UserService {
     // 유저 전체조회
     List<UserResponse> getAllUser();
     // 닉네임으로 유저 조회
-    UserResponse getUserByNickname(UserRequest dto);
+    UserResponse getUserByNickname(String nickname);
     // 로그인
     int login(UserRequest dto);
 }

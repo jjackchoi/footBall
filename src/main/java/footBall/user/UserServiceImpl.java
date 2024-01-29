@@ -23,8 +23,8 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserResponse getUserByNickname(UserRequest dto) {
-        return sqlSession.selectOne("UserMapper.getUserByNickname", dto);
+    public UserResponse getUserByNickname(String nickname) {
+        return sqlSession.selectOne("UserMapper.getUserByNickname", nickname);
     }
 
     @Override

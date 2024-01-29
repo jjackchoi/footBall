@@ -17,8 +17,15 @@ public class UserController {
 
     // 회원가입 페이지
     @GetMapping("/signup")
-    public String register(){
+    public String signupPage(){
         return "signup";
+    }
+
+    // 회원가입 버튼 클릭 시
+    @PostMapping("/signup")
+    public String signup(UserRequest dtos){
+        userService.userRegister(dtos);
+        return "redirect:/login";
     }
 
     // 로그인 페이지

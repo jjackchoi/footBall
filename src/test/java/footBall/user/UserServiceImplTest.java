@@ -19,7 +19,7 @@ class UserServiceImplTest {
         UserRequest dto = new UserRequest();
         dto.setFbUserEmail("chltmdals@naver.com");
         dto.setFbUserPswd("12345");
-        Long id = userService.login(dto);
+        int id = userService.login(dto);
         System.out.println(id);
     }
 }

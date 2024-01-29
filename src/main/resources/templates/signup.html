@@ -34,11 +34,13 @@
                             <div class="card-header"><h3 class="text-center font-weight-light my-4">회원가입</h3>
                             </div>
                             <div class="card-body">
-                                <form th:action="@{/testtest}" method="post">
+<!--                                <form th:action="@{/testtest}" method="post">-->
+                                <form id="signupForm" method="post" autocomplete="off">
                                     <div class="form-floating mb-3">
                                         <input class="form-control" id="inputEmail" type="email" name="fbUserEmail"
                                                placeholder="name@example.com"/>
                                         <label for="inputEmail">이메일</label>
+                                        <span id="email-error" class="error-message" style="color: red;"></span> <!-- 실패 메시지 표시할 곳 -->
                                     </div>
                                     <div class="row mb-3">
                                         <div class="col-md-6">
@@ -55,16 +57,19 @@
                                                 <label for="inputPasswordConfirm">비밀번호 확인</label>
                                             </div>
                                         </div>
+                                        <span id="password-error" class="error-message" style="color: red;"></span> <!-- 실패 메시지 표시할 곳 -->
                                     </div>
                                     <div class="form-floating mb-3">
                                         <input class="form-control" id="inputName" name="fbUserName" type="text"
                                                placeholder="이름"/>
                                         <label for="inputEmail">이름</label>
+                                        <span id="name-error" class="error-message" style="color: red;"></span> <!-- 실패 메시지 표시할 곳 -->
                                     </div>
                                     <div class="form-floating mb-3">
                                         <input class="form-control" id="inputNick" name="fbUserNickname" type="text"
                                                placeholder="닉네임"/>
                                         <label for="inputNick">닉네임</label>
+                                        <span id="nickname-error" class="error-message" style="color: red;"></span> <!-- 실패 메시지 표시할 곳 -->
                                     </div>
                                     <div class="form-floating mb-3 text-center">
                                         <div class="input-group date">
@@ -73,19 +78,23 @@
                                                 <span class="glyphicon glyphicon-th"></span>
                                             </div>
                                         </div>
+                                        <span id="birth-error" class="error-message" style="color: red;"></span> <!-- 실패 메시지 표시할 곳 -->
                                     </div>
                                     <div class="form-floating mb-3">
                                         <input class="form-control" id="inputPhone" name="fbUserPhone" type="text"
                                                placeholder="name@example.com"/>
                                         <label for="inputPhone">핸드폰번호(EX번호만 입력해주세요)</label>
+                                        <span id="phone-error" class="error-message" style="color: red;"></span> <!-- 실패 메시지 표시할 곳 -->
                                     </div>
                                     <div class="form-floating mb-3">
                                         <input class="form-control" id="inputAddress" name="fbUserAddress" type="text"
                                                placeholder="주소"/>
                                         <label for="inputPhone">주소</label>
+                                        <span id="address-error" class="error-message" style="color: red;"></span> <!-- 실패 메시지 표시할 곳 -->
                                     </div>
                                     <div class="mt-4 mb-0">
-                                        <button class="btn btn-primary btn-block" type="submit">회원가입</button>
+<!--                                        <input type="button" class="btn btn-primary btn-block" onclick="signup();" value="회원가입">-->
+                                        <button type="button" id="saveBtn" class="btn btn-primary btn-block" onclick="signUp();">회원가입</button>
                                     </div>
                                 </form>
                             </div>
@@ -123,5 +132,71 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
         crossorigin="anonymous"></script>
 <script src="../js/scripts.js"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+        <!--회원가입 버튼 클릭 시-->
+        function signUp(){
+            console.log('클릭완료');
+            const form = document.getElementById('signupForm');
+            const email = document.getElementById('inputEmail').value;
+            const pswd = document.getElementById('inputPassword').value;
+            const pswdConfirm = document.getElementById('inputPasswordConfirm').value;
+            const name = document.getElementById('inputName').value;
+            <!--이메일-->
+            if(!validateEmail(email)){
+                document.getElementById('email-error').textContent = "유효하지 않은 이메일 양식입니다.";
+                return;
+            }else{
+                document.getElementById('email-error').textContent = "";
+            }
+            <!--비밀번호-->
+            if (!validatePassword(pswd)) {
+                document.getElementById('password-error').textContent = "비밀번호는 최소 8자 이상, 영문 대소문자 및 숫자를 포함해야 합니다.";
+                event.preventDefault();
+                return;
+            }else if(pswd != pswdConfirm){
+                document.getElementById('password-error').textContent = "비밀번호가 일치하지 않습니다. 다시한번 확인해주세요.";
+                event.preventDefault();
+                return;
+            }else{
+                document.getElementById('password-error').textContent = "";
+            }
+            <!--이름-->
+            if (!validateName(name)) {
+                document.getElementById('name-error').textContent = "이름 에러";
+                console.log("정규식 불통과");
+                event.preventDefault();
+                return;
+            } else {
+                document.getElementById('name-error').textContent = "";
+                console.log("정규식 통과");
+            }
+
+            document.getElementById('saveBtn').disabled = true;
+            form.action = '/signup';
+            form.submit();
+        };
+
+        <!--이메일 주소 유효성 검사-->
+        function validateEmail(email) {
+            const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            return emailRegex.test(email);
+        }
+
+        <!--비밀번호 유효성 검사-->
+        function validatePassword(password) {
+            // 예시: 최소 8자 이상, 영문 대소문자 및 숫자 포함
+            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+            return passwordRegex.test(password);
+        }
+
+        <!--이름 유효성 검사-->
+        function validateName(name) {
+            const nameRegex = /^[가-힣a-zA-Z]+$/;
+            return nameRegex.test(name);
+        }
+
+    /*]]>*/
+</script>
 </body>
 </html>

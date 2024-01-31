@@ -175,9 +175,10 @@
             <!--닉네임-->
             checkNicknameAvailability(nickname);
 
-            document.getElementById('saveBtn').disabled = true;
-            form.action = '/signup';
-            form.submit();
+            console.log('오지마');
+<!--            document.getElementById('saveBtn').disabled = true;-->
+<!--            form.action = '/signup';-->
+<!--            form.submit();-->
         };
 
         <!--이메일 주소 유효성 검사-->
@@ -205,12 +206,13 @@
         fetch(`/checkNickname?nickname=${nickname}`)
             .then(response => response.json())
             .then(data => {
-                if (data) {
-                    document.getElementById('nickname-error').textContent = "사용 가능한 닉네임입니다!";
+                if(!data.ok){
+                    console.log('false');
+                    document.getElementById('nickname-error').textContent = "중복된 닉네임입니다!";
                     return false;
-                } else {
-                    document.getElementById('nickname-error').textContent = "사용 불가한 닉네임입니다.";
-                    return false;
+                }else{
+                    console.log('true');
+                    document.getElementById('nickname-error').textContent = "";
                 }
             })
             .catch(error => console.error('Error',error));

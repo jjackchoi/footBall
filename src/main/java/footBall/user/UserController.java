@@ -3,9 +3,12 @@ package footBall.user;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @Slf4j
@@ -24,14 +27,14 @@ public class UserController {
     // 회원가입 닉네임 중복검사
     @ResponseBody
     @GetMapping("/checkNickname")
-    public ResponseEntity<?>  checkNickname(@RequestParam(value = "nickname") String nickname){
+    public ResponseEntity<Boolean> checkNickname(String nickname){
         log.info(nickname);
-        UserResponse target = userService.getUserByNickname(nickname);
-        boolean response = false;
-        if (target == null){
-            response = true;
+        List<UserResponse> target = userService.getUserByNickname(nickname);
+        if (target.size() >= 1){
+            return ResponseEntity.status(HttpStatus.OK).body(false);
+        }else {
+            return ResponseEntity.status(HttpStatus.OK).body(true);
         }
-        return ResponseEntity.ok(response);
     }
 
     // 회원가입 버튼 클릭 시

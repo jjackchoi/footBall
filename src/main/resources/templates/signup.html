@@ -34,8 +34,7 @@
                             <div class="card-header"><h3 class="text-center font-weight-light my-4">회원가입</h3>
                             </div>
                             <div class="card-body">
-<!--                                <form th:action="@{/testtest}" method="post">-->
-                                <form id="signupForm" method="post" autocomplete="off">
+                                <form id="signupForm" method="post">
                                     <div class="form-floating mb-3">
                                         <input class="form-control" id="inputEmail" type="email" name="fbUserEmail"
                                                placeholder="name@example.com"/>
@@ -82,8 +81,8 @@
                                     </div>
                                     <div class="form-floating mb-3">
                                         <input class="form-control" id="inputPhone" name="fbUserPhone" type="text"
-                                               placeholder="name@example.com"/>
-                                        <label for="inputPhone">핸드폰번호(EX번호만 입력해주세요)</label>
+                                               maxlength="13"/>
+                                        <label for="inputPhone">핸드폰번호</label>
                                         <span id="phone-error" class="error-message" style="color: red;"></span> <!-- 실패 메시지 표시할 곳 -->
                                     </div>
                                     <div class="form-floating mb-3">
@@ -93,7 +92,6 @@
                                         <span id="address-error" class="error-message" style="color: red;"></span> <!-- 실패 메시지 표시할 곳 -->
                                     </div>
                                     <div class="mt-4 mb-0">
-<!--                                        <input type="button" class="btn btn-primary btn-block" onclick="signup();" value="회원가입">-->
                                         <button type="button" id="saveBtn" class="btn btn-primary btn-block" onclick="signUp();">회원가입</button>
                                     </div>
                                 </form>
@@ -136,21 +134,35 @@
     /*<![CDATA[*/
         <!--회원가입 버튼 클릭 시-->
         function signUp(){
-            console.log('클릭완료');
+            console.log('회원가입 클릭');
+            if(checkValidation() == true){
+                console.log('오지마');
+                const form = document.getElementById('signupForm');
+                document.getElementById('saveBtn').disabled = true;
+                form.action = '/signup';
+                form.submit();
+            }
+        };
+
+        <!--유효성 검사 및 중복 검사-->
+        async function checkValidation(){
             const form = document.getElementById('signupForm');
             const email = document.getElementById('inputEmail').value;
             const pswd = document.getElementById('inputPassword').value;
             const pswdConfirm = document.getElementById('inputPasswordConfirm').value;
             const name = document.getElementById('inputName').value;
             const nickname = document.getElementById('inputNick').value;
-            <!--이메일-->
+            const phone = document.getElementById('inputPhone').value;
+
+            // 이메일
             if(!validateEmail(email)){
                 document.getElementById('email-error').textContent = "유효하지 않은 이메일 양식입니다.";
                 return;
             }else{
                 document.getElementById('email-error').textContent = "";
             }
-            <!--비밀번호-->
+
+            // 비밀번호
             if (!validatePassword(pswd)) {
                 document.getElementById('password-error').textContent = "비밀번호는 최소 8자 이상, 영문 대소문자 및 숫자를 포함해야 합니다.";
                 event.preventDefault();
@@ -162,24 +174,40 @@
             }else{
                 document.getElementById('password-error').textContent = "";
             }
-            <!--이름-->
+
+            // 이름
             if (!validateName(name)) {
-                document.getElementById('name-error').textContent = "이름 에러";
-                console.log("정규식 불통과");
-                event.preventDefault();
+                document.getElementById('name-error').textContent = "2글자 이상의 한글 혹은 영어이름을 기입해주세요.";
                 return;
             } else {
                 document.getElementById('name-error').textContent = "";
-                console.log("정규식 통과");
             }
-            <!--닉네임-->
-            checkNicknameAvailability(nickname);
 
-            console.log('오지마');
-<!--            document.getElementById('saveBtn').disabled = true;-->
-<!--            form.action = '/signup';-->
-<!--            form.submit();-->
-        };
+            // 닉네임
+            // 정규식 검사
+            if (!validateNick(nickname)) {
+                document.getElementById('nickname-error').textContent = "2글자 이상 7글자 이하의 한글,영어,숫자 조합으로 입력해주세요.";
+                return;
+            } else {
+                document.getElementById('nickname-error').textContent = "";
+            }
+            // 중복 검사
+            const checkNickname = await checkNicknameAvailability(nickname);
+            if(checkNickname){
+                document.getElementById('nickname-error').textContent = "";
+            }else{
+                document.getElementById('nickname-error').textContent = "중복된 닉네임입니다.";
+                return;
+            }
+
+            // 핸드폰 정규식 검사
+            if (!validatePhone(phone)) {
+                document.getElementById('phone-error').textContent = "올바르지 않은 핸드폰 번호 형식입니다.";
+            }else{
+                document.getElementById('phone-error').textContent = "";
+            }
+
+        }
 
         <!--이메일 주소 유효성 검사-->
         function validateEmail(email) {
@@ -200,23 +228,57 @@
             return nameRegex.test(name);
         }
 
+        <!--닉네임 정규식 검사-->
+        function validateNick(nickname) {
+            const nickRegex = /^[가-힣a-zA-Z0-9]{2,7}$/;
+            return nickRegex.test(nickname);
+        }
+
         <!--닉네임 중복 검사-->
-        function checkNicknameAvailability(nickname) {
-        console.log(`${nickname}은?`);
-        fetch(`/checkNickname?nickname=${nickname}`)
-            .then(response => response.json())
-            .then(data => {
-                if(!data.ok){
-                    console.log('false');
-                    document.getElementById('nickname-error').textContent = "중복된 닉네임입니다!";
-                    return false;
-                }else{
-                    console.log('true');
-                    document.getElementById('nickname-error').textContent = "";
-                }
-            })
-            .catch(error => console.error('Error',error));
+        async function checkNicknameAvailability(nickname) {
+            // nickname 확인
+            console.log(`${nickname}은?`);
+            try {
+                // AJAX 호출로 아이디 중복 검사
+                const response = await fetch(`/checkNickname?nickname=${nickname}`);
+                const data = await response.json();
+                return data;
+            } catch(error) {
+                console.error("아이디 중복 검사 중 오류 발생:", error);
+                throw error;
+            }
         };
+
+        <!--핸드폰번호 자동하이픈-->
+        // 입력된 핸드폰 번호에 자동으로 하이픈을 추가하는 함수
+        function addHyphen() {
+          let phoneNumber = document.getElementById('inputPhone').value;
+          // 숫자만 남기고 다른 문자 제거
+          phoneNumber = phoneNumber.replace(/[^0-9]/g, '');
+
+          let formattedPhoneNumber = '';
+          if (phoneNumber.length < 4) {
+            formattedPhoneNumber = phoneNumber;
+          } else if (phoneNumber.length < 7) {
+            formattedPhoneNumber = phoneNumber.substr(0, 3) + '-' + phoneNumber.substr(3);
+          } else if (phoneNumber.length < 11) {
+            formattedPhoneNumber = phoneNumber.substr(0, 3) + '-' + phoneNumber.substr(3, 3) + '-' + phoneNumber.substr(6);
+          } else {
+            formattedPhoneNumber = phoneNumber.substr(0, 3) + '-' + phoneNumber.substr(3, 4) + '-' + phoneNumber.substr(7, 4);
+          }
+
+          // 입력 필드에 포맷된 번호 출력
+          document.getElementById('inputPhone').value = formattedPhoneNumber;
+        }
+
+        // input 값이 변경될 때마다 자동으로 하이픈 추가
+        document.getElementById('inputPhone').addEventListener('input', addHyphen);
+
+        <!--핸드폰번호 정규식 검사-->
+        function validatePhone(phone) {
+            const phoneRegex = /^(010)-\d{4}-\d{4}$/;
+            return phoneRegex.test(phone);
+        }
 
 
     /*]]>*/

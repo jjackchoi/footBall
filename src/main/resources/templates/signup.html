@@ -135,14 +135,16 @@
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
         crossorigin="anonymous"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script src="../js/scripts.js"></script>
 <script th:inline="javascript">
     /*<![CDATA[*/
         <!--회원가입 버튼 클릭 시-->
-        function signUp(){
+        async function signUp(){
             console.log('회원가입 클릭');
-            if(checkValidation() == true){
-                console.log('오지마');
+            let success =  await checkValidation()
+            if(success == true){
+                console.log('일로와');
                 const form = document.getElementById('signupForm');
                 document.getElementById('saveBtn').disabled = true;
                 form.action = '/signup';
@@ -158,9 +160,8 @@
             const name = document.getElementById('inputName').value;
             const nickname = document.getElementById('inputNick').value;
             const phone = document.getElementById('inputPhone').value;
-
-            // 생년월일 hidden input에 담기
-            submitDateOfBirth();
+            let birth = document.getElementById('hiddenDateOfBirth').value;
+            const address = document.getElementById('inputAddress').value;
 
             // 이메일
             // 정규식 검사
@@ -215,15 +216,34 @@
                 return;
             }
 
-            // 생년월일 hidden에 담기
-
+            // 생년월일
+            // 생년월일 hidden input에 담기
+            birth = submitDateOfBirth();
+            // 생년월일 정규식 검사
+            console.log('정규식 검사의' + birth);
+            if(!validateBirth(birth)){
+                document.getElementById('birth-error').textContent = "생년월일을 선택해 주세요.";
+                return;
+            }else{
+                document.getElementById('birth-error').textContent = "";
+            }
 
             // 핸드폰 정규식 검사
             if (!validatePhone(phone)) {
                 document.getElementById('phone-error').textContent = "올바르지 않은 핸드폰 번호 형식입니다.";
+                return;
             }else{
                 document.getElementById('phone-error').textContent = "";
             }
+
+            // 주소 검사
+            if (address == null || address == '') {
+                document.getElementById('address-error').textContent = "주소를 넣어주세요";
+                return;
+            }else{
+                document.getElementById('address-error').textContent = "";
+            }
+            return true;
 
         }
 
@@ -270,7 +290,6 @@
         <!--닉네임 중복 검사-->
         async function checkNicknameAvailability(nickname) {
             // nickname 확인
-            console.log(`${nickname}은?`);
             try {
                 // AJAX 호출로 닉네임 중복 검사
                 const response = await fetch(`/checkNickname?nickname=${nickname}`);
@@ -285,13 +304,26 @@
         <!--생년월일 hidden에 담기-->
         function submitDateOfBirth(){
             // 선택된 년, 월, 일 가져오기
-            const selectedYear = birthYear.value;
-            const selectedMonth = birthMonth.value;
-            const selectedDay = birthDay.value;
-            // 선택된 생년 월일을 hidden input 요소에 설정
-            let hiddenBirthInput = document.querySelector('#hiddenDateOfBirth').value;
-            hiddenBirthInput = selectedYear + "-" + selectedMonth + "-" + selectedDay;
+            let selectedYear = birthYear.value;
+            let selectedMonth = birthMonth.value;
+            let selectedDay = birthDay.value;
+            // 년, 월, 일 합치기
+            if(selectedMonth.length == 1){
+                selectedMonth = '0'+selectedMonth;
+            }
+            if(selectedDay.length == 1){
+                selectedDay = '0'+selectedDay;
+            }
+            let hiddenBirthInput = selectedYear + "-" + selectedMonth + "-" + selectedDay;
             console.log(hiddenBirthInput);
+            return hiddenBirthInput;
+        }
+
+        <!--생년월일 유효성 검사-->
+        function validateBirth(birth){
+            // yyyy-mm-dd 형식으로 생년월일을 검사하는 정규식
+            const dateOfBirthRegex = /^\d{4}-\d{2}-\d{2}$/;
+            return dateOfBirthRegex.test(birth);
         }
 
         <!--생년월일-->
@@ -388,7 +420,24 @@
             return phoneRegex.test(phone);
         }
 
+        <!--주소 찾기 api-->
+        document.querySelector('#inputAddress').addEventListener('click', function(){
+            new daum.Postcode({
+                oncomplete: function(data){
+                    let addr = ''; // 주소 변수
 
+                    // 사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+                    if(data.userSelectedType === 'R'){ // 사용자가 도로명 주소를 선택했을 경우
+                        addr = data.roadAddress;;
+                    }else{ // 사용자가 지번 주소를 선택했을 경우('J')
+                        addr = data.jibunAddress;
+                    }
+
+                    // 주소 정보를 해당 필드에 삽입
+                    document.getElementById("inputAddress").value = addr;
+                }
+            }).open();
+        });
     /*]]>*/
 </script>
 </body>

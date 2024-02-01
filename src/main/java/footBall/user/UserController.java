@@ -23,6 +23,18 @@ public class UserController {
         return "signup";
     }
 
+    // 회원가입 이메일 중복검사
+    @ResponseBody
+    @GetMapping("/checkEmail")
+    public ResponseEntity<Boolean> checkEmail(String email){
+        log.info(email);
+        List<UserResponse> target = userService.getUserByEmail(email);
+        if (target.size() >= 1){
+            return ResponseEntity.status(HttpStatus.OK).body(false);
+        }else {
+            return ResponseEntity.status(HttpStatus.OK).body(true);
+        }
+    }
 
     // 회원가입 닉네임 중복검사
     @ResponseBody

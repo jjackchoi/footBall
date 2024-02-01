@@ -40,6 +40,17 @@
         )
     </insert>
 
+    <!--이메일로 유저 조회-->
+    <select id="getUserByEmail" parameterType="String" resultType="footBall.user.UserResponse">
+        select
+            <include refid="userColumns"/>
+        from
+            fb_user
+        where 1=1
+        and fb_user_email = #{email}
+        and fb_user_del_yn = 0
+    </select>
+
     <!--닉네임으로 유저 조회-->
     <select id="getUserByNickname" parameterType="String" resultType="footBall.user.UserResponse">
         select
@@ -48,17 +59,6 @@
             fb_user
         where 1=1
         and fb_user_nickname = #{nickname}
-        and fb_user_del_yn = 0
-    </select>
-
-    <!--이메일로 유저 조회-->
-    <select id="getUserByEmail" parameterType="footBall.user.UserRequest" resultType="footBall.user.UserResponse">
-        select
-        <include refid="userColumns"/>
-        from
-        fb_user
-        where 1=1
-        and fb_user_email = #{fbUserEmail}
         and fb_user_del_yn = 0
     </select>
 

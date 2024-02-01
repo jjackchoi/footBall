@@ -24,6 +24,11 @@ public class UserServiceImpl implements UserService{
         return sqlSession.selectList("UserMapper.getAllUser");
     }
 
+    @Override
+    public List<UserResponse> getUserByEmail(String email) {
+        return sqlSession.selectList("UserMapper.getUserByEmail", email);
+    }
+
     // 닉네임으로 유저 조회
     @Override
     public List<UserResponse> getUserByNickname(String nickname) {

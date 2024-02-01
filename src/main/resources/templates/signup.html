@@ -70,25 +70,31 @@
                                         <label for="inputNick">닉네임</label>
                                         <span id="nickname-error" class="error-message" style="color: red;"></span> <!-- 실패 메시지 표시할 곳 -->
                                     </div>
-                                    <div class="form-floating mb-3 text-center">
+                                    <div class="form-floating mb-3">
                                         <div class="input-group date">
-                                            <input type="date" class="form-control" placeholder="생년월일"  name="fbUserBirth">
-                                            <div class="input-group-addon">
-                                                <span class="glyphicon glyphicon-th"></span>
-                                            </div>
+                                            <select class="form-select" id="selectYear">
+                                                <option disabled selected>출생 년도</option>
+                                            </select>
+                                            <select class="form-select" id="selectMonth">
+                                                <option disabled selected>월</option>
+                                            </select>
+                                            <select class="form-select" id="selectDay">
+                                                <option disabled selected>일</option>
+                                            </select>
+                                            <input type="hidden" id="hiddenDateOfBirth" name="fbUserBirth">
                                         </div>
                                         <span id="birth-error" class="error-message" style="color: red;"></span> <!-- 실패 메시지 표시할 곳 -->
                                     </div>
                                     <div class="form-floating mb-3">
                                         <input class="form-control" id="inputPhone" name="fbUserPhone" type="text"
-                                               maxlength="13"/>
+                                               maxlength="13" placeholder="핸드폰번호"/>
                                         <label for="inputPhone">핸드폰번호</label>
                                         <span id="phone-error" class="error-message" style="color: red;"></span> <!-- 실패 메시지 표시할 곳 -->
                                     </div>
                                     <div class="form-floating mb-3">
                                         <input class="form-control" id="inputAddress" name="fbUserAddress" type="text"
                                                placeholder="주소"/>
-                                        <label for="inputPhone">주소</label>
+                                        <label for="inputAddress">주소</label>
                                         <span id="address-error" class="error-message" style="color: red;"></span> <!-- 실패 메시지 표시할 곳 -->
                                     </div>
                                     <div class="mt-4 mb-0">
@@ -146,7 +152,6 @@
 
         <!--유효성 검사 및 중복 검사-->
         async function checkValidation(){
-            const form = document.getElementById('signupForm');
             const email = document.getElementById('inputEmail').value;
             const pswd = document.getElementById('inputPassword').value;
             const pswdConfirm = document.getElementById('inputPasswordConfirm').value;
@@ -154,22 +159,32 @@
             const nickname = document.getElementById('inputNick').value;
             const phone = document.getElementById('inputPhone').value;
 
+            // 생년월일 hidden input에 담기
+            submitDateOfBirth();
+
             // 이메일
+            // 정규식 검사
             if(!validateEmail(email)){
-                document.getElementById('email-error').textContent = "유효하지 않은 이메일 양식입니다.";
+                document.getElementById('email-error').textContent = "올바르지 않은 이메일 양식입니다.";
                 return;
             }else{
                 document.getElementById('email-error').textContent = "";
             }
+            // 중복 검사
+            const checkEmail = await checkEmailAvailability(email);
+            if(checkEmail){
+                document.getElementById('email-error').textContent = "";
+            }else{
+                document.getElementById('email-error').textContent = "중복된 이메일입니다.";
+                return;
+            }
 
             // 비밀번호
             if (!validatePassword(pswd)) {
-                document.getElementById('password-error').textContent = "비밀번호는 최소 8자 이상, 영문 대소문자 및 숫자를 포함해야 합니다.";
-                event.preventDefault();
+                document.getElementById('password-error').textContent = "비밀번호는 최소 8자 이상, 영문과 특수 문자를 포함해야 합니다.";
                 return;
             }else if(pswd != pswdConfirm){
                 document.getElementById('password-error').textContent = "비밀번호가 일치하지 않습니다. 다시한번 확인해주세요.";
-                event.preventDefault();
                 return;
             }else{
                 document.getElementById('password-error').textContent = "";
@@ -200,6 +215,9 @@
                 return;
             }
 
+            // 생년월일 hidden에 담기
+
+
             // 핸드폰 정규식 검사
             if (!validatePhone(phone)) {
                 document.getElementById('phone-error').textContent = "올바르지 않은 핸드폰 번호 형식입니다.";
@@ -215,10 +233,25 @@
             return emailRegex.test(email);
         }
 
+        <!--이메일 중복 검사-->
+        async function checkEmailAvailability(email) {
+            // email 확인
+            console.log(`${email}은?`);
+            try {
+                // AJAX 호출로 이메일 중복 검사
+                const response = await fetch(`/checkEmail?email=${email}`);
+                const data = await response.json();
+                return data;
+            } catch(error) {
+                console.error("이메일 중복 검사 중 오류 발생:", error);
+                throw error;
+            }
+        };
+
         <!--비밀번호 유효성 검사-->
         function validatePassword(password) {
-            // 예시: 최소 8자 이상, 영문 대소문자 및 숫자 포함
-            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+            // 영문, 특수문자의 조합으로 8자 이상 확인
+            const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[$@$!%*?&])[a-zA-Z\d$@$!%*?&]{8,}$/;
             return passwordRegex.test(password);
         }
 
@@ -228,7 +261,7 @@
             return nameRegex.test(name);
         }
 
-        <!--닉네임 정규식 검사-->
+        <!--닉네임 유효성 검사-->
         function validateNick(nickname) {
             const nickRegex = /^[가-힣a-zA-Z0-9]{2,7}$/;
             return nickRegex.test(nickname);
@@ -239,15 +272,90 @@
             // nickname 확인
             console.log(`${nickname}은?`);
             try {
-                // AJAX 호출로 아이디 중복 검사
+                // AJAX 호출로 닉네임 중복 검사
                 const response = await fetch(`/checkNickname?nickname=${nickname}`);
                 const data = await response.json();
                 return data;
             } catch(error) {
-                console.error("아이디 중복 검사 중 오류 발생:", error);
+                console.error("닉네임 중복 검사 중 오류 발생:", error);
                 throw error;
             }
         };
+
+        <!--생년월일 hidden에 담기-->
+        function submitDateOfBirth(){
+            // 선택된 년, 월, 일 가져오기
+            const selectedYear = birthYear.value;
+            const selectedMonth = birthMonth.value;
+            const selectedDay = birthDay.value;
+            // 선택된 생년 월일을 hidden input 요소에 설정
+            let hiddenBirthInput = document.querySelector('#hiddenDateOfBirth').value;
+            hiddenBirthInput = selectedYear + "-" + selectedMonth + "-" + selectedDay;
+            console.log(hiddenBirthInput);
+        }
+
+        <!--생년월일-->
+        // 셀렉트 박스 option 목록 동적 생성
+        const birthYear = document.querySelector('#selectYear');
+        const birthMonth = document.querySelector('#selectMonth');
+        const birthDay = document.querySelector('#selectDay');
+        // option 목록 생성 여부 확인
+        isYearOptionExisted = false;
+        isMonthOptionExisted = false;
+        isDayOptionExisted = false;
+        // year 목록 생성되지 않았을 때 (최초 클릭 시)
+        birthYear.addEventListener('focus', function(){
+            if(!isYearOptionExisted){
+                isYearOptionExisted = true;
+                for(var i = 2024; i >= 1940; i--){
+                    // option element 생성
+                    const YearOption = document.createElement('option');
+                    YearOption.setAttribute('value', i);
+                    YearOption.innerText = i;
+                    // birthYear의 자식 요소로 추가
+                    this.appendChild(YearOption);
+                }
+            }
+        });
+        // month 목록 생성되지 않았을 때 (최초 클릭 시)
+        birthMonth.addEventListener('focus', function(){
+            if(!isMonthOptionExisted) {
+                    isMonthOptionExisted = true;
+                    for(var i = 1; i <= 12; i++){
+                    // option element 생성
+                    const MonthOption = document.createElement('option');
+                    MonthOption.setAttribute('value', i);
+                    MonthOption.innerText = i;
+                    // birthMonth의 자식요소로 추가
+                    this.appendChild(MonthOption);
+                }
+            }
+        });
+        // day 목록 생성되지 않았을 때 (최초 클릭 시)
+        birthDay.addEventListener('focus', function(){
+            // 선택된 년도의 값 가져오기
+            const selectedYear = parseInt(birthYear.value);
+            // 선택된 월의 값 가져오기
+            const selectedMonth = parseInt(birthMonth.value);
+            // 월에 따른 일 수 가져오기
+            if(birthYear.value != '출생 년도' && birthMonth.value != '월'){
+                const daysInMonth = new Date(selectedYear, selectedMonth, 0).getDate();
+                if(!isDayOptionExisted){
+                    isMonthOptionExisted = true;
+                    for (var i = 1; i <= daysInMonth; i++){
+                        // option element 생성
+                        const DayOption = document.createElement('option');
+                        DayOption.setAttribute('value', i);
+                        DayOption.innerText = i;
+                        // biarthDay의 자식요소로 추가
+                        this.appendChild(DayOption);
+                    }
+                }
+                document.getElementById('birth-error').textContent = "";
+            }else{
+                document.getElementById('birth-error').textContent = "연도 혹은 월을 선택해 주세요.";
+            }
+        });
 
         <!--핸드폰번호 자동하이픈-->
         // 입력된 핸드폰 번호에 자동으로 하이픈을 추가하는 함수
@@ -274,7 +382,7 @@
         // input 값이 변경될 때마다 자동으로 하이픈 추가
         document.getElementById('inputPhone').addEventListener('input', addHyphen);
 
-        <!--핸드폰번호 정규식 검사-->
+        <!--핸드폰번호 유효성 검사-->
         function validatePhone(phone) {
             const phoneRegex = /^(010)-\d{4}-\d{4}$/;
             return phoneRegex.test(phone);

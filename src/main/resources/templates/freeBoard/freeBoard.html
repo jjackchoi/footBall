@@ -104,6 +104,14 @@
         function submitPostForm() {
             var freeBoardTitle = $('#freeBoardTitle').val();
             var freeBoardText = $('#freeBoardText').val();
+            if(freeBoardTitle == "" || freeBoardTitle == null){
+                alert("제목을 입력해주세요");
+                return;
+            }
+            if(freeBoardText == "" || freeBoardText == null){
+                alert("내용을 입력해주세요");
+                return;
+            }
 
             // 글 작성 완료 후 서버로 데이터 전송 (Ajax를 사용하여 비동기 처리)
             $.ajax({

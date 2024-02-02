@@ -23,9 +23,11 @@ public class FreeBoardController {
 
     // 자유게시판 페이지
     @GetMapping("/freeBoard")
-    public String index(Model model){
-        List<FreeBoardResponse> posts = freeBoardService.findAll();
-        model.addAttribute("posts", posts);
+    public String index(Model model,HttpSession session){
+        if(session.getAttribute("userId") != null){
+            List<FreeBoardResponse> posts = freeBoardService.findAll();
+            model.addAttribute("posts", posts);
+        }
         return "freeBoard/freeBoard";
     }
     @ResponseBody

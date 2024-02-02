@@ -73,4 +73,10 @@
         order by
             fb_user_id desc
     </select>
+
+    <select id="findNickname" parameterType="int" resultType="string">
+        select FB_USER_NICKNAME
+        from fb_user
+        where FB_USER_ID = #{fbUserId}
+    </select>
 </mapper>

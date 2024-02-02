@@ -17,4 +17,6 @@ public interface UserService {
 
     // 로그인
     int login(UserRequest dto);
+
+    String findNickname(int id);
 }

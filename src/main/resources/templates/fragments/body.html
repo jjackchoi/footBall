@@ -18,12 +18,14 @@
             <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
                aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="#!">Settings</a></li>
-                <li><a class="dropdown-item" href="#!">Activity Log</a></li>
+                <li><a class="dropdown-item" href="#!" th:if = "${session.userId} != null" th:text = "${session.userNickname}"></a></li>
+                <li><a class="dropdown-item" href="#!" th:if = "${session.userId} != null">내정보</a></li>
+                <li><a class="dropdown-item" href="#!" th:if = "${session.userId} != null">내가쓴글보기</a></li>
                 <li>
                     <hr class="dropdown-divider"/>
                 </li>
-                <li><a class="dropdown-item" th:href="@{'/logout'}">Logout</a></li>
+                <li><a class="dropdown-item" th:if = "${session.userId} != null" th:href="@{'/logout'}">로그아웃</a></li>
+                <li><a class="dropdown-item" th:if = "${session.userId} == null" th:href="@{'/login'}">로그인</a></li>
             </ul>
         </li>
     </ul>

@@ -27,7 +27,6 @@ public class FreeBoardController {
     @PostMapping("/freeBoard/create")
     public String create(HttpSession session,FreeBoardRequest dto){
         dto.setFbUserId((Integer) session.getAttribute("userId"));
-        System.out.println(session.getAttribute("userId"));
         int Success = freeBoardService.boardCreate(dto);
         if(Success != 0){
             return "success";

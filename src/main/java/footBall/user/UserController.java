@@ -75,8 +75,20 @@ public class UserController {
         if(id == 0){ // 로그인 실패 시
             return "redirect:/login";
         }
+
+        String fbUserNickname = userService.findNickname(id);
         session.setAttribute("userId", id);
+        session.setAttribute("userNickname", fbUserNickname);
         return "redirect:/";
+    }
+    @GetMapping("/logout")
+    public String logOut(HttpSession session){
+        if((Integer)session.getAttribute("userId") != null){
+            session.invalidate();
+            return "login";
+        }else {
+            return "login";
+        }
     }
 
     // 메인화면

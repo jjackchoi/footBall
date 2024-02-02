@@ -43,4 +43,9 @@ public class UserServiceImpl implements UserService{
             return userDto.getFbUserId();
         return 0;
     }
+
+    @Override
+    public String findNickname(int id) {
+        return sqlSession.selectOne("UserMapper.findNickname",id);
+    }
 }

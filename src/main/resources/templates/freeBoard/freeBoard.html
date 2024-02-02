@@ -41,7 +41,7 @@
                 <li>
                     <hr class="dropdown-divider"/>
                 </li>
-                <li><a class="dropdown-item" href="#!">Logout</a></li>
+                <li><a class="dropdown-item" th:href="@{'/logout'}">Logout</a></li>
             </ul>
         </li>
     </ul>
@@ -157,10 +157,6 @@
                         <table id="datatablesSimple">
                             <thead>
                             <tr>
-                                <th>
-                                    <input class="form-check-input" type="checkbox" value="" id="check">
-                                    <label class="form-check-label" for="flexCheckDefault">
-                                    </label></th>
                                 <th>글작성자</th>
                                 <th>글제목</th>
                                 <th>글내용</th>
@@ -169,10 +165,6 @@
                             </thead>
                             <tbody>
                             <tr th:each="post : ${posts}">
-                                <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    <label class="form-check-label" for="flexCheckDefault">
-                                    </label>
-                                </td>
                                 <td th:text="${post.getFreeBoardAuthor()}"></td>
                                 <td>
                                     <a th:href="@{'/freeBoard/details/' + ${post.freeBoardId}}">
@@ -180,7 +172,7 @@
                                     </a>
                                 </td>
                                 <td th:text="${post.getFreeBoardText()}"></td>
-                                <td th:text="${post.getFreeBoardRegDate()}"></td>
+                                <td th:if="${post.freeBoardRegDate != null}" th:text="${#temporals.format(post.freeBoardRegDate, 'yyyy-MM-dd HH시 mm분')}"></td>
                             </tr>
                             </tbody>
                         </table>

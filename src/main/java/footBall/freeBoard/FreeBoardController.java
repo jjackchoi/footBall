@@ -1,5 +1,7 @@
 package footBall.freeBoard;
 
+import footBall.user.UserResponse;
+import footBall.user.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,6 +18,9 @@ public class FreeBoardController {
     @Autowired
     private FreeBoardServiceImpl freeBoardService;
 
+    @Autowired
+    private UserService userService;
+
     // 자유게시판 페이지
     @GetMapping("/freeBoard")
     public String index(Model model){
@@ -26,7 +31,10 @@ public class FreeBoardController {
     @ResponseBody
     @PostMapping("/freeBoard/create")
     public String create(HttpSession session,FreeBoardRequest dto){
+        List<UserResponse> entityList = userService.findOne((Integer) session.getAttribute("userId"));
         dto.setFbUserId((Integer) session.getAttribute("userId"));
+        dto.setFbUserId(entityList.get(0).getFbUserId());
+        dto.setFreeBoardAuthor(entityList.get(0).getFbUserNickname());
         int Success = freeBoardService.boardCreate(dto);
         if(Success != 0){
             return "success";

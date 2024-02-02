@@ -79,4 +79,11 @@
         from fb_user
         where FB_USER_ID = #{fbUserId}
     </select>
+
+    <select id="findOne" parameterType="Integer" resultType="footBall.user.UserResponse">
+        select
+            <include refid="userColumns"/>
+        from fb_user
+        where FB_USER_ID = #{fbUserId}
+    </select>
 </mapper>

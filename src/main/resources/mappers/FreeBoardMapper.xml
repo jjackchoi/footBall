@@ -37,12 +37,8 @@
                                ,FREE_BOARD_MOD_DATE
                                ,FREE_BOARD_DEL_YN)
         VALUES (
-                 (SELECT FB_USER_ID
-                  FROM FB_USER
-                  WHERE FB_USER_ID = #{fbUserId} )
-               ,(SELECT FB_USER_NAME
-                 FROM FB_USER
-                 WHERE FB_USER_ID = #{fbUserId} )
+                #{fbUserId}
+               ,#{freeBoardAuthor}
                ,#{freeBoardTitle}
                ,#{freeBoardText}
                ,NOW()

@@ -19,4 +19,6 @@ public interface UserService {
     int login(UserRequest dto);
 
     String findNickname(int id);
+
+    List<UserResponse> findOne(Integer id);
 }

@@ -48,4 +48,9 @@ public class UserServiceImpl implements UserService{
     public String findNickname(int id) {
         return sqlSession.selectOne("UserMapper.findNickname",id);
     }
+
+    @Override
+    public List<UserResponse> findOne(Integer id) {
+        return sqlSession.selectList("UserMapper.findOne",id);
+    }
 }

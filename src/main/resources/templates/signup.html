@@ -437,7 +437,10 @@
                     // 주소 정보를 해당 필드에 삽입
                     document.getElementById("inputAddress").value = addr;
                 }
-            }).open();
+            }).open({
+                left: (window.innerWidth - 720) / 2,
+                top: (window.innerHeight - 500) / 2
+            });
         });
     /*]]>*/
 </script>

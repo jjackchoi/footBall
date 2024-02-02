@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService{
     // 로그인
     @Override
     public int login(UserRequest dto) {
-        UserResponse userDto = sqlSession.selectOne("UserMapper.getUserByEmail", dto);
+        UserResponse userDto = sqlSession.selectOne("UserMapper.getUserByEmail", dto.getFbUserEmail());
         if (userDto.getFbUserPswd().equals(dto.getFbUserPswd()))
             return userDto.getFbUserId();
         return 0;

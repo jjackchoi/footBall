@@ -147,6 +147,7 @@
             if(success == true){
                 console.log('일로와');
                 const form = document.getElementById('signupForm');
+                console.log(document.getElementById('hiddenDateOfBirth').value);
                 document.getElementById('saveBtn').disabled = true;
                 form.action = '/signup';
                 form.submit();
@@ -162,6 +163,7 @@
             const nickname = document.getElementById('inputNick').value;
             const phone = document.getElementById('inputPhone').value;
             let birth = document.getElementById('hiddenDateOfBirth').value;
+            let inputBirth = document.getElementById('hiddenDateOfBirth');
             const address = document.getElementById('inputAddress').value;
 
             // 이메일
@@ -220,6 +222,7 @@
             // 생년월일
             // 생년월일 hidden input에 담기
             birth = submitDateOfBirth();
+            inputBirth.value = birth;
             // 생년월일 정규식 검사
             console.log('정규식 검사의' + birth);
             if(!validateBirth(birth)){

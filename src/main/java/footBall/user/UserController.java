@@ -53,6 +53,7 @@ public class UserController {
     @PostMapping("/signup")
     public String signup(UserRequest dtos){
         userService.userRegister(dtos);
+        log.info(dtos.toString());
         return "redirect:/login";
     }
 
@@ -77,6 +78,8 @@ public class UserController {
         session.setAttribute("userId", id);
         return "redirect:/";
     }
+
+    // 메인화면
 
     @GetMapping("/test")
     public String testLayout(){

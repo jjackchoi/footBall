@@ -96,6 +96,7 @@
                                                placeholder="주소"/>
                                         <label for="inputAddress">주소</label>
                                         <span id="address-error" class="error-message" style="color: red;"></span> <!-- 실패 메시지 표시할 곳 -->
+                                        <button type="button" id="btnAddress" class="btn btn-outline-secondary" style="position: absolute; right: 0; top: 0; height: 100%; width: auto;">주소찾기</button>
                                     </div>
                                     <div class="mt-4 mb-0">
                                         <button type="button" id="saveBtn" class="btn btn-primary btn-block" onclick="signUp();">회원가입</button>
@@ -421,7 +422,7 @@
         }
 
         <!--주소 찾기 api-->
-        document.querySelector('#inputAddress').addEventListener('click', function(){
+        document.querySelector('#btnAddress').addEventListener('click', function(){
             new daum.Postcode({
                 oncomplete: function(data){
                     let addr = ''; // 주소 변수

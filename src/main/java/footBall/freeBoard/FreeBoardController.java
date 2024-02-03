@@ -30,6 +30,8 @@ public class FreeBoardController {
         }
         return "freeBoard/freeBoard";
     }
+
+    // 글 작성
     @ResponseBody
     @PostMapping("/freeBoard/create")
     public String create(HttpSession session,FreeBoardRequest dto){

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="FbcMapper">
+
+    <!--유저 테이블 전체 칼럼-->
+    <sql id="commentColumns">
+         fbc_id
+        ,free_board_id
+        ,fbc_author
+        ,fbc_text
+        ,fbc_reg_date
+        ,fbc_mod_date
+        ,fbc_del_yn
+    </sql>
+
+</mapper>

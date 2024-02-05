@@ -5,7 +5,7 @@
 
     <!--건의게시판 테이블 전체 칼럼-->
     <sql id="boardColumns">
-         suggestion_board_id
+        suggestion_board_id
         ,fb_user_id
         ,suggestion_board_author
         ,suggestion_board_title
@@ -31,7 +31,7 @@
     <!--게시판 생성-->
     <insert id="create" parameterType="footBall.suggestionBoard.SuggestionBoardRequest">
         insert into suggestion_board(
-             fb_user_id
+            fb_user_id
             ,suggestion_board_author
             ,suggestion_board_title
             ,suggestion_board_text
@@ -41,7 +41,7 @@
             ,suggestion_board_del_yn
         )
         values(
-             #{fbUserId}
+            #{fbUserId}
             ,#{suggestionBoardAuthor}
             ,#{suggestionBoardTitle}
             ,#{suggestionBoardText}
@@ -51,5 +51,16 @@
             ,'N'
         )
     </insert>
+
+    <!--게시글 상세 조회-->
+    <select id="findById" parameterType="int" resultType="footBall.suggestionBoard.SuggestionBoardResponse">
+        select
+            <include refid="boardColumns" />
+        from
+            suggestion_board
+        where 1=1
+        and suggestion_board_del_yn = 'N'
+        and suggestion_board_id = #{id}
+    </select>
 
 </mapper>

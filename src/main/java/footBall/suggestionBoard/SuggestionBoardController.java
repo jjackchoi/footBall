@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -21,6 +22,7 @@ public class SuggestionBoardController {
     @Autowired
     private UserServiceImpl userService;
 
+    // 건의게시판 페이지
     @GetMapping("/suggestionBoard")
     public String index(Model model){
         List<SuggestionBoardResponse> posts= suggestionBoardService.findAll();
@@ -42,5 +44,13 @@ public class SuggestionBoardController {
         }else {
             return "false";
         }
+    }
+
+    // 건의게시판 제목클릭 시 상세보기
+    @GetMapping("/suggestionBoard/{id}")
+    public String detail(@PathVariable int id, Model model){
+        SuggestionBoardResponse post = suggestionBoardService.findById(id);
+        model.addAttribute("post", post);
+        return "suggestionBoard/suggestionBoardDetails";
     }
 }

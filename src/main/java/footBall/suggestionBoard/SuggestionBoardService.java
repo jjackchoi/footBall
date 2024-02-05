@@ -9,4 +9,7 @@ public interface SuggestionBoardService {
 
     // 게시글 생성
     int create(SuggestionBoardRequest dto);
+
+    // 게시글 상세 조회
+    SuggestionBoardResponse findById(int id);
 }

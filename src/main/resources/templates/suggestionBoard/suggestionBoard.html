@@ -37,7 +37,7 @@
                 <tr th:each="post : ${posts}">
                     <td th:text="${post.getSuggestionBoardAuthor()}"></td>
                     <td>
-                        <a th:href="@{'/suggestionBoard/details/' + ${post.suggestionBoardId}}">
+                        <a th:href="@{'/suggestionBoard/' + ${post.suggestionBoardId}}">
                             <span th:text="${post.getSuggestionBoardTitle()}"></span>
                         </a>
                     </td>

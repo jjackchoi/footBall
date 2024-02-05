@@ -17,8 +17,15 @@ public class SuggestionBoardServiceImpl implements SuggestionBoardService{
         return sqlSession.selectList("SuggestionBoardMapper.findAll");
     }
 
+    // 게시글 생성
     @Override
     public int create(SuggestionBoardRequest dto) {
         return sqlSession.insert("SuggestionBoardMapper.create", dto);
+    }
+
+    // 게시글 상세 조회
+    @Override
+    public SuggestionBoardResponse findById(int id) {
+        return sqlSession.selectOne("SuggestionBoardMapper.findById", id);
     }
 }

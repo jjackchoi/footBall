@@ -8,4 +8,7 @@ public interface FbcService {
 
     //댓글 작성
     int insert(FbcRequest dto);
+
+    //댓글 삭제
+    void deleteList(int id);
 }

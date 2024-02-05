@@ -58,4 +58,18 @@
                ,NOW()
                ,'N');
     </insert>
+    <!--글 수정-->
+    <update id="boardUpdate" parameterType="footBall.freeBoard.FreeBoardRequest">
+        UPDATE free_board
+        SET FREE_BOARD_TITLE = #{freeBoardTitle}
+           ,FREE_BOARD_TEXT = #{freeBoardText}
+           ,FREE_BOARD_REG_DATE = now()
+        WHERE FREE_BOARD_ID = #{freeBoardId};
+    </update>
+
+    <!--글 삭제-->
+    <delete id="deleteOne" parameterType="int">
+        DELETE FROM free_board
+        WHERE FREE_BOARD_ID = #{freeBoardId}
+    </delete>
 </mapper>

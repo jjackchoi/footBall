@@ -17,6 +17,12 @@ public class FbcServiceImpl implements FbcService {
         return sqlSession.insert("FbcMapper.fbcCreate",dto);
     }
 
+    // 댓글 삭제
+    @Override
+    public void deleteList(int id) {
+        sqlSession.delete("FbcMapper.fbcdeleteList",id);
+    }
+
     // 댓글 조회
     @Override
     public List<FbcResponse> findList(int id) {

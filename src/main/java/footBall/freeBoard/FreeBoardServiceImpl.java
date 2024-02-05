@@ -23,4 +23,15 @@ public class FreeBoardServiceImpl implements FreeBoardService{
     public FreeBoardResponse findOne(int freeBoardId) {
         return sqlSession.selectOne("FreeBoardMapper.findOne",freeBoardId);
     }
+    //글 수정
+    @Override
+    public int boardUpdate(FreeBoardRequest dto) {
+        return sqlSession.update("FreeBoardMapper.boardUpdate",dto);
+    }
+
+    //글 삭제
+    @Override
+    public int deleteOne(int id) {
+        return sqlSession.delete("FreeBoardMapper.deleteOne",id);
+    }
 }

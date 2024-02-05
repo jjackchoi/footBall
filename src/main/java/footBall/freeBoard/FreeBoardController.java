@@ -48,6 +48,22 @@ public class FreeBoardController {
             return "false";
         }
     }
+    // 글 수정
+    @ResponseBody
+    @PostMapping("/freeBoard/update")
+    public String update(HttpSession session,FreeBoardRequest dto){
+        List<UserResponse> entityList = userService.findOne((Integer) session.getAttribute("userId"));
+        dto.setFreeBoardId(dto.getFreeBoardId());
+        dto.setFbUserId((Integer) session.getAttribute("userId"));
+        dto.setFreeBoardAuthor(entityList.get(0).getFbUserNickname());
+        int Success = freeBoardService.boardUpdate(dto);
+        if(Success != 0){
+            return "success";
+        }else {
+            return "false";
+        }
+    }
+    // 글 단건조회
     @GetMapping("/freeBoard/details/{id}")
     public String boardOne(@PathVariable int id, Model model){
         FreeBoardResponse param = freeBoardService.findOne(id);
@@ -57,4 +73,21 @@ public class FreeBoardController {
         model.addAttribute("comments",comment);
         return "freeBoard/freeBoardDetails";
     }
+    // 글 삭제
+    @GetMapping("/freeBoard/delete/{id}")
+    public String deleteOne(@PathVariable int id, Model model){
+        List<FbcResponse> list = fbcService.findList(id);
+        if(list.size() > 0){ //댓글데이터 있을시에 삭제하고 넘어감(종속되어있어서 fk)
+            fbcService.deleteList(id);
+        }
+        int success = freeBoardService.deleteOne(id);
+        if(success != 0){
+            //성공
+        }else {
+            //실패
+        }
+        
+        return "redirect:/freeBoard";
+    }
+
 }

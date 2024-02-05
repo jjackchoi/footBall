@@ -38,4 +38,11 @@
         from free_board_comment
         where FREE_BOARD_ID = #{freeBoardId}
     </select>
+
+    <!--댓글 삭제-->
+    <delete id="fbcdeleteList" parameterType="int">
+        DELETE FROM free_board_comment
+        WHERE FREE_BOARD_ID = #{freeBoardId}
+
+    </delete>
 </mapper>

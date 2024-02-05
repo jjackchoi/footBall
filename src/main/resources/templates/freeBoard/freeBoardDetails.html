@@ -28,8 +28,10 @@
                     <div th:unless="${post}">
                         <p>게시물이 존재하지 않습니다.</p>
                     </div>
-                    <button type="submit" class="btn btn-primary mt-2" >수정</button>
-                    <button type="submit" class="btn btn-danger mt-2" >삭제</button>
+                    <div th:if="${post.getFreeBoardAuthor()} == ${session.userNickname}">
+                    <button type="button" class="btn btn-primary mt-2" data-toggle="modal" onclick="openModal()">수정</button>
+                    <a th:href="@{'/freeBoard/delete/' + ${post.freeBoardId}}"><button type="button" class="btn btn-danger mt-2" >삭제</button></a>
+                    </div>
                     </form>
                 </div>
             </div>
@@ -52,45 +54,84 @@
         <button type="submit" class="btn btn-primary mt-2" >댓글 작성</button>
     </form>
 
+    <th:block layout:fragment="modal">
+        <!-- 글 작성 팝업 모달 -->
+        <div class="modal fade" id="writePostModal" tabindex="-1" role="dialog" aria-labelledby="writePostModalLabel"
+             aria-hidden="true" th:fragment="modal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="writePostModalLabel">자유게시판 글 수정</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModal()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- 글 작성 폼 -->
+                        <form id="postForm">
+                            <label for="freeBoardTitle">제목</label>
+                            <input id="freeBoardTitle" name="freeBoardTitle" class="form-control" th:value="${post.freeBoardTitle}">
+                            <label for="freeBoardText">내용</label>
+                            <textarea id="freeBoardText" name="freeBoardText" rows="8" class="form-control" th:text="${post.getFreeBoardText()}"></textarea>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModal()">닫기</button>
+                        <button type="button" class="btn btn-primary" onclick="submitPostForm()">수정</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </th:block>
+
 </th:block>
 
 <th:block layout:fragment="script">
     <script th:inline="javascript">
-        var userId = /*[[${session.userNickName}]]*/ null; // 세션의 userId 값을 가져옴
+        var userId = /*[[${session.userId}]]*/ null; // 세션의 userId 값을 가져옴
 
-        <!-- 댓글 작성 완료 시 실행되는 스크립트 -->
+        function openModal() {
+            // 세션의 userId 값이 null이면 알림 창 띄우기, 그렇지 않으면 모달 열기
+            if (userId === null) {
+                alert('로그인이 필요합니다!');
+            } else {
+                $('#writePostModal').modal('show');
+            }
+        }
+
+        function closeModal() {
+             $('#writePostModal').modal('hide');
+        }
+
+        <!-- 글 수정 완료 시 실행되는 스크립트 -->
         function submitPostForm() {
-
-
             var freeBoardId = $('#freeBoardId').val();
-            console.log(freeBoardId);
-            var fbcAuthor = $('#fbcAuthor').val();
-            console.log(fbcAuthor);
-<!--            var freeBoardText = $('#freeBoardText').val();-->
-<!--            if(freeBoardTitle == "" || freeBoardTitle == null){-->
-<!--                alert("제목을 입력해주세요");-->
-<!--                return;-->
-<!--            }-->
-<!--            if(freeBoardText == "" || freeBoardText == null){-->
-<!--                alert("내용을 입력해주세요");-->
-<!--                return;-->
-<!--            }-->
+            var freeBoardTitle = $('#freeBoardTitle').val();
+            var freeBoardText = $('#freeBoardText').val();
+            if(freeBoardTitle == "" || freeBoardTitle == null){
+                alert("제목을 입력해주세요");
+                return;
+            }
+            if(freeBoardText == "" || freeBoardText == null){
+                alert("내용을 입력해주세요");
+                return;
+            }
 
-            // 글 작성 완료 후 서버로 데이터 전송 (Ajax를 사용하여 비동기 처리)
-<!--            $.ajax({-->
-<!--                type: 'POST',-->
-<!--                url: '/freeBoard/create', // 실제로 데이터를 저장하는 엔드포인트로 변경해야 합니다.-->
-<!--                data: {freeBoardTitle: freeBoardTitle, freeBoardText: freeBoardText},-->
-<!--                success: function () {-->
-<!--                    // 작성 완료 후 팝업 닫기-->
-<!--                    $('#writePostModal').modal('hide');-->
-<!--                    // 메인 화면 새로고침-->
-<!--                    location.reload();-->
-<!--                },-->
-<!--                error: function () {-->
-<!--                    alert('글 작성 실패');-->
-<!--                }-->
-<!--            });-->
+            // 글 수정 완료 후 서버로 데이터 전송 (Ajax를 사용하여 비동기 처리)
+            $.ajax({
+                type: 'POST',
+                url: '/freeBoard/update', // 실제로 데이터를 저장하는 엔드포인트로 변경해야 합니다.
+                data: {freeBoardTitle: freeBoardTitle, freeBoardText: freeBoardText,freeBoardId:freeBoardId},
+                success: function () {
+                    // 작성 완료 후 팝업 닫기
+                    $('#writePostModal').modal('hide');
+                    // 메인 화면 새로고침
+                    location.reload();
+                },
+                error: function () {
+                    alert('글 작성 실패');
+                }
+            });
         }
     </script>
 </th:block>

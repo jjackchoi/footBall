@@ -44,11 +44,13 @@ public class UserServiceImpl implements UserService{
         return 0;
     }
 
+    // 닉네임 조회
     @Override
     public String findNickname(int id) {
         return sqlSession.selectOne("UserMapper.findNickname",id);
     }
 
+    // 정보조회
     @Override
     public List<UserResponse> findOne(Integer id) {
         return sqlSession.selectList("UserMapper.findOne",id);

@@ -17,8 +17,10 @@ public interface UserService {
 
     // 로그인
     int login(UserRequest dto);
-
+    
+    // 닉네임 조회
     String findNickname(int id);
 
+    //정보 조회
     List<UserResponse> findOne(Integer id);
 }

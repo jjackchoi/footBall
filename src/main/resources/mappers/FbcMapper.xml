@@ -14,6 +14,7 @@
         ,fbc_del_yn
     </sql>
 
+    <!--댓글 작성-->
     <insert id="fbcCreate" parameterType="footBall.freeBoardComment.FbcRequest">
         INSERT INTO free_board_comment
         (FREE_BOARD_ID
@@ -30,6 +31,8 @@
         ,now()
         ,'N');
     </insert>
+
+    <!--댓글 조회<리스트>-->
     <select id="findList" parameterType="int" resultType="footBall.freeBoardComment.FbcResponse">
         select *
         from free_board_comment

@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class FbcController {
     @Autowired
     private FbcServiceImpl fbcService;
-
+    
+    // 댓글 작성
     @PostMapping("/freeBoard/fbcCreate")
     public String fbcCreate(FbcRequest dto){
         int success = fbcService.insert(dto);

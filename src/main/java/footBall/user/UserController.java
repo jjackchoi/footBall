@@ -81,6 +81,8 @@ public class UserController {
         session.setAttribute("userNickname", fbUserNickname);
         return "redirect:/";
     }
+
+    // 로그아웃 시
     @GetMapping("/logout")
     public String logOut(HttpSession session){
         if((Integer)session.getAttribute("userId") != null){
@@ -89,6 +91,12 @@ public class UserController {
         }else {
             return "login";
         }
+    }
+
+    // 내정보화면
+    @GetMapping("/myPage")
+    public String myPage(){
+        return "myPage";
     }
 
     // 메인화면

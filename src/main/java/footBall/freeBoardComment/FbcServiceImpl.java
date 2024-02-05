@@ -10,11 +10,14 @@ import java.util.List;
 public class FbcServiceImpl implements FbcService {
     @Autowired
     private SqlSession sqlSession;
+    
+    // 댓글 작성
     @Override
     public int insert(FbcRequest dto) {
         return sqlSession.insert("FbcMapper.fbcCreate",dto);
     }
 
+    // 댓글 조회
     @Override
     public List<FbcResponse> findList(int id) {
         return sqlSession.selectList("FbcMapper.findList",id);

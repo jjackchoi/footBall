@@ -27,6 +27,12 @@
             free_board_id desc
     </select>
 
+    <select id="findOne" parameterType="footBall.freeBoard.FreeBoardRequest" resultType="footBall.freeBoard.FreeBoardResponse">
+        select *
+        from free_board
+        where FREE_BOARD_ID = #{freeBoardId}
+    </select>
+
     <insert id="boardCreate" parameterType="footBall.freeBoard.FreeBoardRequest">
         INSERT INTO FREE_BOARD (
                                  FB_USER_ID

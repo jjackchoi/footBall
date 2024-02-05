@@ -14,4 +14,25 @@
         ,fbc_del_yn
     </sql>
 
+    <insert id="fbcCreate" parameterType="footBall.freeBoardComment.FbcRequest">
+        INSERT INTO free_board_comment
+        (FREE_BOARD_ID
+        ,FBC_AUTHOR
+        ,FBC_TEXT
+        ,FBC_REG_DATE
+        ,FBC_MOD_DATE
+        ,FBC_DEL_YN)
+        VALUES (
+        #{freeBoardId}
+        ,#{fbcAuthor}
+        ,#{fbcText}
+        ,now()
+        ,now()
+        ,'N');
+    </insert>
+    <select id="findList" parameterType="int" resultType="footBall.freeBoardComment.FbcResponse">
+        select *
+        from free_board_comment
+        where FREE_BOARD_ID = #{freeBoardId}
+    </select>
 </mapper>

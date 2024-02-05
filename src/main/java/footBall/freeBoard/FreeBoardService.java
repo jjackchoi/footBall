@@ -6,4 +6,6 @@ public interface FreeBoardService {
     List<FreeBoardResponse> findAll();
 
     int boardCreate(FreeBoardRequest dto);
+
+    FreeBoardResponse findOne(int id);
 }

@@ -19,4 +19,8 @@ public class FreeBoardServiceImpl implements FreeBoardService{
     public int boardCreate(FreeBoardRequest dto) {
         return sqlSession.insert("FreeBoardMapper.boardCreate",dto);
     }
+    @Override
+    public FreeBoardResponse findOne(int freeBoardId) {
+        return sqlSession.selectOne("FreeBoardMapper.findOne",freeBoardId);
+    }
 }

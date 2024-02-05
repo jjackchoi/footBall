@@ -1,15 +1,14 @@
 package footBall.freeBoard;
 
+import footBall.freeBoardComment.FbcResponse;
+import footBall.freeBoardComment.FbcService;
 import footBall.user.UserResponse;
 import footBall.user.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,6 +19,9 @@ public class FreeBoardController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    FbcService fbcService;
+
 
     // 자유게시판 페이지
     @GetMapping("/freeBoard")
@@ -45,5 +47,14 @@ public class FreeBoardController {
         }else {
             return "false";
         }
+    }
+    @GetMapping("/freeBoard/details/{id}")
+    public String boardOne(@PathVariable int id, Model model){
+        FreeBoardResponse param = freeBoardService.findOne(id);
+        System.out.println(param);
+        List<FbcResponse> comment = fbcService.findList(id);
+        model.addAttribute("post",param);
+        model.addAttribute("comments",comment);
+        return "freeBoard/freeBoardDetails";
     }
 }

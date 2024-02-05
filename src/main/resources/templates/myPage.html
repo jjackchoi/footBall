@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/basic">
+
+<th:block layout:fragment="title">
+    <title>자유게시판</title>
+</th:block>
+
+<th:block layout:fragment="content">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <center><h1 style="margin-bottom: 40px;">내 정보보기</h1></center>
+
+                <div class="row g-3 align-items-center mb-3">
+                    <div class="col-md-4 text-end">
+                        <label for="inputEmail" class="col-form-label">이메일 :</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="email" id="inputEmail" class="form-control" aria-describedby="passwordHelpInline" disabled>
+                    </div>
+                </div>
+
+                <div class="row g-3 align-items-center mb-3">
+                    <div class="col-md-4 text-end">
+                        <label for="inputNickname" class="col-form-label">닉네임 :</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="text" id="inputNickname" class="form-control" aria-describedby="passwordHelpInline" >
+                    </div>
+                </div>
+
+                <div class="row g-3 align-items-center mb-3">
+                    <div class="col-md-4 text-end">
+                        <label for="inputPassword" class="col-form-label">비밀번호 :</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="password" id="inputPassword" class="form-control" aria-describedby="passwordHelpInline">
+                    </div>
+                </div>
+
+                <div class="row g-3 align-items-center mb-3">
+                    <div class="col-md-4 text-end">
+                        <label for="inputName" class="col-form-label">이름 :</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="text" id="inputName" class="form-control" aria-describedby="passwordHelpInline">
+                    </div>
+                </div>
+
+                <div class="row g-3 align-items-center mb-3">
+                    <div class="col-md-4 text-end">
+                        <label for="inputbirth" class="col-form-label">생일 :</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="text" id="inputbirth" class="form-control" aria-describedby="passwordHelpInline">
+                    </div>
+                </div>
+
+                <div class="row g-3 align-items-center mb-3">
+                    <div class="col-md-4 text-end">
+                        <label for="inputPhone" class="col-form-label">핸드폰번호 :</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="number" id="inputPhone" class="form-control" aria-describedby="passwordHelpInline">
+                    </div>
+                </div>
+
+                <div class="row g-3 align-items-center mb-3">
+                    <div class="col-md-4 text-end">
+                        <label for="inputAddress" class="col-form-label">주소 :</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="text" id="inputAddress" class="form-control" aria-describedby="passwordHelpInline">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</th:block>
+</th:block>
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+
+    </script>
+</th:block>
+
+</html>

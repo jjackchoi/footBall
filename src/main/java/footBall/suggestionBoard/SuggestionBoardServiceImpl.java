@@ -1,0 +1,24 @@
+package footBall.suggestionBoard;
+
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class SuggestionBoardServiceImpl implements SuggestionBoardService{
+    @Autowired
+    private SqlSession sqlSession;
+
+    // 전체 조회
+    @Override
+    public List<SuggestionBoardResponse> findAll(){
+        return sqlSession.selectList("SuggestionBoardMapper.findAll");
+    }
+
+    @Override
+    public int create(SuggestionBoardRequest dto) {
+        return sqlSession.insert("SuggestionBoardMapper.create", dto);
+    }
+}

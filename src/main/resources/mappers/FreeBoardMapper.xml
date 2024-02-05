@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="FreeBoardMapper">
 
-    <!--유저 테이블 전체 칼럼-->
+    <!--자유게시판 테이블 전체 칼럼-->
     <sql id="boardColumns">
          free_board_id
         ,fb_user_id
@@ -16,26 +16,33 @@
         ,free_board_del_yn
     </sql>
 
+    <!--자유게시판 전체조회-->
     <select id="findAll" resultType="footBall.freeBoard.FreeBoardResponse">
         select
             <include refid="boardColumns" />
         from
             free_board
         where 1=1
-            and free_board_del_yn = 0
+            and free_board_del_yn = 'N'
         order by
             free_board_id desc
     </select>
 
+    <!--아이디로 게시판 조회-->
     <select id="findOne" parameterType="footBall.freeBoard.FreeBoardRequest" resultType="footBall.freeBoard.FreeBoardResponse">
-        select *
-        from free_board
-        where FREE_BOARD_ID = #{freeBoardId}
+        select
+            <include refid="boardColumns" />
+        from
+            free_board
+        where
+            FREE_BOARD_ID = #{freeBoardId}
+            and free_board_del_yn = 'N'
     </select>
 
+    <!--게시글 작성-->
     <insert id="boardCreate" parameterType="footBall.freeBoard.FreeBoardRequest">
         INSERT INTO FREE_BOARD (
-                                 FB_USER_ID
+                                FB_USER_ID
                                ,FREE_BOARD_AUTHOR
                                ,FREE_BOARD_TITLE
                                ,FREE_BOARD_TEXT

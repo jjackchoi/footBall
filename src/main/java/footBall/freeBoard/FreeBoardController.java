@@ -37,10 +37,9 @@ public class FreeBoardController {
     @ResponseBody
     @PostMapping("/freeBoard/create")
     public String create(HttpSession session,FreeBoardRequest dto){
-        List<UserResponse> entityList = userService.findOne((Integer) session.getAttribute("userId"));
+        UserResponse entity = userService.findOne((Integer) session.getAttribute("userId"));
         dto.setFbUserId((Integer) session.getAttribute("userId"));
-        dto.setFbUserId(entityList.get(0).getFbUserId());
-        dto.setFreeBoardAuthor(entityList.get(0).getFbUserNickname());
+        dto.setFreeBoardAuthor(entity.getFbUserNickname());
         int Success = freeBoardService.boardCreate(dto);
         if(Success != 0){
             return "success";
@@ -52,10 +51,10 @@ public class FreeBoardController {
     @ResponseBody
     @PostMapping("/freeBoard/update")
     public String update(HttpSession session,FreeBoardRequest dto){
-        List<UserResponse> entityList = userService.findOne((Integer) session.getAttribute("userId"));
+        UserResponse entity = userService.findOne((Integer) session.getAttribute("userId"));
         dto.setFreeBoardId(dto.getFreeBoardId());
         dto.setFbUserId((Integer) session.getAttribute("userId"));
-        dto.setFreeBoardAuthor(entityList.get(0).getFbUserNickname());
+        dto.setFreeBoardAuthor(entity.getFbUserNickname());
         int Success = freeBoardService.boardUpdate(dto);
         if(Success != 0){
             return "success";

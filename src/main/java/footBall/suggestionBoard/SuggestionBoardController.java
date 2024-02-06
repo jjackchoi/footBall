@@ -34,10 +34,9 @@ public class SuggestionBoardController {
     @ResponseBody
     @PostMapping("/suggestionBoard/create")
     public String create(HttpSession session, SuggestionBoardRequest dto){
-        List<UserResponse> entityList = userService.findOne((Integer) session.getAttribute("userId"));
+        UserResponse entity = userService.findOne((Integer) session.getAttribute("userId"));
         dto.setFbUserId((Integer) session.getAttribute("userId"));
-        dto.setFbUserId(entityList.get(0).getFbUserId());
-        dto.setSuggestionBoardAuthor(entityList.get(0).getFbUserNickname());
+        dto.setSuggestionBoardAuthor(entity.getFbUserNickname());
         int Success = suggestionBoardService.create(dto);
         if(Success != 0){
             return "success";

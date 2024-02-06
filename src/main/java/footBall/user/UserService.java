@@ -22,5 +22,5 @@ public interface UserService {
     String findNickname(int id);
 
     //정보 조회
-    List<UserResponse> findOne(Integer id);
+    UserResponse findOne(Integer id);
 }

@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService{
 
     // 정보조회
     @Override
-    public List<UserResponse> findOne(Integer id) {
-        return sqlSession.selectList("UserMapper.findOne",id);
+    public UserResponse findOne(Integer id) {
+        return sqlSession.selectOne("UserMapper.findOne",id);
     }
 }

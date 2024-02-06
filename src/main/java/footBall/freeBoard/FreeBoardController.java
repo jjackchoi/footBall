@@ -20,7 +20,7 @@ public class FreeBoardController {
     @Autowired
     private UserService userService;
     @Autowired
-    FbcService fbcService;
+    private FbcService fbcService;
 
 
     // 자유게시판 페이지

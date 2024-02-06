@@ -30,7 +30,8 @@
                     </div>
                     <div th:if="${post.getFreeBoardAuthor()} == ${session.userNickname}">
                     <button type="button" class="btn btn-primary mt-2" data-toggle="modal" onclick="openModal()">수정</button>
-                    <a th:href="@{'/freeBoard/delete/' + ${post.freeBoardId}}"><button type="button" class="btn btn-danger mt-2" >삭제</button></a>
+<!--                    <a th:href="@{'/freeBoard/delete/' + ${post.freeBoardId}}"><button type="button" class="btn btn-danger mt-2">삭제</button></a>-->
+                    <button type="button" class="btn btn-danger mt-2" id="deleteBtn">삭제</button>
                     </div>
                     </form>
                 </div>
@@ -133,6 +134,25 @@
                 }
             });
         }
+
+        document.querySelector('#deleteBtn').addEventListener('click', function(){
+            const boardId = [[ ${post.freeBoardId} ]];
+
+            if( !confirm(boardId + '번 게시글을 삭제할까요?')){
+                return false;
+            }
+
+            const formHtml = `
+                <form action="/freeBoard/delete" id="deleteForm" method="post">
+                    <input type="hidden" id="boardId" name="freeBoardId" value="${boardId}" />
+                </form>
+            `;
+            const doc = new DOMParser().parseFromString(formHtml, 'text/html');
+            const form = doc.body.firstChild;
+            document.body.append(form);
+            document.getElementById('deleteForm').submit();
+            alert(boardId + '번 게시글이 삭제되었습니다.');
+        });
     </script>
 </th:block>
 </html>

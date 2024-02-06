@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class FreeBoardController {
@@ -73,19 +74,16 @@ public class FreeBoardController {
         return "freeBoard/freeBoardDetails";
     }
     // 글 삭제
-    @GetMapping("/freeBoard/delete/{id}")
-    public String deleteOne(@PathVariable int id, Model model){
-        List<FbcResponse> list = fbcService.findList(id);
-        if(list.size() > 0){ //댓글데이터 있을시에 삭제하고 넘어감(종속되어있어서 fk)
-            fbcService.deleteList(id);
+    @PostMapping("/freeBoard/delete")
+    public String deleteOne(int freeBoardId){
+        List<FbcResponse> list = fbcService.findList(freeBoardId);
+        if(list.size() == 0) { // 댓글 없을 시 바로 삭제
+            freeBoardService.deleteOne(freeBoardId);
+            return "redirect:/freeBoard";
         }
-        int success = freeBoardService.deleteOne(id);
-        if(success != 0){
-            //성공
-        }else {
-            //실패
-        }
-        
+        // 댓글데이터 있을시에 삭제하고 넘어감(종속되어있어서 fk)
+        fbcService.deleteList(freeBoardId);
+        freeBoardService.deleteOne(freeBoardId);
         return "redirect:/freeBoard";
     }
 

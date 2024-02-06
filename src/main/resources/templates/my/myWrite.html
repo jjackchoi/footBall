@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/basic">
+
+<th:block layout:fragment="title">
+    <title>자유게시판</title>
+</th:block>
+
+<th:block layout:fragment="content">
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-table me-1"></i>
+            자유게시판
+        </div>
+        <div class="card-body">
+            <table id="datatablesSimple">
+                <thead>
+                <tr>
+                    <th>글작성자</th>
+                    <th>글제목</th>
+                    <th>글내용</th>
+                    <th>작성일자</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="post : ${posts}">
+                    <td th:text="${post.getFreeBoardAuthor()}"></td>
+                    <td>
+                        <a th:href="@{'/freeBoard/details/' + ${post.freeBoardId}}">
+                            <span th:text="${post.freeBoardTitle}"></span>
+                        </a>
+                    </td>
+                    <td th:text="${post.getFreeBoardText()}"></td>
+                    <td th:if="${post.freeBoardRegDate != null}" th:text="${#temporals.format(post.freeBoardRegDate, 'yyyy-MM-dd HH시 mm분')}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-table me-1"></i>
+            건의게시판
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>작성자</th>
+                    <th>제목</th>
+                    <th>내용</th>
+                    <th>작성일자</th>
+                </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                <tr th:each="subPost : ${subPosts}">
+                    <td th:text="${subPost.getSuggestionBoardAuthor()}"></td>
+                    <td>
+                        <a th:href="@{'/suggestionBoard/' + ${subPost.suggestionBoardId}}">
+                            <span th:text="${subPost.getSuggestionBoardTitle()}"></span>
+                        </a>
+                    </td>
+                    <td th:text="${subPost.getSuggestionBoardText()}"></td>
+                    <td th:if="${subPost.suggestionBoardRegDate != null}" th:text="${#temporals.format(subPost.suggestionBoardRegDate, 'yyyy-MM-dd HH시 mm분')}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</th:block>
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        var userId = /*[[${session.userId}]]*/ null; // 세션의 userId 값을 가져옴
+
+        function openModal() {
+            // 세션의 userId 값이 null이면 알림 창 띄우기, 그렇지 않으면 모달 열기
+            if (userId === null) {
+                alert('로그인이 필요합니다!');
+            } else {
+                $('#writePostModal').modal('show');
+            }
+        }
+
+        function closeModal() {
+             $('#writePostModal').modal('hide');
+        }
+
+        <!-- 글 작성 완료 시 실행되는 스크립트 -->
+        function submitPostForm() {
+            var freeBoardTitle = $('#freeBoardTitle').val();
+            var freeBoardText = $('#freeBoardText').val();
+            if(freeBoardTitle == "" || freeBoardTitle == null){
+                alert("제목을 입력해주세요");
+                return;
+            }
+            if(freeBoardText == "" || freeBoardText == null){
+                alert("내용을 입력해주세요");
+                return;
+            }
+
+            // 글 작성 완료 후 서버로 데이터 전송 (Ajax를 사용하여 비동기 처리)
+            $.ajax({
+                type: 'POST',
+                url: '/freeBoard/create', // 실제로 데이터를 저장하는 엔드포인트로 변경해야 합니다.
+                data: {freeBoardTitle: freeBoardTitle, freeBoardText: freeBoardText},
+                success: function (result) {
+                    // 작성 완료 후 팝업 닫기
+                    $('#writePostModal').modal('hide');
+                    // 메인 화면 새로고침
+                    location.reload();
+                },
+                error: function () {
+                    alert('글 작성 실패');
+                }
+            });
+        }
+    </script>
+</th:block>
+
+</html>

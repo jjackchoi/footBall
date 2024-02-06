@@ -34,4 +34,10 @@ public class FreeBoardServiceImpl implements FreeBoardService{
     public int deleteOne(int id) {
         return sqlSession.delete("FreeBoardMapper.deleteOne",id);
     }
+
+    // 내가쓴글조회
+    @Override
+    public List<FreeBoardResponse> findByUserId(Integer userId) {
+        return sqlSession.selectList("FreeBoardMapper.findByUserId",userId);
+    }
 }

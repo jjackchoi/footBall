@@ -20,7 +20,7 @@
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                 <li><a class="dropdown-item" href="#!" th:if = "${session.userId} != null" th:text = "${session.userNickname}"></a></li>
                 <li><a class="dropdown-item" th:href="@{'/myPage'}" th:if = "${session.userId} != null">내정보</a></li>
-                <li><a class="dropdown-item" href="#!" th:if = "${session.userId} != null">내가쓴글보기</a></li>
+                <li><a class="dropdown-item" th:href="@{'/board/myWrite'}" th:if = "${session.userId} != null">내가쓴글보기</a></li>
                 <li>
                     <hr class="dropdown-divider"/>
                 </li>

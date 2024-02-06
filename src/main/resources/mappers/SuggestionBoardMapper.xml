@@ -63,4 +63,14 @@
         and suggestion_board_id = #{id}
     </select>
 
+    <!--내가 쓴글 조회-->
+    <select id="findByUserId" parameterType="int" resultType="footBall.suggestionBoard.SuggestionBoardResponse">
+        select
+            <include refid="boardColumns" />
+        from suggestion_board
+        where 1=1
+        and suggestion_board_del_yn = 'N'
+        and FB_USER_ID = #{fbUserId}
+    </select>
+
 </mapper>

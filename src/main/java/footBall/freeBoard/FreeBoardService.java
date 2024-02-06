@@ -17,4 +17,7 @@ public interface FreeBoardService {
 
     // 글 삭제
     int deleteOne(int id);
+
+    // 내가쓴글조회
+    List<FreeBoardResponse> findByUserId(Integer userId);
 }

@@ -74,4 +74,15 @@
            ,FREE_BOARD_MOD_DATE = now()
         WHERE FREE_BOARD_ID = #{freeBoardId}
     </update>
+
+    <!--내가 쓴글 조회-->
+    <select id="findByUserId" parameterType="int" resultType="footBall.freeBoard.FreeBoardResponse">
+        select
+        <include refid="boardColumns" />
+        from
+        free_board
+        where 1=1
+        and free_board_del_yn = 'N'
+        and FB_USER_ID = #{fbUserId}
+    </select>
 </mapper>

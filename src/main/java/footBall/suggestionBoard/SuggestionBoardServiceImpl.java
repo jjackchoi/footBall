@@ -28,4 +28,10 @@ public class SuggestionBoardServiceImpl implements SuggestionBoardService{
     public SuggestionBoardResponse findById(int id) {
         return sqlSession.selectOne("SuggestionBoardMapper.findById", id);
     }
+
+    // 내가쓴글조회
+    @Override
+    public List<SuggestionBoardResponse> findByUserId(int id) {
+        return sqlSession.selectList("SuggestionBoardMapper.findByUserId", id);
+    }
 }

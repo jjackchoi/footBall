@@ -12,4 +12,7 @@ public interface SuggestionBoardService {
 
     // 게시글 상세 조회
     SuggestionBoardResponse findById(int id);
+
+    // 내가쓴글조회
+    List<SuggestionBoardResponse> findByUserId(int id);
 }

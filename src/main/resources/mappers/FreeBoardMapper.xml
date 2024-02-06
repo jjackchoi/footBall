@@ -63,7 +63,7 @@
         UPDATE free_board
         SET FREE_BOARD_TITLE = #{freeBoardTitle}
            ,FREE_BOARD_TEXT = #{freeBoardText}
-           ,FREE_BOARD_REG_DATE = now()
+           ,FREE_BOARD_MOD_DATE = now()
         WHERE FREE_BOARD_ID = #{freeBoardId};
     </update>
 

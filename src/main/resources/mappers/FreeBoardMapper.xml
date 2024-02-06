@@ -68,8 +68,10 @@
     </update>
 
     <!--글 삭제-->
-    <delete id="deleteOne" parameterType="int">
-        DELETE FROM free_board
+    <update id="deleteOne" parameterType="int">
+        UPDATE free_board
+        SET FREE_BOARD_DEL_YN = 'Y'
+           ,FREE_BOARD_MOD_DATE = now()
         WHERE FREE_BOARD_ID = #{freeBoardId}
-    </delete>
+    </update>
 </mapper>

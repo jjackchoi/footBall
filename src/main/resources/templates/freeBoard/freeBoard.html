@@ -117,7 +117,7 @@
             // 글 작성 완료 후 서버로 데이터 전송 (Ajax를 사용하여 비동기 처리)
             $.ajax({
                 type: 'POST',
-                url: '/freeBoard/create', // 실제로 데이터를 저장하는 엔드포인트로 변경해야 합니다.
+                url: '/freeBoard/save', // 실제로 데이터를 저장하는 엔드포인트로 변경해야 합니다.
                 data: {freeBoardTitle: freeBoardTitle, freeBoardText: freeBoardText},
                 success: function (result) {
                     // 작성 완료 후 팝업 닫기

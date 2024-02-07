@@ -15,6 +15,7 @@ public class SuggestionBoardResponse {
     private LocalDateTime suggestionBoardRegDate; // 건의게시판 작성시간
     private LocalDateTime suggestionBoardModDate; // 건의게시판 수정시간
     private String suggestionBoardImgPath; // 건의게시판 이미지
-    private Boolean suggestionBoardDelYn; // 건의게시판 삭제여부
+    private boolean suggestionBoardDelYn; // 건의게시판 삭제여부
+    private String suggestionBoardSolYn; // 건의게시판 해결여부
 
 }

@@ -31,6 +31,7 @@
                     <th>제목</th>
                     <th>내용</th>
                     <th>작성일자</th>
+                    <th>해결여부</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -43,7 +44,12 @@
                     </td>
                     <td th:text="${post.getSuggestionBoardText()}"></td>
                     <td th:if="${post.suggestionBoardRegDate != null}" th:text="${#temporals.format(post.suggestionBoardRegDate, 'yyyy-MM-dd HH시 mm분')}"></td>
-                </tr>
+                    <th:block th:if="${post.suggestionBoardSolYn == 'N'}">
+                        <td>미해결</td>
+                    </th:block>
+                    <th:block th:if="${post.suggestionBoardSolYn == 'Y'}">
+                        <td>해결</td>
+                    </th:block>
                 </tbody>
             </table>
         </div>

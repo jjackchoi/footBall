@@ -33,37 +33,7 @@ public class FreeBoardController {
         }
         return "freeBoard/freeBoard";
     }
-
-    // 글 작성
-    @ResponseBody
-    @PostMapping("/freeBoard/create")
-    public String create(HttpSession session,FreeBoardRequest dto){
-        UserResponse entity = userService.findOne((Integer) session.getAttribute("userId"));
-        dto.setFbUserId((Integer) session.getAttribute("userId"));
-        dto.setFreeBoardAuthor(entity.getFbUserNickname());
-        int Success = freeBoardService.boardCreate(dto);
-        if(Success != 0){
-            return "success";
-        }else {
-            return "false";
-        }
-    }
-
-    // 글 수정
-    @ResponseBody
-    @PostMapping("/freeBoard/update")
-    public String update(HttpSession session,FreeBoardRequest dto){
-        UserResponse entity = userService.findOne((Integer) session.getAttribute("userId"));
-        dto.setFbUserId((Integer) session.getAttribute("userId"));
-        dto.setFreeBoardAuthor(entity.getFbUserNickname());
-        int Success = freeBoardService.boardUpdate(dto);
-        if(Success != 0){
-            return "success";
-        }else {
-            return "false";
-        }
-    }
-
+    
     // 글 작성 및 수정
     @ResponseBody
     @PostMapping("/freeBoard/save")

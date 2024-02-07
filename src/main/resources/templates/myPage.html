@@ -16,7 +16,7 @@
                         <label for="inputEmail" class="col-form-label">이메일 :</label>
                     </div>
                     <div class="col-md-8">
-                        <input type="email" id="inputEmail" class="form-control" aria-describedby="passwordHelpInline" disabled>
+                        <input type="email" id="inputEmail" class="form-control" aria-describedby="passwordHelpInline" th:value="${user.getFbUserEmail()}" disabled>
                     </div>
                 </div>
 
@@ -25,7 +25,7 @@
                         <label for="inputNickname" class="col-form-label">닉네임 :</label>
                     </div>
                     <div class="col-md-8">
-                        <input type="text" id="inputNickname" class="form-control" aria-describedby="passwordHelpInline" >
+                        <input type="text" id="inputNickname" class="form-control" aria-describedby="passwordHelpInline" th:value="${user.getFbUserNickname()}" >
                     </div>
                 </div>
 
@@ -43,7 +43,7 @@
                         <label for="inputName" class="col-form-label">이름 :</label>
                     </div>
                     <div class="col-md-8">
-                        <input type="text" id="inputName" class="form-control" aria-describedby="passwordHelpInline">
+                        <input type="text" id="inputName" class="form-control" aria-describedby="passwordHelpInline" th:value="${user.getFbUserName()}">
                     </div>
                 </div>
 
@@ -52,7 +52,7 @@
                         <label for="inputbirth" class="col-form-label">생일 :</label>
                     </div>
                     <div class="col-md-8">
-                        <input type="text" id="inputbirth" class="form-control" aria-describedby="passwordHelpInline">
+                        <input type="text" id="inputbirth" class="form-control" aria-describedby="passwordHelpInline" th:value="${user.getFbUserBirth()}">
                     </div>
                 </div>
 
@@ -61,7 +61,7 @@
                         <label for="inputPhone" class="col-form-label">핸드폰번호 :</label>
                     </div>
                     <div class="col-md-8">
-                        <input type="number" id="inputPhone" class="form-control" aria-describedby="passwordHelpInline">
+                        <input type="number" id="inputPhone" class="form-control" aria-describedby="passwordHelpInline" th:value="${user.getFbUserPhone()}">
                     </div>
                 </div>
 
@@ -70,7 +70,7 @@
                         <label for="inputAddress" class="col-form-label">주소 :</label>
                     </div>
                     <div class="col-md-8">
-                        <input type="text" id="inputAddress" class="form-control" aria-describedby="passwordHelpInline">
+                        <input type="text" id="inputAddress" class="form-control" aria-describedby="passwordHelpInline" th:value="${user.getFbUserAddress()}">
                     </div>
                 </div>
 

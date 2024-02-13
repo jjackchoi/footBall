@@ -52,7 +52,7 @@
         <input type="hidden" id="fbcAuthor" name="fbcAuthor" th:value="${session.userNickname}" >
         <label for="commentText">댓글 작성</label>
         <textarea id="commentText" name="fbcText" rows="4" class="form-control" onkeydown="handleKeyPress(event)"></textarea>
-        <button type="submit" class="btn btn-primary mt-2" >댓글 작성</button>
+        <button type="button" class="btn btn-primary mt-2" onclick="dataSubmit()">댓글 작성</button>
     </form>
 
     <th:block layout:fragment="modal">
@@ -91,16 +91,21 @@
     <script th:inline="javascript">
         var userId = /*[[${session.userId}]]*/ null; // 세션의 userId 값을 가져옴
 
+        function dataSubmit() {
+            var commentText = document.getElementById("commentText").value;
+            if (commentText.trim() === "") {
+                 alert("댓글을 입력해주세요.");
+                 return; // 함수 실행 종료
+            }
+            var form = document.getElementById("commentForm");
+
+            // 폼을 제출합니다.
+            form.submit();
+        }
+
         function handleKeyPress(event) {
             if (event.keyCode === 13) { // 엔터 키의 keyCode는 13입니다.
-                // 폼을 선택합니다.
-                var form = document.getElementById("commentForm");
-
-                // 폼을 제출합니다.
-                form.submit();
-
-                // 여기에 엔터를 눌렀을 때 수행할 동작을 추가합니다.
-                // 예를 들어, 폼을 제출하거나 특정 함수를 호출할 수 있습니다.
+                dataSubmit();
             }
         }
 

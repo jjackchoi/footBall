@@ -5,6 +5,23 @@
     <title>건의게시판</title>
 </th:block>
 
+<th:block layout:fragment="add-css">
+    <style>
+        .suggestionTitle{
+            appearance: none;
+            font-family: inherit;
+            font-size: inherit;
+            border: 0px;
+            cursor: pointer;
+            background: none;
+            line-height: 1.5;
+        }
+        .suggestionText{
+            display: none;
+        }
+    </style>
+</th:block>
+
 <th:block layout:fragment="content">
     <h1 class="mt-4">건의게시판</h1>
     <div class="right" style="text-align: right">
@@ -28,28 +45,31 @@
                 <thead>
                 <tr>
                     <th>작성자</th>
-                    <th>제목</th>
+                    <th>답변여부</th>
                     <th>내용</th>
-                    <th>작성일자</th>
-                    <th>해결여부</th>
+                    <th>등록일자</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="post : ${posts}">
-                    <td th:text="${post.getSuggestionBoardAuthor()}"></td>
-                    <td>
-                        <a th:href="@{'/suggestionBoard/' + ${post.suggestionBoardId}}">
-                            <span th:text="${post.getSuggestionBoardTitle()}"></span>
-                        </a>
-                    </td>
-                    <td th:text="${post.getSuggestionBoardText()}"></td>
-                    <td th:if="${post.suggestionBoardRegDate != null}" th:text="${#temporals.format(post.suggestionBoardRegDate, 'yyyy-MM-dd HH시 mm분')}"></td>
-                    <th:block th:if="${post.suggestionBoardSolYn == 'N'}">
-                        <td>미해결</td>
-                    </th:block>
-                    <th:block th:if="${post.suggestionBoardSolYn == 'Y'}">
-                        <td>해결</td>
-                    </th:block>
+                <div th:each="post : ${posts}">
+                    <tr>
+                        <td th:text="${post.suggestionBoardAuthor}"></td>
+                        <th:block th:if="${post.suggestionBoardSolYn == 'N'}">
+                            <td style="font-weight: bold;">답변예정</td>
+                        </th:block>
+                        <th:block th:if="${post.suggestionBoardSolYn == 'Y'}">
+                            <td style="font-weight: bold;">답변완료</td>
+                        </th:block>
+                        <td>
+                            <button class="suggestionTitle" th:text="${post.suggestionBoardTitle}" onclick="toggleRow(this)">
+                            </button>
+                        </td>
+                        <td th:if="${post.suggestionBoardRegDate != null}" th:text="${#temporals.format(post.suggestionBoardRegDate, 'yyyy-MM-dd HH시 mm분')}"></td>
+                    </tr>
+                    <tr class="suggestionText">
+                        <td colspan="4" th:text="${post.suggestionBoardText}"></td>
+                    </tr>
+                </div>
                 </tbody>
             </table>
         </div>
@@ -131,6 +151,16 @@
                     alert('글 작성 실패');
                 }
             });
+        }
+
+        <!--글 제목 클릭 시 내용 노출-->
+        function toggleRow(button) {
+            var row = button.parentNode.parentNode.nextElementSibling;
+            if (row.classList.contains('suggestionText')) {
+                row.classList.remove('suggestionText');
+            } else {
+                row.classList.add('suggestionText');
+            }
         }
     </script>
 </th:block>

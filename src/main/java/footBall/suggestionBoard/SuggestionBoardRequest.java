@@ -2,8 +2,6 @@ package footBall.suggestionBoard;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 @Data
 public class SuggestionBoardRequest {
 
@@ -13,5 +11,6 @@ public class SuggestionBoardRequest {
     private String suggestionBoardTitle; // 건의게시판 제목
     private String suggestionBoardText; // 건의게시판 내용
     private String suggestionBoardImgPath; // 건의게시판 이미지
+    private String suggestionBoardSecYn; // 건의게시판 비밀글여부
 
 }

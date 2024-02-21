@@ -15,6 +15,7 @@
         ,suggestion_board_img_path
         ,suggestion_board_del_yn
         ,suggestion_board_sol_yn
+        ,suggestion_board_sec_yn
     </sql>
 
     <!--자유게시판 전체 조회-->
@@ -42,6 +43,7 @@
             ,suggestion_board_img_path
             ,suggestion_board_del_yn
             ,suggestion_board_sol_yn
+            ,suggestion_board_sec_yn
         )
         values(
             #{fbUserId}
@@ -53,6 +55,7 @@
             ,null
             ,'N'
             ,'N'
+            ,#{suggestionBoardSecYn}
         )
         ]]>
     </insert>

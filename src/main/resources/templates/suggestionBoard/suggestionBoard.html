@@ -19,6 +19,25 @@
         .suggestionText{
             display: none;
         }
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            margin-left: auto; /* 요소를 오른쪽으로 이동 */
+        }
+
+        .checkbox-wrapper input[type="checkbox"] {
+            margin-left: 5px;
+        }
+
+        .checkbox-wrapper label {
+            margin-left: 5px;
+            width: 50px;
+        }
     </style>
 </th:block>
 
@@ -92,7 +111,13 @@
                     <!-- 글 작성 폼 -->
                     <form id="postForm">
                         <label for="suggestionBoardTitle">제목</label>
-                        <input id="suggestionBoardTitle" name="suggestionBoardTitle" class="form-control">
+                        <div class="input-wrapper">
+                            <input id="suggestionBoardTitle" name="suggestionBoardTitle" class="form-control">
+                            <div class="checkbox-wrapper">
+                                <input type="checkbox" name="suggestionBoardSecYn" id="suggestionBoardSecYn" value="N">
+                                <label for="suggestionBoardSecYn">비밀글</label>
+                            </div>
+                        </div>
                         <label for="suggestionBoardText">내용</label>
                         <textarea id="suggestionBoardText" name="suggestionBoardText" rows="8" class="form-control"></textarea>
                     </form>
@@ -123,10 +148,25 @@
              $('#writePostModal').modal('hide');
         }
 
+        <!--게시글 작성 비밀글 여부 확인-->
+        document.addEventListener("DOMContentLoaded", function() {
+            let checkbox = document.getElementById("suggestionBoardSecYn");
+
+            checkbox.addEventListener("change", function() {
+                if (this.checked) {
+                    this.value = 'Y'; // 체크된 경우 'Y'로 설정
+                } else {
+                    this.value = 'N'; // 체크 해제된 경우 'N'으로 설정
+                }
+            });
+        });
+
         <!-- 글 작성 완료 시 실행되는 스크립트 -->
         function submitPostForm() {
-            var suggestionBoardTitle = $('#suggestionBoardTitle').val();
-            var suggestionBoardText = $('#suggestionBoardText').val();
+            let suggestionBoardTitle = document.getElementById('suggestionBoardTitle').value;
+            let suggestionBoardText = document.getElementById('suggestionBoardText').value;
+            let suggestionBoardSecYn = document.getElementById('suggestionBoardSecYn').value;
+
             if(suggestionBoardTitle == "" || suggestionBoardTitle == null){
                 alert("제목을 입력해주세요");
                 return;
@@ -140,7 +180,9 @@
             $.ajax({
                 type: 'POST',
                 url: '/suggestionBoard/create', // 실제로 데이터를 저장하는 엔드포인트로 변경해야 합니다.
-                data: {suggestionBoardTitle: suggestionBoardTitle, suggestionBoardText: suggestionBoardText},
+                data: {suggestionBoardTitle: suggestionBoardTitle
+                      ,suggestionBoardText: suggestionBoardText
+                      ,suggestionBoardSecYn: suggestionBoardSecYn},
                 success: function () {
                     // 작성 완료 후 팝업 닫기
                     $('#writePostModal').modal('hide');
@@ -162,6 +204,7 @@
                 row.classList.add('suggestionText');
             }
         }
+
     </script>
 </th:block>
 

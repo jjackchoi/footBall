@@ -7,6 +7,9 @@ public interface SuggestionBoardService {
     // 전체 조회
     List<SuggestionBoardResponse> findAll();
 
+    // 비밀글제외 조회
+    List<SuggestionBoardResponse> findExcludeSecret();
+
     // 게시글 생성
     int create(SuggestionBoardRequest dto);
 

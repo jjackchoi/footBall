@@ -45,7 +45,7 @@
 <th:block layout:fragment="content">
     <h1 class="mt-4">건의게시판</h1>
     <div class="right" style="text-align: right">
-        <input type="checkbox" class="btn-check" id="excludeSecret" autocomplete="off" onchange="toggleSecretPosts()">
+        <input type="checkbox" class="btn-check" id="excludeSecret" value="N">
         <label class="btn btn-outline-primary" for="excludeSecret">비밀글 제외</label>
         <button type="button" class="btn btn-primary" data-toggle="modal" onclick="openModal()">
             글 작성
@@ -228,7 +228,41 @@
         }
 
         <!--비밀글 제외 게시글조회-->
+        document.addEventListener("DOMContentLoaded", function() {
+            let excludeSecret = document.getElementById("excludeSecret");
 
+            excludeSecret.addEventListener("change", function() {
+
+                if (this.checked) {
+                    this.value = 'Y'; // 체크된 경우 'Y'로 설정
+                } else {
+                    this.value = 'N'; // 체크 해제된 경우 'N'으로 설정
+                }
+                console.log(this.value);
+                let checkboxValue = this.value;
+
+                // 체크박스의 값을 비동기통신을 통하여 서버에 전달
+                $.ajax({
+                    type: 'POST',
+                    url: '/suggestionBoard/excludeSec',
+                    contentType: 'application/json', // 요청의 Content-Type을 JSON으로 설정
+                    data: JSON.stringify({checkboxValue: checkboxValue}), // JSON 형식으로 직렬화된 데이터를 보냄
+                    success: function(response) {
+                        if(response === 'Y'){
+                            console.log('비동기통신 완료 - Y'+response);
+                        }else{
+                            console.log('비동기통신 완료 - N');
+                        }
+
+                        // 메인 화면 새로고침
+                        <!--location.reload();-->
+                    },
+                    error: function () {
+                        alert('글 작성 실패');
+                    }
+                });
+            });
+        });
 
     </script>
 </th:block>

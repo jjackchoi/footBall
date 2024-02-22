@@ -17,6 +17,12 @@ public class SuggestionBoardServiceImpl implements SuggestionBoardService{
         return sqlSession.selectList("SuggestionBoardMapper.findAll");
     }
 
+    // 비밀글제외 조회
+    @Override
+    public List<SuggestionBoardResponse> findExcludeSecret() {
+        return sqlSession.selectList("SuggestionBoardMapper.findExcludeSecret");
+    }
+
     // 게시글 생성
     @Override
     public int create(SuggestionBoardRequest dto) {

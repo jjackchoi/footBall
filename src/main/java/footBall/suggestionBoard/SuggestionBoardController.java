@@ -1,6 +1,5 @@
 package footBall.suggestionBoard;
 
-import footBall.freeBoard.FreeBoardRequest;
 import footBall.user.UserResponse;
 import footBall.user.UserServiceImpl;
 import jakarta.servlet.http.HttpSession;
@@ -31,6 +30,23 @@ public class SuggestionBoardController {
         }
         return "suggestionBoard/suggestionBoard";
     }
+
+    // 건의게시판 비밀글제외 조회
+    @ResponseBody
+    @PostMapping("/suggestionBoard/excludeSec")
+    public String excludeSec(Model model, String checkboxValue){
+        if (checkboxValue == "Y"){
+            List<SuggestionBoardResponse> posts = suggestionBoardService.findExcludeSecret();
+            model.addAttribute("posts", posts);
+            return "Y";
+        }else{
+            List<SuggestionBoardResponse> posts = suggestionBoardService.findAll();
+            model.addAttribute("posts", posts);
+            return "N";
+        }
+
+    }
+
 
     // 글 작성
     @ResponseBody

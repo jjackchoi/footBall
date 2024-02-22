@@ -24,9 +24,11 @@ public class SuggestionBoardController {
 
     // 건의게시판 페이지
     @GetMapping("/suggestionBoard")
-    public String index(Model model){
-        List<SuggestionBoardResponse> posts= suggestionBoardService.findAll();
-        model.addAttribute("posts", posts);
+    public String index(Model model, HttpSession session){
+        if (session.getAttribute("userId") != null) {
+            List<SuggestionBoardResponse> posts = suggestionBoardService.findAll();
+            model.addAttribute("posts", posts);
+        }
         return "suggestionBoard/suggestionBoard";
     }
 

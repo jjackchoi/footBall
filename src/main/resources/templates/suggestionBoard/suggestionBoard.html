@@ -6,6 +6,7 @@
 </th:block>
 
 <th:block layout:fragment="add-css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         .suggestionTitle{
             appearance: none;
@@ -44,9 +45,8 @@
 <th:block layout:fragment="content">
     <h1 class="mt-4">건의게시판</h1>
     <div class="right" style="text-align: right">
-        <button type="button" class="btn btn-success">
-            모든글 조회
-        </button>
+        <input type="checkbox" class="btn-check" id="excludeSecret" autocomplete="off" onchange="toggleSecretPosts()">
+        <label class="btn btn-outline-primary" for="excludeSecret">비밀글 제외</label>
         <button type="button" class="btn btn-primary" data-toggle="modal" onclick="openModal()">
             글 작성
         </button>
@@ -70,19 +70,29 @@
                 </tr>
                 </thead>
                 <tbody>
-                <div th:each="post : ${posts}">
+                <div id="postList" th:each="post : ${posts}">
                     <tr>
+                        <!--작성자-->
                         <td th:text="${post.suggestionBoardAuthor}"></td>
+                        <!--답변여부-->
                         <th:block th:if="${post.suggestionBoardSolYn == 'N'}">
                             <td style="font-weight: bold;">답변예정</td>
                         </th:block>
                         <th:block th:if="${post.suggestionBoardSolYn == 'Y'}">
                             <td style="font-weight: bold;">답변완료</td>
                         </th:block>
-                        <td>
-                            <button class="suggestionTitle" th:text="${post.suggestionBoardTitle}" onclick="toggleRow(this)">
-                            </button>
-                        </td>
+                        <!--비밀글여부에 따라 내용 노출 다르게-->
+                        <th:block th:if="${post.suggestionBoardSecYn != 'Y'}"> <!--비밀글이 아님-->
+                            <td><button class="suggestionTitle" th:text="${post.suggestionBoardTitle}" data-secret="N" onclick="toggleRow(this)"></button></td>
+                        </th:block>
+                        <th:block th:if="${post.suggestionBoardSecYn == 'Y' and session.userId != post.fbUserId}"> <!--비밀글이고 로그인된 사용자와 작성자가 일치하지 않음-->
+                            <td><button class="suggestionTitle" data-secret="Y" onclick="toggleRow(this)">비밀글 입니다.<i class="icon fas fa-key"></i></button></td>
+                        </th:block>
+                        <th:block th:if="${post.suggestionBoardSecYn == 'Y' and session.userId == post.fbUserId}"> <!--비밀글이고 로그인된 사용자와 작성자가 일치함-->
+                            <td><button class="suggestionTitle" th:text="${post.suggestionBoardTitle}" data-secret="N" onclick="toggleRow(this)">
+                                <i class="icon fas fa-key"></i></button></td>
+                        </th:block>
+                        <!--등록일자-->
                         <td th:if="${post.suggestionBoardRegDate != null}" th:text="${#temporals.format(post.suggestionBoardRegDate, 'yyyy-MM-dd HH시 mm분')}"></td>
                     </tr>
                     <tr class="suggestionText">
@@ -133,10 +143,11 @@
 
 <th:block layout:fragment="script">
     <script th:inline="javascript">
-        var userId = /*[[${session.userId}]]*/ null; // 세션의 userId 값을 가져옴
+        <!--세션의 userId 값을 가져옴-->
+        var userId = /*[[${session.userId}]]*/ null;
 
+        <!--세션의 userId 값이 null이면 알림 창 띄우기, 그렇지 않으면 모달 열기-->
         function openModal() {
-            // 세션의 userId 값이 null이면 알림 창 띄우기, 그렇지 않으면 모달 열기
             if (userId === null) {
                 alert('로그인이 필요합니다!');
             } else {
@@ -144,6 +155,7 @@
             }
         }
 
+        <!--모달창 닫기-->
         function closeModal() {
              $('#writePostModal').modal('hide');
         }
@@ -197,13 +209,26 @@
 
         <!--글 제목 클릭 시 내용 노출-->
         function toggleRow(button) {
-            var row = button.parentNode.parentNode.nextElementSibling;
-            if (row.classList.contains('suggestionText')) {
-                row.classList.remove('suggestionText');
-            } else {
-                row.classList.add('suggestionText');
+            // 비밀글 여부 확인
+            let isSecret = button.getAttribute("data-secret");
+
+            if(isSecret == "Y"){
+                // 비밀글이고 로그인정보와 작성자가 일치하지 않을 경우 알림창 띄우고 동작 멈추기
+                alert("비밀글로 작성자만 볼 수 있습니다.");
+                return;
+            }else{
+                // 비밀글이 아닌 경우 해당 행의 내용 토글
+                let row = button.parentNode.parentNode.nextElementSibling;
+                if (row.classList.contains('suggestionText')) {
+                    row.classList.remove('suggestionText');
+                } else {
+                    row.classList.add('suggestionText');
+                }
             }
         }
+
+        <!--비밀글 제외 게시글조회-->
+
 
     </script>
 </th:block>

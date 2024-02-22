@@ -17,5 +17,6 @@ public class SuggestionBoardResponse {
     private String suggestionBoardImgPath; // 건의게시판 이미지
     private boolean suggestionBoardDelYn; // 건의게시판 삭제여부
     private String suggestionBoardSolYn; // 건의게시판 해결여부
+    private String suggestionBoardSecYn; // 건의게시판 비밀글여부
 
 }

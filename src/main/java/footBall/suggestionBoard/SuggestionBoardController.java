@@ -6,10 +6,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,34 +18,28 @@ public class SuggestionBoardController {
     @Autowired
     private UserServiceImpl userService;
 
-    // 건의게시판 페이지
+    /*건의게시판 페이지*/
     @GetMapping("/suggestionBoard")
     public String index(Model model, HttpSession session){
-        if (session.getAttribute("userId") != null) {
-            List<SuggestionBoardResponse> posts = suggestionBoardService.findAll();
-            model.addAttribute("posts", posts);
-        }
         return "suggestionBoard/suggestionBoard";
     }
 
-    // 건의게시판 비밀글제외 조회
+    /*게시글 전체조회*/
     @ResponseBody
-    @PostMapping("/suggestionBoard/excludeSec")
-    public String excludeSec(Model model, String checkboxValue){
-        if (checkboxValue == "Y"){
-            List<SuggestionBoardResponse> posts = suggestionBoardService.findExcludeSecret();
-            model.addAttribute("posts", posts);
-            return "Y";
-        }else{
-            List<SuggestionBoardResponse> posts = suggestionBoardService.findAll();
-            model.addAttribute("posts", posts);
-            return "N";
-        }
+    @GetMapping("/suggestionBoard/findAll")
+    public List<SuggestionBoardResponse> findAll(){
+        return suggestionBoardService.findAll();
+    }
 
+    /*게시글 비밀글제외 조회*/
+    @ResponseBody
+    @GetMapping("/suggestionBoard/findExcludeSec")
+    public List<SuggestionBoardResponse> findExcludeSec(){
+        return suggestionBoardService.findExcludeSecret();
     }
 
 
-    // 글 작성
+    /*글 작성*/
     @ResponseBody
     @PostMapping("/suggestionBoard/create")
     public String create(HttpSession session, SuggestionBoardRequest dto){
@@ -63,7 +54,7 @@ public class SuggestionBoardController {
         }
     }
 
-    // 건의게시판 제목클릭 시 상세보기
+    /*건의게시판 제목클릭 시 상세보기*/
     @GetMapping("/suggestionBoard/{id}")
     public String detail(@PathVariable int id, Model model){
         SuggestionBoardResponse post = suggestionBoardService.findById(id);

@@ -39,6 +39,9 @@
             margin-left: 5px;
             width: 50px;
         }
+        .table > :not(:first-child) {
+            border-top: 0px;
+        }
     </style>
 </th:block>
 
@@ -60,45 +63,17 @@
             건의게시판
         </div>
         <div class="card-body">
-            <table id="datatablesSimple">
+            <table class="table">
                 <thead>
-                <tr>
-                    <th>작성자</th>
-                    <th>답변여부</th>
-                    <th>내용</th>
-                    <th>등록일자</th>
-                </tr>
-                </thead>
-                <tbody>
-                <div id="postList" th:each="post : ${posts}">
                     <tr>
-                        <!--작성자-->
-                        <td th:text="${post.suggestionBoardAuthor}"></td>
-                        <!--답변여부-->
-                        <th:block th:if="${post.suggestionBoardSolYn == 'N'}">
-                            <td style="font-weight: bold;">답변예정</td>
-                        </th:block>
-                        <th:block th:if="${post.suggestionBoardSolYn == 'Y'}">
-                            <td style="font-weight: bold;">답변완료</td>
-                        </th:block>
-                        <!--비밀글여부에 따라 내용 노출 다르게-->
-                        <th:block th:if="${post.suggestionBoardSecYn != 'Y'}"> <!--비밀글이 아님-->
-                            <td><button class="suggestionTitle" th:text="${post.suggestionBoardTitle}" data-secret="N" onclick="toggleRow(this)"></button></td>
-                        </th:block>
-                        <th:block th:if="${post.suggestionBoardSecYn == 'Y' and session.userId != post.fbUserId}"> <!--비밀글이고 로그인된 사용자와 작성자가 일치하지 않음-->
-                            <td><button class="suggestionTitle" data-secret="Y" onclick="toggleRow(this)">비밀글 입니다.<i class="icon fas fa-key"></i></button></td>
-                        </th:block>
-                        <th:block th:if="${post.suggestionBoardSecYn == 'Y' and session.userId == post.fbUserId}"> <!--비밀글이고 로그인된 사용자와 작성자가 일치함-->
-                            <td><button class="suggestionTitle" th:text="${post.suggestionBoardTitle}" data-secret="N" onclick="toggleRow(this)">
-                                <i class="icon fas fa-key"></i></button></td>
-                        </th:block>
-                        <!--등록일자-->
-                        <td th:if="${post.suggestionBoardRegDate != null}" th:text="${#temporals.format(post.suggestionBoardRegDate, 'yyyy-MM-dd HH시 mm분')}"></td>
+                        <th>작성자</th>
+                        <th>답변여부</th>
+                        <th>내용</th>
+                        <th>등록일자</th>
                     </tr>
-                    <tr class="suggestionText">
-                        <td colspan="4" th:text="${post.suggestionBoardText}"></td>
-                    </tr>
-                </div>
+                </thead>
+                <tbody class="postList">
+
                 </tbody>
             </table>
         </div>
@@ -143,8 +118,112 @@
 
 <th:block layout:fragment="script">
     <script th:inline="javascript">
+
+        window.onload = () => {
+            lenderPost();
+        }
+
         <!--세션의 userId 값을 가져옴-->
-        var userId = /*[[${session.userId}]]*/ null;
+        let userId = /*[[${session.userId}]]*/ null;
+
+        // 게시글 렌더링
+        function lenderPost() {
+            // 로그인이 안되어있으면 return false
+            if (userId == '' || userId == null){
+                return false;
+            }
+
+            let exSecYn = document.getElementById("excludeSecret").value; // 비밀글제외 클릭 값
+            let methodName = ''; // ajax에 들어갈 함수명
+            if(exSecYn == 'N'){ // 비밀글제외 미클릭
+                methodName = 'findAll';
+            }else if(exSecYn == 'Y'){
+                methodName = 'findExcludeSec';
+            }
+
+            $.ajax({
+                url : `/suggestionBoard/${methodName}`,
+                type : 'get',
+                dataType : 'json',
+                async : false,
+                success : function(response){
+
+                    // 1. 조회된 데이터가 없는 경우
+                    if(!response.length){
+                        document.querySelector('.postList').innerHTML = `<tr class="cm_none"><td colspan="4">등록된 댓글이 없습니다.</td></tr>`;
+                        return false;
+                    }
+
+                    // 2. 렌더링 할 HTML을 저장할 변수
+                    let postHtml = '';
+
+                    // 3. 리스트 HTML 추가
+                    response.forEach(post => {
+                        // 속성 변수화
+                        let author = post.suggestionBoardAuthor; // 작성자
+                        let solYn = post.suggestionBoardSolYn == 'N' ? '답변예정' : '답변완료' ; // 답변여부
+                        let title = post.suggestionBoardTitle; // 제목
+                        if(post.suggestionBoardSecYn == 'Y'){ // 비밀글여부에 따른 제목 값 변환
+                            if(userId != post.fbUserId){
+                                title = "비밀글 입니다. <i class='icon fas fa-key'></i>";
+                            }else{
+                                title = post.suggestionBoardTitle + "<i class='icon fas fa-key'></i>";
+                            }
+                        }
+                        let dataSecret = ''; // data-secret 값 넣기
+                        if(post.suggestionBoardSecYn != 'Y'){ // 비밀글이 아닐 때
+                            dataSecret = 'N';
+                        }else if(post.suggestionBoardSecYn == 'Y' && userId != post.fbUserId){ // 비밀글이고 세션사용자와 작성자가 다를 때
+                            dataSecret = 'Y';
+                        }else if(post.suggestionBoardSecYn == 'Y' && userId == post.fbUserId){ // 비밀글이고 세션사용자와 작성자가 같을 때
+                            dataSecret = 'N';
+                        }
+                        let regDate = post.suggestionBoardRegDate != null ? dayjs(post.suggestionBoardRegDate).format('YYYY-MM-DD HH:mm') : "";
+
+                        // 값을 html에 집어넣기
+                        postHtml += `
+                            <tr>
+                                <!--작성자-->
+                                <td>${author}</td>
+                                <!--답변여부-->
+                                <td style="font-weight: bold;">${solYn}</td>
+                                <!--비밀글 여부에 따라 내용노출 다르게-->
+                                <td><button class="suggestionTitle" data-secret="${dataSecret}" onclick="toggleRow(this)">${title}</button></td>
+                                <!--등록일자-->
+                                <td>${regDate}</td>
+                            </tr>
+                            <tr class="suggestionText">
+                                <td colspan="4">${post.suggestionBoardText}</td>
+                            </tr>
+                        `;
+                    })
+
+                    // 4. class가 postList인 요소를 찾아 HTML을 렌더링
+                    document.querySelector('.postList').innerHTML = postHtml;
+
+                },
+                error : function(request, status, error){
+                    console.log(error);
+                }
+            })
+        }
+
+        <!--비밀글 제외 게시글조회-->
+        document.addEventListener("DOMContentLoaded", function() {
+            let excludeSecret = document.getElementById("excludeSecret");
+
+            excludeSecret.addEventListener("change", function() {
+
+                if (this.checked) {
+                    this.value = 'Y'; // 체크된 경우 'Y'로 설정
+                } else {
+                    this.value = 'N'; // 체크 해제된 경우 'N'으로 설정
+                }
+                console.log(this.value);
+                let checkboxValue = this.value;
+                lenderPost();
+            });
+        });
 
         <!--세션의 userId 값이 null이면 알림 창 띄우기, 그렇지 않으면 모달 열기-->
         function openModal() {
@@ -226,43 +305,6 @@
                 }
             }
         }
-
-        <!--비밀글 제외 게시글조회-->
-        document.addEventListener("DOMContentLoaded", function() {
-            let excludeSecret = document.getElementById("excludeSecret");
-
-            excludeSecret.addEventListener("change", function() {
-
-                if (this.checked) {
-                    this.value = 'Y'; // 체크된 경우 'Y'로 설정
-                } else {
-                    this.value = 'N'; // 체크 해제된 경우 'N'으로 설정
-                }
-                console.log(this.value);
-                let checkboxValue = this.value;
-
-                // 체크박스의 값을 비동기통신을 통하여 서버에 전달
-                $.ajax({
-                    type: 'POST',
-                    url: '/suggestionBoard/excludeSec',
-                    contentType: 'application/json', // 요청의 Content-Type을 JSON으로 설정
-                    data: JSON.stringify({checkboxValue: checkboxValue}), // JSON 형식으로 직렬화된 데이터를 보냄
-                    success: function(response) {
-                        if(response === 'Y'){
-                            console.log('비동기통신 완료 - Y'+response);
-                        }else{
-                            console.log('비동기통신 완료 - N');
-                        }
-
-                        // 메인 화면 새로고침
-                        <!--location.reload();-->
-                    },
-                    error: function () {
-                        alert('글 작성 실패');
-                    }
-                });
-            });
-        });
 
     </script>
 </th:block>

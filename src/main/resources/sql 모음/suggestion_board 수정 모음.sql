@@ -9,3 +9,4 @@ ALTER TABLE football.suggestion_board ADD SUGGESTION_BOARD_SEC_YN varchar(2) NOT
 ALTER TABLE football.suggestion_board MODIFY COLUMN SUGGESTION_BOARD_SEC_YN varchar(2) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT "N" NOT NULL;
 
 
+

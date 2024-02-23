@@ -15,8 +15,8 @@ public class UserResponse {
     private String fbUserBirth;            //	유저 생년월일
     private String fbUserPhone;            //	유저 휴대폰번호
     private String fbUserAddress;          //	유저 주소
-    private boolean fbUserAuth;            //	유저 권한
-    private boolean fbUserDelYn;          //	유저 삭제여부
+    private Boolean fbUserAuth;            //	유저 권한
+    private Boolean fbUserDelYn;          //	유저 삭제여부
     private LocalDateTime fbUserRegDate;  //	유저 등록일
     private LocalDateTime fbUserModDate;  //	유저 수정일
 

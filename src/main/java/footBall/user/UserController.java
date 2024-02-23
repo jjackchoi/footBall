@@ -76,10 +76,10 @@ public class UserController {
         if(id == 0){ // 로그인 실패 시
             return "redirect:/login";
         }
-
-        String fbUserNickname = userService.findNickname(id);
+        UserResponse userInfo =userService.findOne(id);
         session.setAttribute("userId", id);
-        session.setAttribute("userNickname", fbUserNickname);
+        session.setAttribute("userNickname", userInfo.getFbUserNickname());
+        session.setAttribute("userAuth", userInfo.getFbUserAuth());
         return "redirect:/";
     }
 

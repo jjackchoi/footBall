@@ -5,4 +5,9 @@
 	2. 비밀글제외 버튼을 눌렀을 때 findExcludeSec() 함수 호출 후
 	비밀글 제외하고 조회(Y) 完
 	3. 다시 제외버튼을 누르면(N) findAllPost()를 호출 完
+관리자 관련
+- 건의게시판의 비밀글 관리자라면 볼 수있게 구현
+	1. userController에서 session에 fb_user_auth 추가
+	2. suggestionBoard의 스크립트에 비밀글 여부 조건에 
+	관리자면 비밀글 볼 수있게 수정
 	

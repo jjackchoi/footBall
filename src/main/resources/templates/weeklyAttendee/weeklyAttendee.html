@@ -22,6 +22,15 @@
         </div>
         <div class="card-body">
             <ol class="list-group">
+                <div class="ms-2 align-items-center d-none" th:if="${session.userAuth == 'Y'}" id="vDelete">
+                    <input type="button" class="btn btn-danger" style="float: right;" value="금주 투표삭제" onclick="voteDelete();"/>
+                </div>
+                <div class="ms-2 align-items-center" th:if="${session.userAuth == 'Y'}" id="vStart">
+                    <input type="button" class="btn btn-primary" style="float: right;" value="금주 투표시작" onclick="voteStart();"/>
+                </div>
+                <div class="fw-bold ms-2 me-auto d-flex align-items-center d-none" id="vDate">
+                    안녕하세요!
+                </div>
                 <li class="list-group-item justify-content-between align-items-start">
                     <div class="ms-2 me-auto d-flex align-items-center">
                         <input type="checkbox">
@@ -70,6 +79,7 @@
             console.log(sessionId);
         }
 
+        // 화면 로드 시 미참여인원 렌더링
         function lenderNonpart(){
             let users = [[${users}]];
             console.log(users);
@@ -80,6 +90,24 @@
             nonUser = nonUser.replace(/,\s*$/, '');
             console.log(nonUser);
             document.getElementById('nonPart').innerHTML = nonUser;
+        }
+
+        // 투표시작 버튼 클릭 시
+        function voteStart(){
+            console.log([[ ${session.userAuth} ]]);
+            // 시작버튼 안보이게 - 삭제버튼 보이게 - 투표날짜 보이게
+            document.querySelector('#vStart').classList.add('d-none');
+            document.querySelector('#vDelete').classList.remove('d-none');
+            document.querySelector('#vDate').classList.remove('d-none');
+        }
+
+        // 투표삭제 버튼 클릭 시
+        function voteDelete(){
+            console.log([[ ${session.userAuth} ]]);
+            // 삭제버튼 안보이게 - 시작버튼 보이게 - 투표날짜 안보이게
+            document.querySelector('#vStart').classList.remove('d-none');
+            document.querySelector('#vDelete').classList.add('d-none');
+            document.querySelector('#vDate').classList.add('d-none');
         }
     </script>
 </th:block>

@@ -21,27 +21,41 @@
             참석인원 투표
         </div>
         <div class="card-body">
-            <ol class="list-group list-group-numbered">
-                <li class="list-group-item d-flex justify-content-between align-items-start">
-                    <div class="ms-2 me-auto">
-                        <div class="fw-bold">참석</div>
+            <ol class="list-group">
+                <li class="list-group-item justify-content-between align-items-start">
+                    <div class="ms-2 me-auto d-flex align-items-center">
+                        <input type="checkbox">
+                        <div class="fw-bold ms-2">참석</div>
+                    </div>
+                    <div class="ms-2 me-auto d-flex align-items-center">
                         Content for list item
                     </div>
-                    <span class="badge text-bg-primary rounded-pill">14</span>
                 </li>
-                <li class="list-group-item d-flex justify-content-between align-items-start">
-                    <div class="ms-2 me-auto">
-                        <div class="fw-bold">불참</div>
+                <li class="list-group-item justify-content-between align-items-start">
+                    <div class="ms-2 me-auto d-flex align-items-center">
+                        <input type="checkbox">
+                        <div class="fw-bold ms-2">불참</div>
+                    </div>
+                    <div class="ms-2 me-auto d-flex align-items-center">
                         Content for list item
                     </div>
-                    <span class="badge text-bg-primary rounded-pill">14</span>
                 </li>
-                <li class="list-group-item d-flex justify-content-between align-items-start">
-                    <div class="ms-2 me-auto">
-                        <div class="fw-bold">미정</div>
+                <li class="list-group-item justify-content-between align-items-start">
+                    <div class="ms-2 me-auto d-flex align-items-center">
+                        <input type="checkbox">
+                        <div class="fw-bold ms-2">미정</div>
+                    </div>
+                    <div class="ms-2 me-auto d-flex align-items-center">
                         Content for list item
                     </div>
-                    <span class="badge text-bg-primary rounded-pill">14</span>
+                </li>
+                <li class="list-group-item justify-content-between align-items-start">
+                    <div class="ms-2 me-auto d-flex align-items-center">
+                        <div class="fw-bold">미참여</div>
+                    </div>
+                    <div class="ms-2 me-auto d-flex align-items-center" id="nonPart">
+
+                    </div>
                 </li>
             </ol>
         </div>
@@ -50,7 +64,23 @@
 
 <th:block layout:fragment="script">
     <script th:inline="javascript">
+        window.onload = () => {
+            lenderNonpart();
+            let sessionId = [[ ${session.userId} ]];
+            console.log(sessionId);
+        }
 
+        function lenderNonpart(){
+            let users = [[${users}]];
+            console.log(users);
+            let nonUser = [];
+            users.forEach(user => {
+                nonUser += user.fbUserName + ',';
+            })
+            nonUser = nonUser.replace(/,\s*$/, '');
+            console.log(nonUser);
+            document.getElementById('nonPart').innerHTML = nonUser;
+        }
     </script>
 </th:block>
 

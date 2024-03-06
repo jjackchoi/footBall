@@ -74,9 +74,30 @@
 <th:block layout:fragment="script">
     <script th:inline="javascript">
         window.onload = () => {
+            let sunday = getSunday();
+            console.log(sunday);
             lenderNonpart();
+<!--            lenderVoteButton(sunday);-->
             let sessionId = [[ ${session.userId} ]];
             console.log(sessionId);
+        }
+
+        // 화면 로드 시 투표 대상 데이터여부에 따른 시작,삭제버튼 렌더링
+        function lenderVoteButton(sunday){
+            $.ajax({
+                url : `/weeklyAttendee/voteDate`,
+                type : 'GET',
+                contentType: 'application/json',
+                data: JSON.stringify({ voteDate: sunday }),
+                async : false,
+                success : function(response){
+                    console.log('성공적으로 투표대상날짜 조회');
+                    console.log(`서버 응답: ${response}`);
+                },
+                error : function(request, status, error){
+                    console.log(error);
+                }
+            })
         }
 
         // 돌아오는주 일요일 정보 가져오기
@@ -109,6 +130,16 @@
             document.getElementById('nonPart').innerHTML = nonUser;
         }
 
+        // 정기모임 날짜 투표생성/삭제버튼 밑에 렌더링
+        function lenderVoteDate(sunday){
+            let sundayMonth = sunday.getMonth() + 1; // 월요일은 1 더해줘야 해당월로 지정됨
+            let sundayDate = sunday.getDate();
+            let voteDate = document.querySelector('#vDate');
+            voteDate.innerHTML = `
+                ${sundayMonth}/${sundayDate}(일) 정기모임
+            `;
+        }
+
         // 투표시작 버튼 클릭 시
         function voteStart(){
             // 시작버튼 안보이게 - 삭제버튼 보이게 - 투표날짜 보이게
@@ -117,14 +148,8 @@
             document.querySelector('#vDate').classList.remove('d-none');
             // 일요일정보 가져오기
             let sunday = getSunday();
-            console.log(sunday);
-            let sundayMonth = sunday.getMonth() + 1; // 월요일은 1 더해줘야 해당월로 지정됨
-            let sundayDate = sunday.getDate();
-            // 투표시작 버튼 밑에 날짜 렌더링
-            let voteDate = document.querySelector('#vDate');
-            voteDate.innerHTML = `
-                ${sundayMonth}/${sundayDate}(일) 정기모임
-            `;
+            // 투표생성/삭제버튼 밑에 정기모임 날짜 렌더링
+            lenderVoteDate(sunday);
             // 투표 대상 날짜 데이터 생성
             createVoteDate(sunday);
         }

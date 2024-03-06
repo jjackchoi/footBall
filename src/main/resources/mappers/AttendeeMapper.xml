@@ -11,11 +11,17 @@
 
     <!--투표대상 날짜 생성-->
     <insert id="createDate" parameterType="footBall.attendee.AttendeeDto" useGeneratedKeys="true" keyProperty="voteId">
-        INSERT INTO VOTE(
+        INSERT INTO vote(
             vote_date
         )
         VALUES(
             #{voteDate}
         )
     </insert>
+
+    <!--투표대상 날짜 삭제-->
+    <delete id="deleteDate" parameterType="footBall.attendee.AttendeeDto">
+        DELETE FROM vote
+        WHERE vote_date = #{voteDate}
+    </delete>
 </mapper>

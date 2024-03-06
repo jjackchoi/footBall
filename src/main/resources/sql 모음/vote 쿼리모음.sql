@@ -22,7 +22,7 @@ delete from vote where vote_id in(1,2,3,4);
 
 /*한개 삭제*/
 delete from vote 
-where vote_id 
+where vote_date = '2024-03-10 00:00:00.000';
 
 
 

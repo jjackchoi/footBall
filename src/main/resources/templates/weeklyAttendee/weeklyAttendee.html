@@ -94,7 +94,7 @@
                 sunday.setDate(today.getDate() + (7 - currentDay));
             }
             // 시분초 0으로 설정
-            sunday.setHours(0,0,0,0);
+            sunday.setHours(9,0,0,0);
             return sunday;
         }
 
@@ -125,20 +125,20 @@
             voteDate.innerHTML = `
                 ${sundayMonth}/${sundayDate}(일) 정기모임
             `;
-            // 투표날짜 데이터 넣기
+            // 투표 대상 날짜 데이터 생성
             createVoteDate(sunday);
         }
 
-        // 투표대상 날짜 insert
+        // 투표 대상 날짜 데이터 생성
         function createVoteDate(sunday){
-            console.log(`${sunday}에`);
+            console.log(sunday);
+            sunday = sunday.toISOString();
+
             $.ajax({
                 url : `/weeklyAttendee/voteDate`,
                 type : 'POST',
-                dataType : 'json',
-                data: {
-                    voteDate: sunday
-                },
+                contentType: 'application/json',
+                data: JSON.stringify({ voteDate: sunday }),
                 async : false,
                 success : function(response){
                     console.log('성공적으로 투표대상날짜 생성');
@@ -157,6 +157,34 @@
             document.querySelector('#vStart').classList.remove('d-none');
             document.querySelector('#vDelete').classList.add('d-none');
             document.querySelector('#vDate').classList.add('d-none');
+
+            // 일요일정보 가져오기
+            let sunday = getSunday();
+            console.log(sunday);
+
+            // 투표 대상 날짜 데이터 삭제
+            deleteVoteDate(sunday);
+        }
+
+        // 투표 대상 날짜 데이터 삭제
+        function deleteVoteDate(sunday){
+            console.log(sunday);
+            sunday = sunday.toISOString();
+
+            $.ajax({
+                url : `/weeklyAttendee/voteDate`,
+                type : 'DELETE',
+                contentType: 'application/json',
+                data: JSON.stringify({ voteDate: sunday }),
+                async : false,
+                success : function(response){
+                    console.log('성공적으로 투표대상날짜 생성');
+                    console.log(`서버 응답: ${response}`);
+                },
+                error : function(request, status, error){
+                    console.log(error);
+                }
+            })
         }
     </script>
 </th:block>

@@ -11,8 +11,9 @@ public class AttendeeServiceImpl implements AttendeeService{
     @Autowired
     SqlSession sqlSession;
 
+    // 투표대상 날짜 생성
     @Override
-    public int createDate(AttendeeDto voteDate) {
-        return sqlSession.insert("AttendeeMapper.createDate", voteDate);
+    public int createDate(AttendeeDto params) {
+        return sqlSession.insert("AttendeeMapper.createDate", params);
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.LocalDateTime;
@@ -30,8 +31,8 @@ public class AttendeeController {
 
     @ResponseBody
     @PostMapping("/weeklyAttendee/voteDate")
-    public String dateCreate(AttendeeDto voteDate){
-        int created = attendeeService.createDate(voteDate);
+    public String dateCreate(@RequestBody AttendeeDto params){
+        int created = attendeeService.createDate(params);
         if(created == 1) {
             return "success";
         }else {

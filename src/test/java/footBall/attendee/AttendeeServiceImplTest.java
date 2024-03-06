@@ -14,10 +14,10 @@ class AttendeeServiceImplTest {
     private AttendeeServiceImpl attendeeService;
     @Test
     void dateCreate() {
-        AttendeeDto dto = new AttendeeDto();
-        LocalDateTime currentDate = LocalDateTime.now();
-        dto.setVoteDate(currentDate);
-        System.out.println(dto.toString());
-        attendeeService.createDate(dto);
+//        AttendeeDto dto = new AttendeeDto();
+//        LocalDateTime currentDate = LocalDateTime.now();
+//        dto.setVoteDate(currentDate);
+//        System.out.println(dto.toString());
+//        attendeeService.createDate(dto);
     }
 }

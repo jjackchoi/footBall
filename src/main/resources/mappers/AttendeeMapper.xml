@@ -9,14 +9,13 @@
         ,vote_date
     </sql>
 
-    <!--투표대상날짜 생성-->
+    <!--투표대상 날짜 생성-->
     <insert id="createDate" parameterType="footBall.attendee.AttendeeDto" useGeneratedKeys="true" keyProperty="voteId">
         INSERT INTO VOTE(
-            <include refid="voteColumns"/>
+            vote_date
         )
         VALUES(
-             #{voteId}
-            ,#{voteDate}
+            #{voteDate}
         )
     </insert>
 </mapper>

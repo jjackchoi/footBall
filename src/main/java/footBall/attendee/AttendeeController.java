@@ -2,6 +2,7 @@ package footBall.attendee;
 
 import footBall.user.UserResponse;
 import footBall.user.UserServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
+@Slf4j
 public class AttendeeController {
 
     @Autowired
@@ -43,11 +45,23 @@ public class AttendeeController {
     @DeleteMapping("/weeklyAttendee/voteDate")
     public String deleteDate(@RequestBody AttendeeDto params){
        int deleted = attendeeService.deleteDate(params);
-       if (deleted == 1) {
+       if (deleted > 0) {
            return "success";
        } else {
            return "fail";
        }
+    }
+
+    // 투표 대상 데이터 존재여부 판별
+    @ResponseBody
+    @GetMapping("/weeklyAttendee/voteDate")
+    public String findDate(){
+        int found = attendeeService.findDate();
+        if (found > 0){
+            return "existent";
+        } else {
+            return "nonExistent";
+        }
     }
 
 }

@@ -3,7 +3,7 @@ insert into vote(
 	vote_id, vote_date
 )
 values(
-	0,current_timestamp()
+	0,'2024-03-10 00:00:00.000'
 );
 
 /*시퀀스 1로 초기화*/
@@ -18,11 +18,16 @@ from vote
 where VOTE_DATE = '2024-03-10 00:00:00.000';
 
 /*여러개 삭제*/
-delete from vote where vote_id in(1,2,3,4);
+delete from vote where vote_id in(12);
 
 /*한개 삭제*/
 delete from vote 
 where vote_date = '2024-03-10 00:00:00.000';
+
+/*특정조건으로 카운트*/
+select count(*)
+from vote
+where VOTE_DATE = '2024-03-10 00:00:00.000';
 
 
 

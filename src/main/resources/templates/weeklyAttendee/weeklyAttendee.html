@@ -75,11 +75,9 @@
     <script th:inline="javascript">
         window.onload = () => {
             let sunday = getSunday();
-            console.log(sunday);
             lenderNonpart();
-<!--            lenderVoteButton(sunday);-->
+            lenderVoteButton(sunday);
             let sessionId = [[ ${session.userId} ]];
-            console.log(sessionId);
         }
 
         // 화면 로드 시 투표 대상 데이터여부에 따른 시작,삭제버튼 렌더링
@@ -87,12 +85,21 @@
             $.ajax({
                 url : `/weeklyAttendee/voteDate`,
                 type : 'GET',
-                contentType: 'application/json',
-                data: JSON.stringify({ voteDate: sunday }),
                 async : false,
                 success : function(response){
-                    console.log('성공적으로 투표대상날짜 조회');
-                    console.log(`서버 응답: ${response}`);
+                    console.log(`성공적으로 투표대상날짜 존재 판별 - 서버 응답: ${response}`);
+                    if(response == 'existent'){
+                        lenderVoteDate(sunday);
+                        // 시작버튼 안보이게 - 삭제버튼 보이게 - 투표날짜 보이게
+                        document.querySelector('#vStart').classList.add('d-none');
+                        document.querySelector('#vDelete').classList.remove('d-none');
+                        document.querySelector('#vDate').classList.remove('d-none');
+                    } else {
+                        // 삭제버튼 안보이게 - 시작버튼 보이게 - 투표날짜 안보이게
+                        document.querySelector('#vStart').classList.remove('d-none');
+                        document.querySelector('#vDelete').classList.add('d-none');
+                        document.querySelector('#vDate').classList.add('d-none');
+                    }
                 },
                 error : function(request, status, error){
                     console.log(error);

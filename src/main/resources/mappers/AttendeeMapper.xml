@@ -24,4 +24,18 @@
         DELETE FROM vote
         WHERE vote_date = #{voteDate}
     </delete>
+
+    <!--투표대상 날짜 조회-->
+    <select id="getDate" parameterType="footBall.attendee.AttendeeDto" resultType="footBall.attendee.AttendeeDto">
+        SELECT *
+        FROM vote
+        WHERE vote_date = #{voteDate};
+    </select>
+
+    <!--투표대상 날짜 존재여부 판별-->
+    <select id="findDate" parameterType="footBall.attendee.AttendeeDto" resultType="int">
+        SELECT COUNT(*)
+        FROM vote
+        WHERE vote_date = #{voteDate};
+    </select>
 </mapper>

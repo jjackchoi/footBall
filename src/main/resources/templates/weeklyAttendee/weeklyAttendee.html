@@ -28,44 +28,44 @@
                 <div class="ms-2 align-items-center" th:if="${session.userAuth == 'Y'}" id="vStart">
                     <input type="button" class="btn btn-primary" style="float: right;" value="금주 투표시작" onclick="voteStart();"/>
                 </div>
-                <div class="fw-bold ms-2 me-auto my-2 d-flex align-items-center d-none" id="vDate">
-                    안녕하세요!
-                </div>
-                <li class="list-group-item justify-content-between align-items-start">
-                    <div class="ms-2 me-auto d-flex align-items-center">
-                        <input type="checkbox">
-                        <div class="fw-bold ms-2">참석</div>
-                    </div>
-                    <div class="ms-2 me-auto d-flex align-items-center">
-                        Content for list item
-                    </div>
-                </li>
-                <li class="list-group-item justify-content-between align-items-start">
-                    <div class="ms-2 me-auto d-flex align-items-center">
-                        <input type="checkbox">
-                        <div class="fw-bold ms-2">불참</div>
-                    </div>
-                    <div class="ms-2 me-auto d-flex align-items-center">
-                        Content for list item
-                    </div>
-                </li>
-                <li class="list-group-item justify-content-between align-items-start">
-                    <div class="ms-2 me-auto d-flex align-items-center">
-                        <input type="checkbox">
-                        <div class="fw-bold ms-2">미정</div>
-                    </div>
-                    <div class="ms-2 me-auto d-flex align-items-center">
-                        Content for list item
-                    </div>
-                </li>
-                <li class="list-group-item justify-content-between align-items-start">
-                    <div class="ms-2 me-auto d-flex align-items-center">
-                        <div class="fw-bold">미참여</div>
-                    </div>
-                    <div class="ms-2 me-auto d-flex align-items-center" id="nonPart">
+                <div class="fw-bold ms-2 me-auto my-2 d-flex align-items-center" id="vDate"></div>
+                <div id="voteBox">
+                    <li class="list-group-item justify-content-between align-items-start">
+                        <div class="ms-2 me-auto d-flex align-items-center">
+                            <input type="checkbox">
+                            <div class="fw-bold ms-2">참석</div>
+                        </div>
+                        <div class="ms-2 me-auto d-flex align-items-center">
+                            Content for list item
+                        </div>
+                    </li>
+                    <li class="list-group-item justify-content-between align-items-start">
+                        <div class="ms-2 me-auto d-flex align-items-center">
+                            <input type="checkbox">
+                            <div class="fw-bold ms-2">불참</div>
+                        </div>
+                        <div class="ms-2 me-auto d-flex align-items-center">
+                            Content for list item
+                        </div>
+                    </li>
+                    <li class="list-group-item justify-content-between align-items-start">
+                        <div class="ms-2 me-auto d-flex align-items-center">
+                            <input type="checkbox">
+                            <div class="fw-bold ms-2">미정</div>
+                        </div>
+                        <div class="ms-2 me-auto d-flex align-items-center">
+                            Content for list item
+                        </div>
+                    </li>
+                    <li class="list-group-item justify-content-between align-items-start">
+                        <div class="ms-2 me-auto d-flex align-items-center">
+                            <div class="fw-bold">미참여</div>
+                        </div>
+                        <div class="ms-2 me-auto d-flex align-items-center" id="nonPart">
 
-                    </div>
-                </li>
+                        </div>
+                    </li>
+                </div>
             </ol>
         </div>
     </div>
@@ -93,12 +93,10 @@
                         // 시작버튼 안보이게 - 삭제버튼 보이게 - 투표날짜 보이게
                         document.querySelector('#vStart').classList.add('d-none');
                         document.querySelector('#vDelete').classList.remove('d-none');
-                        document.querySelector('#vDate').classList.remove('d-none');
                     } else {
                         // 삭제버튼 안보이게 - 시작버튼 보이게 - 투표날짜 안보이게
                         document.querySelector('#vStart').classList.remove('d-none');
                         document.querySelector('#vDelete').classList.add('d-none');
-                        document.querySelector('#vDate').classList.add('d-none');
                     }
                 },
                 error : function(request, status, error){
@@ -152,11 +150,16 @@
             // 시작버튼 안보이게 - 삭제버튼 보이게 - 투표날짜 보이게
             document.querySelector('#vStart').classList.add('d-none');
             document.querySelector('#vDelete').classList.remove('d-none');
-            document.querySelector('#vDate').classList.remove('d-none');
+
             // 일요일정보 가져오기
             let sunday = getSunday();
+
             // 투표생성/삭제버튼 밑에 정기모임 날짜 렌더링
             lenderVoteDate(sunday);
+
+            // 투표박스 보이게
+            document.querySelector('#voteBox').classList.remove('d-none');
+
             // 투표 대상 날짜 데이터 생성
             createVoteDate(sunday);
         }
@@ -184,15 +187,19 @@
 
         // 투표삭제 버튼 클릭 시
         function voteDelete(){
-            console.log([[ ${session.userAuth} ]]);
             // 삭제버튼 안보이게 - 시작버튼 보이게 - 투표날짜 안보이게
             document.querySelector('#vStart').classList.remove('d-none');
             document.querySelector('#vDelete').classList.add('d-none');
-            document.querySelector('#vDate').classList.add('d-none');
 
             // 일요일정보 가져오기
             let sunday = getSunday();
-            console.log(sunday);
+
+            // 투표 미존재문구 렌더링
+            let vDate = document.querySelector('#vDate');
+            vDate.innerHTML = `투표가 존재하지 않습니다!`;
+
+            // 투표박스 안보이게
+            document.querySelector('#voteBox').classList.add('d-none');
 
             // 투표 대상 날짜 데이터 삭제
             deleteVoteDate(sunday);

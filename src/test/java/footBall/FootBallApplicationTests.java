@@ -22,7 +22,6 @@ class FootBallApplicationTests {
 	void contextLoads() {
 		// findDate 실행
 		System.out.println(attendeeService.findDate());
-
 	}
 
 }

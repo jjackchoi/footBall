@@ -28,12 +28,12 @@
                 <div class="ms-2 align-items-center" th:if="${session.userAuth == 'Y'}" id="vStart">
                     <input type="button" class="btn btn-primary" style="float: right;" value="금주 투표시작" onclick="voteStart();"/>
                 </div>
-                <div class="fw-bold ms-2 me-auto my-2 d-flex align-items-center" id="vDate"></div>
-                <div id="voteBox">
+                <div class="fw-bold ms-2 me-auto my-2 d-flex align-items-center" id="vDate">투표가 존재하지 않습니다!</div>
+                <div class="d-none" id="voteBox">
                     <li class="list-group-item justify-content-between align-items-start">
                         <div class="ms-2 me-auto d-flex align-items-center">
-                            <input type="checkbox">
-                            <div class="fw-bold ms-2">참석</div>
+                            <input type="radio" name="attendance" value="Y">
+                            <span class="fw-bold ms-2">참석</span>
                         </div>
                         <div class="ms-2 me-auto d-flex align-items-center">
                             Content for list item
@@ -41,8 +41,8 @@
                     </li>
                     <li class="list-group-item justify-content-between align-items-start">
                         <div class="ms-2 me-auto d-flex align-items-center">
-                            <input type="checkbox">
-                            <div class="fw-bold ms-2">불참</div>
+                            <input type="radio" name="attendance" value="N">
+                            <span class="fw-bold ms-2">불참</span>
                         </div>
                         <div class="ms-2 me-auto d-flex align-items-center">
                             Content for list item
@@ -50,8 +50,8 @@
                     </li>
                     <li class="list-group-item justify-content-between align-items-start">
                         <div class="ms-2 me-auto d-flex align-items-center">
-                            <input type="checkbox">
-                            <div class="fw-bold ms-2">미정</div>
+                            <input type="radio" name="attendance" value="P">
+                            <span class="fw-bold ms-2">미정</span>
                         </div>
                         <div class="ms-2 me-auto d-flex align-items-center">
                             Content for list item
@@ -59,7 +59,7 @@
                     </li>
                     <li class="list-group-item justify-content-between align-items-start">
                         <div class="ms-2 me-auto d-flex align-items-center">
-                            <div class="fw-bold">미참여</div>
+                            <span class="fw-bold">미참여</span>
                         </div>
                         <div class="ms-2 me-auto d-flex align-items-center" id="nonPart">
 
@@ -90,9 +90,10 @@
                     console.log(`성공적으로 투표대상날짜 존재 판별 - 서버 응답: ${response}`);
                     if(response == 'existent'){
                         lenderVoteDate(sunday);
-                        // 시작버튼 안보이게 - 삭제버튼 보이게 - 투표날짜 보이게
+                        // 시작버튼 안보이게 - 삭제버튼 보이게 - 투표박스 보이게
                         document.querySelector('#vStart').classList.add('d-none');
                         document.querySelector('#vDelete').classList.remove('d-none');
+                        document.querySelector('#voteBox').classList.remove('d-none');
                     } else {
                         // 삭제버튼 안보이게 - 시작버튼 보이게 - 투표날짜 안보이게
                         document.querySelector('#vStart').classList.remove('d-none');

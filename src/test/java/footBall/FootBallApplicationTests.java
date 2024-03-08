@@ -20,7 +20,6 @@ class FootBallApplicationTests {
 	private AttendeeServiceImpl attendeeService;
 	@Test
 	void contextLoads() {
-
 		// findDate 실행
 		System.out.println(attendeeService.findDate());
 

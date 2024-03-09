@@ -40,4 +40,9 @@ public class FreeBoardServiceImpl implements FreeBoardService{
     public List<FreeBoardResponse> findByUserId(Integer userId) {
         return sqlSession.selectList("FreeBoardMapper.findByUserId",userId);
     }
+
+    @Override
+    public List<FreeBoardResponse> searchFreeBoardPosts(String freeBoardTitle) {
+        return sqlSession.selectList("FreeBoardMapper.findKeyword",freeBoardTitle);
+    }
 }

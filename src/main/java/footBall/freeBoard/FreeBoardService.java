@@ -20,4 +20,6 @@ public interface FreeBoardService {
 
     // 내가쓴글조회
     List<FreeBoardResponse> findByUserId(Integer userId);
+
+    List<FreeBoardResponse> searchFreeBoardPosts(String keyword);
 }

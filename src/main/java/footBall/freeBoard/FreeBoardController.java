@@ -33,6 +33,14 @@ public class FreeBoardController {
         }
         return "freeBoard/freeBoard";
     }
+
+    // 검색 결과 조회
+    @GetMapping("/freeBoard/search")
+    public String searchFreeBoardPosts(@RequestParam(name = "freeBoardTitle") String freeBoardTitle, Model model) {
+        List<FreeBoardResponse> searchResult = freeBoardService.searchFreeBoardPosts(freeBoardTitle);
+        model.addAttribute("posts", searchResult);
+        return "freeBoard/freeBoard";
+    }
     
     // 글 작성 및 수정
     @ResponseBody

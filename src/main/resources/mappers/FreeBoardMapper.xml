@@ -85,4 +85,11 @@
         and free_board_del_yn = 'N'
         and FB_USER_ID = #{fbUserId}
     </select>
+    <select id="findKeyword" parameterType="String" resultType="footBall.freeBoard.FreeBoardResponse">
+        SELECT * FROM free_board
+        WHERE (free_board_title LIKE CONCAT('%', #{freeBoardTitle}, '%')
+        OR free_board_text LIKE CONCAT('%', #{freeBoardTitle}, '%')
+        OR FREE_BOARD_AUTHOR LIKE CONCAT('%', #{freeBoardTitle}, '%'))
+        AND free_board_del_yn = 'N';
+    </select>
 </mapper>

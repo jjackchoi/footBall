@@ -6,23 +6,56 @@
 </th:block>
 
 <th:block layout:fragment="content">
+    <div class="container mt-5" style="background-image: url('/assets/img/football.jpg'); min-height: 80vh; background-size: cover; background-position: center;">
     <h1 class="mt-4">자유게시판</h1>
     <div class="right" style="text-align: right">
-        <button type="button" class="btn btn-success">
+        <a th:href="@{'/freeBoard'}" class="btn btn-success">
             모든글 조회
-        </button>
+        </a>
         <button type="button" class="btn btn-primary" data-toggle="modal" onclick="openModal()">
             글 작성
         </button>
     </div>
-    <ol class="breadcrumb mb-4">
+            <!-- 검색 입력란과 버튼 -->
+        <form th:action="@{/freeBoard/search}" method="get">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="검색어를 입력하세요" name="freeBoardTitle" aria-label="Recipient's username" aria-describedby="button-addon2">
+                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">검색</button>
+            </div>
+        </form>
 
-    </ol>
-    <div class="card mb-4">
+        <!-- 테이블 -->
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>글작성자</th>
+                <th>글제목</th>
+                <th>글내용</th>
+                <th>작성일자</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="post : ${posts}">
+                <td th:text="${post.getFreeBoardAuthor()}"></td>
+                <td>
+                    <a th:href="@{'/freeBoard/details/' + ${post.freeBoardId}}">
+                        <span th:text="${post.freeBoardTitle}"></span>
+                    </a>
+                </td>
+                <td th:text="${post.getFreeBoardText()}"></td>
+                <td th:if="${post.freeBoardRegDate != null}" th:text="${#temporals.format(post.freeBoardRegDate, 'yyyy-MM-dd HH시 mm분')}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+<!--    <ol class="breadcrumb mb-4">
+
+    </ol>-->
+<!--    <div class="card mb-4">
         <div class="card-header">
             <i class="fas fa-table me-1"></i>
             자유게시판
-        </div>
+
         <div class="card-body">
             <table id="datatablesSimple">
                 <thead>
@@ -47,7 +80,7 @@
                 </tbody>
             </table>
         </div>
-    </div>
+    </div>-->
 </th:block>
 
 <th:block layout:fragment="modal">

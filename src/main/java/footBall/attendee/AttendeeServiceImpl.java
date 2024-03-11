@@ -1,5 +1,6 @@
 package footBall.attendee;
 
+import footBall.user.UserResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -15,27 +17,46 @@ public class AttendeeServiceImpl implements AttendeeService{
     @Autowired
     SqlSession sqlSession;
 
+    // 미참여인원 가져오기
+    @Override
+    public List<UserResponse> getNonattendanceUser() {
+        LocalDateTime sunday = this.getSunday();
+        return sqlSession.selectList("AttendeeMapper.getNonattendanceUser", sunday);
+    }
+
     // 투표대상 날짜 생성
     @Override
-    public int createDate(AttendeeDto params) {
+    public int createDate(VoteDto params) {
         return sqlSession.insert("AttendeeMapper.createDate", params);
     }
 
     // 투표대상 날짜 삭제
     @Override
-    public int deleteDate(AttendeeDto params) {
+    public int deleteDate(VoteDto params) {
         return sqlSession.delete("AttendeeMapper.deleteDate", params);
     }
 
     // 투표대상 날짜 조회
     @Override
-    public AttendeeDto getDate(AttendeeDto params) {
+    public VoteDto getDate(VoteDto params) {
         return sqlSession.selectOne("AttendeeMapper.getDate", params);
     }
 
     // 투표대상 날짜 존재여부 판별
     @Override
     public int findDate() {
+        // 일요일 가져오기
+        LocalDateTime sunday = this.getSunday();
+
+        // dto에 넣기
+        VoteDto dto = new VoteDto();
+        dto.setVoteDate(sunday);
+
+        return sqlSession.selectOne("AttendeeMapper.findDate", dto);
+    }
+
+    // 일요일 가져오기
+    public LocalDateTime getSunday(){
         // 현재 날짜 가져오기
         LocalDateTime today = LocalDateTime.now();
 
@@ -57,11 +78,6 @@ public class AttendeeServiceImpl implements AttendeeService{
         }
         sunday = sunday.withHour(0).withMinute(0).withSecond(0).withNano(0);
         log.info("돌아오는주 일요일의 정보는 : " + sunday);
-
-        // dto에 넣기
-        AttendeeDto dto = new AttendeeDto();
-        dto.setVoteDate(sunday);
-
-        return sqlSession.selectOne("AttendeeMapper.findDate", dto);
+        return sunday;
     }
 }

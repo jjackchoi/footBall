@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class AttendeeDto {
+public class VoteDto {
     private int voteId;
     private LocalDateTime voteDate;
 }

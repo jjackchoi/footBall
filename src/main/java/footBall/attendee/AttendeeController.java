@@ -23,15 +23,17 @@ public class AttendeeController {
     // 금주의 참석인원 페이지
     @GetMapping("/weeklyAttendee")
     public String weeklyAttendee(Model model){
-        List<UserResponse> users = userService.getAllUser();
-        model.addAttribute("users", users);
+//        List<UserResponse> users = userService.getAllUser();
+//        model.addAttribute("users", users);
+        List<UserResponse> nonattendanceUsers = attendeeService.getNonattendanceUser();
+        model.addAttribute("nonattendanceUsers", nonattendanceUsers);
         return "weeklyAttendee/weeklyAttendee";
     }
 
     // 투표 대상 날짜 데이터 넣기
     @ResponseBody
     @PostMapping("/weeklyAttendee/voteDate")
-    public String createDate(@RequestBody AttendeeDto params){
+    public String createDate(@RequestBody VoteDto params){
         int created = attendeeService.createDate(params);
         if(created == 1) {
             return "success";
@@ -43,7 +45,7 @@ public class AttendeeController {
     // 투표 대상 날짜 데이터 삭제
     @ResponseBody
     @DeleteMapping("/weeklyAttendee/voteDate")
-    public String deleteDate(@RequestBody AttendeeDto params){
+    public String deleteDate(@RequestBody VoteDto params){
        int deleted = attendeeService.deleteDate(params);
        if (deleted > 0) {
            return "success";

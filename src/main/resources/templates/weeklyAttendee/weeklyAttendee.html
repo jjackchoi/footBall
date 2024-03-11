@@ -74,14 +74,15 @@
 <th:block layout:fragment="script">
     <script th:inline="javascript">
         window.onload = () => {
+            let sessionId = [[ ${session.userId} ]];
+            let sessionAuth = [[ ${session.userAuth} ]];
             let sunday = getSunday();
             lenderNonpart();
-            lenderVoteButton(sunday);
-            let sessionId = [[ ${session.userId} ]];
+            lenderVoteButton(sunday, sessionAuth);
         }
 
         // 화면 로드 시 투표 대상 데이터여부에 따른 시작,삭제버튼 렌더링
-        function lenderVoteButton(sunday){
+        function lenderVoteButton(sunday, sessionAuth){
             $.ajax({
                 url : `/weeklyAttendee/voteDate`,
                 type : 'GET',
@@ -90,14 +91,19 @@
                     console.log(`성공적으로 투표대상날짜 존재 판별 - 서버 응답: ${response}`);
                     if(response == 'existent'){
                         lenderVoteDate(sunday);
-                        // 시작버튼 안보이게 - 삭제버튼 보이게 - 투표박스 보이게
-                        document.querySelector('#vStart').classList.add('d-none');
-                        document.querySelector('#vDelete').classList.remove('d-none');
+                        if(sessionAuth == 'Y'){
+                            // 시작버튼 안보이게 - 삭제버튼 보이게
+                            document.querySelector('#vStart').classList.add('d-none');
+                            document.querySelector('#vDelete').classList.remove('d-none');
+                        }
+                        // 투표박스 보이게
                         document.querySelector('#voteBox').classList.remove('d-none');
                     } else {
-                        // 삭제버튼 안보이게 - 시작버튼 보이게 - 투표날짜 안보이게
-                        document.querySelector('#vStart').classList.remove('d-none');
-                        document.querySelector('#vDelete').classList.add('d-none');
+                        if(sessionAuth == 'Y'){
+                            // 삭제버튼 안보이게 - 시작버튼 보이게
+                            document.querySelector('#vStart').classList.remove('d-none');
+                            document.querySelector('#vDelete').classList.add('d-none');
+                        }
                     }
                 },
                 error : function(request, status, error){

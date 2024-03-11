@@ -23,8 +23,6 @@ public class AttendeeController {
     // 금주의 참석인원 페이지
     @GetMapping("/weeklyAttendee")
     public String weeklyAttendee(Model model){
-//        List<UserResponse> users = userService.getAllUser();
-//        model.addAttribute("users", users);
         List<UserResponse> nonattendanceUsers = attendeeService.getNonattendanceUser();
         model.addAttribute("nonattendanceUsers", nonattendanceUsers);
         return "weeklyAttendee/weeklyAttendee";

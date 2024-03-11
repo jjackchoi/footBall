@@ -35,7 +35,7 @@
                             <input type="radio" name="attendance" value="Y">
                             <span class="fw-bold ms-2">참석</span>
                         </div>
-                        <div class="ms-2 me-auto d-flex align-items-center">
+                        <div class="ms-2 me-auto d-flex align-items-center" id="attend">
                             Content for list item
                         </div>
                     </li>
@@ -44,7 +44,7 @@
                             <input type="radio" name="attendance" value="N">
                             <span class="fw-bold ms-2">불참</span>
                         </div>
-                        <div class="ms-2 me-auto d-flex align-items-center">
+                        <div class="ms-2 me-auto d-flex align-items-center" id="nonAttend">
                             Content for list item
                         </div>
                     </li>
@@ -53,7 +53,7 @@
                             <input type="radio" name="attendance" value="P">
                             <span class="fw-bold ms-2">미정</span>
                         </div>
-                        <div class="ms-2 me-auto d-flex align-items-center">
+                        <div class="ms-2 me-auto d-flex align-items-center" id="pending">
                             Content for list item
                         </div>
                     </li>
@@ -77,8 +77,24 @@
             let sessionId = [[ ${session.userId} ]];
             let sessionAuth = [[ ${session.userAuth} ]];
             let sunday = getSunday();
+            lenderVoted();
             lenderNonpart();
             lenderVoteButton(sunday, sessionAuth);
+        }
+
+        // 화면 로드 시 투표한 인원 렌더링
+        function lenderVoted(){
+
+        }
+        // 화면 로드 시 미참여인원 렌더링
+        function lenderNonpart(){
+            let users = [[ ${nonattendanceUsers} ]];
+            let nonUser = [];
+            users.forEach(user => {
+                nonUser += user.fbUserName + ', ';
+            })
+            nonUser = nonUser.replace(/,\s*$/, '');
+            document.getElementById('nonPart').innerHTML = nonUser;
         }
 
         // 화면 로드 시 투표 대상 데이터여부에 따른 시작,삭제버튼 렌더링
@@ -129,17 +145,6 @@
             // 시분초 0으로 설정
             sunday.setHours(9,0,0,0);
             return sunday;
-        }
-
-        // 화면 로드 시 미참여인원 렌더링
-        function lenderNonpart(){
-            let users = [[ ${nonattendanceUsers} ]];
-            let nonUser = [];
-            users.forEach(user => {
-                nonUser += user.fbUserName + ', ';
-            })
-            nonUser = nonUser.replace(/,\s*$/, '');
-            document.getElementById('nonPart').innerHTML = nonUser;
         }
 
         // 정기모임 날짜 투표생성/삭제버튼 밑에 렌더링
@@ -232,6 +237,18 @@
                 }
             })
         }
+
+        // 라디오버튼 클릭 시 이벤트
+        let previousValue = null;
+        document.querySelectorAll('input[name="attendance"]').forEach(function(radio) {
+            radio.addEventListener('click', function() {
+                let selectedValue = this.value;
+                if(selectedValue != previousValue){
+                console.log("선택된 체크박스 값은 : " + selectedValue);
+                previousValue = selectedValue;
+                }
+            });
+        });
     </script>
 </th:block>
 

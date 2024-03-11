@@ -1,11 +1,13 @@
 select * from vote;
+select * from fb_user;
+select * from attend;
 
 /*test data insert*/
-insert into attend(VOTE_ID, FB_USER_ID , ATTEND_STATUS) values(14, 1, 'F');
-insert into attend(VOTE_ID, FB_USER_ID , ATTEND_STATUS) values(14, 2, 'N');
-insert into attend(VOTE_ID, FB_USER_ID , ATTEND_STATUS) values(14, 3, 'N');
-insert into attend(VOTE_ID, FB_USER_ID , ATTEND_STATUS) values(14, 24, 'Y');
-insert into attend(VOTE_ID, FB_USER_ID , ATTEND_STATUS) values(14, 25, 'Y');
+insert into attend(VOTE_ID, FB_USER_ID , ATTEND_STATUS) values(19, 7, 'P');
+insert into attend(VOTE_ID, FB_USER_ID , ATTEND_STATUS) values(19, 6, 'N');
+insert into attend(VOTE_ID, FB_USER_ID , ATTEND_STATUS) values(19, 5, 'N');
+insert into attend(VOTE_ID, FB_USER_ID , ATTEND_STATUS) values(19, 4, 'Y');
+insert into attend(VOTE_ID, FB_USER_ID , ATTEND_STATUS) values(19, 3, 'Y');
 
 /*test vote data delete*/
 delete from attend where VOTE_ID = 12;
@@ -86,3 +88,32 @@ OR FU.FB_USER_ID IS NULL
 	)
 AND FB_USER_DEL_YN = 'N'
 ORDER BY FB_USER_ID DESC;
+
+/*날짜에 따른 유저아이디(fb_user_id) 조회*/
+select FB_USER_ID 
+from attend
+where 1=1
+and attend_status = 'Y'
+and vote_id = (
+	select vote_id
+	from vote
+	where VOTE_DATE = '2024-03-17 00:00:00.000'
+);
+
+/*참석한 회원 조회*/
+select * 
+from fb_user
+where 1=1
+and fb_user_id in(
+	select FB_USER_ID 
+	from attend
+	where 1=1
+	and attend_status = 'Y'
+	and vote_id = (
+		select vote_id
+		from vote
+		where VOTE_DATE = '2024-03-17 00:00:00.000'
+	)
+)
+and fb_user_del_yn = 'N'
+order by fb_user_id desc;

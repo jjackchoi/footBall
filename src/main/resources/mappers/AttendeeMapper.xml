@@ -94,4 +94,17 @@
         FROM vote
         WHERE vote_date = #{voteDate};
     </select>
+
+    <!--투표 값 업데이트-->
+    <update id="updateVote" parameterType="java.util.Map">
+        UPDATE attend
+        SET attend_status = #{object1}
+        WHERE 1=1
+        AND fb_user_id = #{object2}
+        AND vote_id = (
+            SELECT vote_id
+            FROM vote
+            WHERE vote_date = #{object3}
+        )
+    </update>
 </mapper>

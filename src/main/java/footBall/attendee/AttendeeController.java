@@ -69,4 +69,16 @@ public class AttendeeController {
         }
     }
 
+    // 투표 값 업데이트
+    @ResponseBody
+    @PostMapping("/weeklyAttendee/updateVote")
+    public String updateVote(@RequestBody AttendDto params){
+        int updated = attendeeService.updateVote(params);
+        if (updated > 0){
+            return "success";
+        }else{
+            return "fail";
+        }
+    }
+
 }

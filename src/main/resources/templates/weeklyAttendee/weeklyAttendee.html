@@ -266,10 +266,48 @@
         let previousValue = null;
         document.querySelectorAll('input[name="attendance"]').forEach(function(radio) {
             radio.addEventListener('click', function() {
+                // 세션id 가져오기
+                let sessionId = [[ ${{session.userId}} ]];
+                // 로그인을 미수행 시 멈춤
+                if(sessionId == null || sessionId == ''){
+                    alert('로그인을 해주세요!');
+                    return;
+                }
+                // 투표 조회 결과를 담은 모델에서 fbUserId 가져오기
+                let votedUserIdList = /*[[ ${votedUsers.![fbUserId]} ]]*/ [];
+                let votedUserExVal = 0;
+                console.log(votedUserIdList);
+                // 로그인된 세션의 id가 투표한 인원의 id에 포함되어 있는지 확인(1이면 포함)
+                for(var i = 0; i < votedUserIdList.length; i++){
+                    if (sessionId == votedUserIdList[i]){
+                        votedUserExVal++;
+                    }
+                }
+                // 라디오버튼 선택된 값
                 let selectedValue = this.value;
-                if(selectedValue != previousValue){
                 console.log("선택된 체크박스 값은 : " + selectedValue);
-                previousValue = selectedValue;
+                // votedUserExVal에 따라서 insert update 구분
+                if(votedUserExVal > 0) {
+                    $.ajax({
+                        url: "/weeklyAttendee/updateVote",
+                        type: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify(
+                            { fbUserId: sessionId,
+                              attendStatus: selectedValue }
+                        ),
+                        async : false,
+                        success: function(response) {
+                            console.log(response);
+                        },
+                        error : function(request, status, error){
+                            console.log(error);
+                        }
+                    })
+                }
+
+                if(selectedValue != previousValue){
+                    previousValue = selectedValue;
                 }
                 console.log("previousValue의 값은 : " + previousValue);
             });

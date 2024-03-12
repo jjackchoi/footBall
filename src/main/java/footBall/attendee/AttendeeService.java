@@ -23,4 +23,7 @@ public interface AttendeeService {
 
     // 투표한 인원 조회
     List<UserResponse> votedUser();
+
+    // 투표 값 업데이트
+    int updateVote(AttendDto params);
 }

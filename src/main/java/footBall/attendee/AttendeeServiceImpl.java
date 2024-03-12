@@ -66,6 +66,17 @@ public class AttendeeServiceImpl implements AttendeeService{
         return sqlSession.selectOne("AttendeeMapper.findDate", dto);
     }
 
+    // 투표 값 업데이트
+    @Override
+    public int updateVote(AttendDto params) {
+        LocalDateTime sunday = getSunday();
+        Map<String, Object> objectMap = new HashMap<>();
+        objectMap.put("object1", params.getAttendStatus());
+        objectMap.put("object2", params.getFbUserId());
+        objectMap.put("object3", sunday);
+        return sqlSession.update("AttendeeMapper.updateVote", objectMap);
+    }
+
     // 일요일 가져오기
     public LocalDateTime getSunday(){
         // 현재 날짜 가져오기

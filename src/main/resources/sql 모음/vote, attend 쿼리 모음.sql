@@ -129,3 +129,29 @@ AND fu.fb_user_id IN(
 )
 AND fu.fb_user_del_yn = 'N'
 ORDER BY fu.fb_user_id DESC;
+
+/*미참여(미투표) 시 투표영역 버튼을 눌렀을 때*/
+INSERT INTO attend(
+	vote_id, fb_user_id , attend_status
+) 
+VALUES(
+	(
+		SELECT vote_id
+	 	FROM vote
+	 	WHERE vote_date = '2024-03-17 00:00:00.000'
+ 	), 26, 'P'
+);
+
+select * from attend
+where FB_USER_ID  = 26;
+
+/*투표영역 버튼에서 다른버튼을 클릭했을 시*/
+UPDATE attend 
+SET attend_status = "Y"
+WHERE 1=1
+AND fb_user_id = 26
+AND vote_id = (
+	SELECT vote_id
+	FROM vote
+ 	WHERE vote_date = '2024-03-17 00:00:00.000'
+);

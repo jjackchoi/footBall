@@ -19,7 +19,7 @@ public class AttendeeServiceImpl implements AttendeeService{
     @Autowired
     SqlSession sqlSession;
 
-    // 미참여인원 가져오기
+    // 미참여 인원 가져오기
     @Override
     public List<UserResponse> getNonattendanceUser() {
         // 일요일 가져오기
@@ -27,41 +27,33 @@ public class AttendeeServiceImpl implements AttendeeService{
         return sqlSession.selectList("AttendeeMapper.getNonattendanceUser", sunday);
     }
 
-    // 참석인원 조회
+    // 투표한 인원 조회
     @Override
-    public List<UserResponse> getAttendedUser() {
+    public List<UserResponse> votedUser() {
         // 일요일 가져오기
         LocalDateTime sunday = this.getSunday();
-        String attendValue = "Y";
-        Map<String, Object> params = new HashMap<>();
-        params.put("param1", sunday);
-        params.put("param2", attendValue);
-        return sqlSession.selectList("AttendeeMapper.getAttendedUser", params);
+        return sqlSession.selectList("AttendeeMapper.getAttendedUser", sunday);
     }
 
-    // 불참인원 조회
-
-    // 미정인원 조회
-
-    // 투표대상 날짜 생성
+    // 투표 대상 날짜 생성
     @Override
     public int createDate(VoteDto params) {
         return sqlSession.insert("AttendeeMapper.createDate", params);
     }
 
-    // 투표대상 날짜 삭제
+    // 투표 대상 날짜 삭제
     @Override
     public int deleteDate(VoteDto params) {
         return sqlSession.delete("AttendeeMapper.deleteDate", params);
     }
 
-    // 투표대상 날짜 조회
+    // 투표 대상 날짜 조회
     @Override
     public VoteDto getDate(VoteDto params) {
         return sqlSession.selectOne("AttendeeMapper.getDate", params);
     }
 
-    // 투표대상 날짜 존재여부 판별
+    // 투표 대상 날짜 존재 여부 판별
     @Override
     public int findDate() {
         // 일요일 가져오기
@@ -87,7 +79,7 @@ public class AttendeeServiceImpl implements AttendeeService{
         int todayOfWeekValue = todayOfWeek.getValue();
         log.info("오늘 날짜의 요일 숫자 " + todayOfWeekValue);
 
-        // 투표대상 일요일 날짜 가져오기
+        // 투표 대상 일요일 날짜 가져오기
         LocalDateTime sunday = null;
         if (todayOfWeekValue == 7){
             sunday = today;

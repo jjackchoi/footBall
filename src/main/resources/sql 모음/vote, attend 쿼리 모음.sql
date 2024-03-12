@@ -72,20 +72,20 @@ FROM FB_USER
 WHERE 1=1
 AND FB_USER_ID IN (
 	SELECT FU.FB_USER_ID 
-FROM FB_USER FU
-LEFT JOIN (
-	SELECT *
-	FROM ATTEND
-	WHERE VOTE_ID = (
-		SELECT VOTE_ID
-		FROM VOTE
-		WHERE VOTE_DATE = '2024-03-17 00:00:00.000'
+	FROM FB_USER FU
+	LEFT JOIN (
+		SELECT *
+		FROM ATTEND
+		WHERE VOTE_ID = (
+			SELECT VOTE_ID
+			FROM VOTE
+			WHERE VOTE_DATE = '2024-03-17 00:00:00.000'
 		)
-) A
-ON FU.FB_USER_ID = A.FB_USER_ID 
-WHERE A.FB_USER_ID IS NULL
-OR FU.FB_USER_ID IS NULL
-	)
+	) A
+	ON FU.FB_USER_ID = A.FB_USER_ID 
+	WHERE A.FB_USER_ID IS NULL
+	OR FU.FB_USER_ID IS NULL
+)
 AND FB_USER_DEL_YN = 'N'
 ORDER BY FB_USER_ID DESC;
 
@@ -101,19 +101,31 @@ and vote_id = (
 );
 
 /*참석한 회원 조회*/
-select * 
-from fb_user
-where 1=1
-and fb_user_id in(
-	select FB_USER_ID 
-	from attend
-	where 1=1
-	and attend_status = 'Y'
-	and vote_id = (
-		select vote_id
-		from vote
-		where VOTE_DATE = '2024-03-17 00:00:00.000'
+SELECT fu.fb_user_id
+      ,fu.fb_user_email
+      ,fu.fb_user_pswd
+      ,fu.fb_user_nickname
+      ,fu.fb_user_name
+      ,fu.fb_user_birth
+      ,fu.fb_user_phone
+      ,fu.fb_user_address
+      ,fu.fb_user_auth
+      ,fu.fb_user_del_yn
+      ,fu.fb_user_reg_date
+      ,fu.fb_user_mod_date
+      ,a.attend_status
+FROM fb_user fu
+LEFT JOIN attend a 
+ON fu.fb_user_id = a.fb_user_id 
+WHERE 1=1
+AND fu.fb_user_id IN(
+	SELECT fb_user_id 
+	FROM attend
+	WHERE vote_id = (
+		SELECT vote_id
+		FROM vote
+		WHERE vote_date = '2024-03-17 00:00:00.000'
 	)
 )
-and fb_user_del_yn = 'N'
-order by fb_user_id desc;
+AND fu.fb_user_del_yn = 'N'
+ORDER BY fu.fb_user_id DESC;

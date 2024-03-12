@@ -23,12 +23,13 @@ public class AttendeeController {
     // 금주의 참석인원 페이지
     @GetMapping("/weeklyAttendee")
     public String weeklyAttendee(Model model){
+        // 미참여(미투표) 인원 조회
         List<UserResponse> nonattendanceUsers = attendeeService.getNonattendanceUser();
-        List<UserResponse> attendedUsers = attendeeService.getAttendedUser();
-//        attendeeService.getNonattendedUser();
-//        attendeeService.getPendingUser();
         model.addAttribute("nonattendanceUsers", nonattendanceUsers);
-        model.addAttribute("attendedUsers", attendedUsers);
+
+        // 투표한 인원 조회
+        List<UserResponse> votedUsers = attendeeService.votedUser();
+        model.addAttribute("votedUsers", votedUsers);
         return "weeklyAttendee/weeklyAttendee";
     }
 

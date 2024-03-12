@@ -84,14 +84,32 @@
 
         // 화면 로드 시 투표한 인원 렌더링
         function lenderVoted(){
-            let attendedUsers = [[ ${attendedUsers} ]];
-            let attended = [];
-            attendedUsers.forEach(attendedUser => {
-                attended += attendedUser.fbUserName + ', ';
+            // 투표 인원 가져오기
+            let votedUsers = [[ ${votedUsers} ]];
+            // 화면단에 담을 변수 초기화
+            let attended = '';
+            let nonAttended = '';
+            let pended = '';
+            // 변수에 담기
+            votedUsers.forEach(votedUser => {
+                if(votedUser.attendStatus == 'Y'){
+                    attended += votedUser.fbUserName + ', ';
+                }else if(votedUser.attendStatus == 'N'){
+                    nonAttended += votedUser.fbUserName + ', ';
+                }else if(votedUser.attendStatus == 'P'){
+                    pended += votedUser.fbUserName + ', ';
+                }
             })
+            // 끝자리 ',' 없애기
             attended = attended.replace(/,\s*$/, '');
+            nonAttended = nonAttended.replace(/,\s*$/, '');
+            pended = pended.replace(/,\s*$/, '');
+            // 화면에 렌더링
             document.querySelector('#attend').innerHTML = attended;
+            document.querySelector('#nonAttend').innerHTML = nonAttended;
+            document.querySelector('#pending').innerHTML = pended;
         }
+
         // 화면 로드 시 미참여인원 렌더링
         function lenderNonpart(){
             let users = [[ ${nonattendanceUsers} ]];

@@ -3,13 +3,13 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="AttendeeMapper">
 
-    <!--투표테이블 전체 칼럼-->
+    <!--투표 테이블 전체 칼럼-->
     <sql id="voteColumns">
          vote_id
         ,vote_date
     </sql>
 
-    <!--참석테이블 전체 칼럼-->
+    <!--참석 테이블 전체 칼럼-->
     <sql id="attendColumns">
          attend_id
         ,vote_id
@@ -17,7 +17,7 @@
         ,attend_status
     </sql>
 
-    <!--미참여인원 조회하기-->
+    <!--미참여 인원 조회하기-->
     <select id="getNonattendanceUser" resultType="footBall.user.UserResponse" parameterType="java.time.LocalDateTime">
         SELECT *
         FROM fb_user
@@ -42,27 +42,30 @@
         ORDER BY fb_user_id DESC
     </select>
 
-<!--    <select id="getAttendedUser" parameterType="java.time.LocalDateTime" resultType="footBall.user.UserResponse">-->
-    <select id="getAttendedUser" parameterType="java.util.Map" resultType="footBall.user.UserResponse">
-        SELECT *
-        FROM fb_user
+    <!--투표 인원 조회하기-->
+    <select id="getAttendedUser" parameterType="java.time.LocalDateTime" resultType="footBall.user.UserResponse">
+        SELECT fu.fb_user_id ,fu.fb_user_email ,fu.fb_user_pswd ,fu.fb_user_nickname
+            ,fu.fb_user_name ,fu.fb_user_birth ,fu.fb_user_phone ,fu.fb_user_address
+            ,fu.fb_user_auth ,fu.fb_user_del_yn ,fu.fb_user_reg_date ,fu.fb_user_mod_date
+            ,a.attend_status
+        FROM fb_user fu
+        LEFT JOIN attend a
+        ON fu.fb_user_id = a.fb_user_id
         WHERE 1=1
-        AND fb_user_id IN(
+        AND fu.fb_user_id IN(
             SELECT fb_user_id
             FROM attend
-            WHERE 1=1
-            AND attend_status = #{param2}
-            AND vote_id = (
+            WHERE vote_id = (
                 SELECT vote_id
                 FROM vote
-                WHERE vote_date = #{param1}
+                WHERE vote_date = #{sunday}
             )
         )
-        AND fb_user_del_yn = 'N'
-        ORDER BY fb_user_id DESC
+        AND fu.fb_user_del_yn = 'N'
+        ORDER BY fu.fb_user_id DESC;
     </select>
 
-    <!--투표대상 날짜 생성-->
+    <!--투표 대상 날짜 생성-->
     <insert id="createDate" parameterType="footBall.attendee.VoteDto" useGeneratedKeys="true" keyProperty="voteId">
         INSERT INTO vote(
             vote_date
@@ -72,20 +75,20 @@
         )
     </insert>
 
-    <!--투표대상 날짜 삭제-->
+    <!--투표 대상 날짜 삭제-->
     <delete id="deleteDate" parameterType="footBall.attendee.VoteDto">
         DELETE FROM vote
         WHERE vote_date = #{voteDate}
     </delete>
 
-    <!--투표대상 날짜 조회-->
+    <!--투표 대상 날짜 조회-->
     <select id="getDate" parameterType="footBall.attendee.VoteDto" resultType="footBall.attendee.VoteDto">
         SELECT *
         FROM vote
         WHERE vote_date = #{voteDate};
     </select>
 
-    <!--투표대상 날짜 존재여부 판별-->
+    <!--투표 대상 날짜 존재 여부 판별-->
     <select id="findDate" parameterType="footBall.attendee.VoteDto" resultType="int">
         SELECT COUNT(*)
         FROM vote

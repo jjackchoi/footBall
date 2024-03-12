@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -20,9 +22,26 @@ public class AttendeeServiceImpl implements AttendeeService{
     // 미참여인원 가져오기
     @Override
     public List<UserResponse> getNonattendanceUser() {
+        // 일요일 가져오기
         LocalDateTime sunday = this.getSunday();
         return sqlSession.selectList("AttendeeMapper.getNonattendanceUser", sunday);
     }
+
+    // 참석인원 조회
+    @Override
+    public List<UserResponse> getAttendedUser() {
+        // 일요일 가져오기
+        LocalDateTime sunday = this.getSunday();
+        String attendValue = "Y";
+        Map<String, Object> params = new HashMap<>();
+        params.put("param1", sunday);
+        params.put("param2", attendValue);
+        return sqlSession.selectList("AttendeeMapper.getAttendedUser", params);
+    }
+
+    // 불참인원 조회
+
+    // 미정인원 조회
 
     // 투표대상 날짜 생성
     @Override

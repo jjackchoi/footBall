@@ -20,4 +20,11 @@ public interface AttendeeService {
 
     // 투표대상 날짜 존재여부 판별
     int findDate();
+
+    // 참석인원 조회
+    List<UserResponse> getAttendedUser();
+
+    // 불참인원 조회
+
+    // 미정인원 조회
 }

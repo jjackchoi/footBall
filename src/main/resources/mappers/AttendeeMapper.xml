@@ -42,6 +42,26 @@
         ORDER BY fb_user_id DESC
     </select>
 
+<!--    <select id="getAttendedUser" parameterType="java.time.LocalDateTime" resultType="footBall.user.UserResponse">-->
+    <select id="getAttendedUser" parameterType="java.util.Map" resultType="footBall.user.UserResponse">
+        SELECT *
+        FROM fb_user
+        WHERE 1=1
+        AND fb_user_id IN(
+            SELECT fb_user_id
+            FROM attend
+            WHERE 1=1
+            AND attend_status = #{param2}
+            AND vote_id = (
+                SELECT vote_id
+                FROM vote
+                WHERE vote_date = #{param1}
+            )
+        )
+        AND fb_user_del_yn = 'N'
+        ORDER BY fb_user_id DESC
+    </select>
+
     <!--투표대상 날짜 생성-->
     <insert id="createDate" parameterType="footBall.attendee.VoteDto" useGeneratedKeys="true" keyProperty="voteId">
         INSERT INTO vote(

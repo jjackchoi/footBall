@@ -84,7 +84,13 @@
 
         // 화면 로드 시 투표한 인원 렌더링
         function lenderVoted(){
-
+            let attendedUsers = [[ ${attendedUsers} ]];
+            let attended = [];
+            attendedUsers.forEach(attendedUser => {
+                attended += attendedUser.fbUserName + ', ';
+            })
+            attended = attended.replace(/,\s*$/, '');
+            document.querySelector('#attend').innerHTML = attended;
         }
         // 화면 로드 시 미참여인원 렌더링
         function lenderNonpart(){
@@ -247,6 +253,7 @@
                 console.log("선택된 체크박스 값은 : " + selectedValue);
                 previousValue = selectedValue;
                 }
+                console.log("previousValue의 값은 : " + previousValue);
             });
         });
     </script>

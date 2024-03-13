@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/basic">
+
+<th:block layout:fragment="title">
+    <title>회비현황</title>
+</th:block>
+
+<th:block layout:fragment="add-css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+    </style>
+</th:block>
+
+<th:block layout:fragment="content">
+    <h1 class="mt-4">회비현황</h1>
+    <div class="right" style="text-align: right">
+        <button type="button" class="btn btn-primary" onclick="sendCheckedRows()">
+            수정버튼
+        </button>
+    </div>
+    <ol class="breadcrumb mb-4">
+
+    </ol>
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-table me-1"></i>
+            회비현황
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>회원</th>
+                    <th th:each="i : ${#numbers.sequence(1, 12)}" th:text="${i}월"></th>
+                </tr>
+                </thead>
+                <tbody class="postList">
+                <tr th:if="${session.userAuth} == 'Y'" th:each="post, rowStat : ${posts}">
+                    <td th:text="${post.getFbUserName()}"></td>
+                    <td th:each="i, colStat : ${#numbers.sequence(1, 12)}">
+                        <input type="checkbox" th:attr="data-userid=${post.getFbUserId()}, data-rowindex=${rowStat.index * 12 + colStat.index + 1}" onchange="handleCheckboxChange(this)" />
+                    </td>
+                </tr>
+                <tr th:if="${session.userAuth} == 'N'" th:each="post, rowStat : ${posts}">
+                    <td th:text="${post.getFbUserName()}"></td>
+                    <td th:each="i, colStat : ${#numbers.sequence(1, 12)}">
+                        <input th:if="${session.userAuth} == 'Y'" type="checkbox" th:attr="data-userid=${post.getFbUserId()}, data-rowindex=${rowStat.index * 12 + colStat.index + 1}" onchange="handleCheckboxChange(this)" />
+
+                        <!-- 출력 상자를 표시하는 경우 -->
+                        <span th:if="${session.userAuth} == 'N'" th:attr="data-userid=${post.getFbUserId()}, data-rowindex=${rowStat.index * 12 + colStat.index + 1}" th:text="${'O'}"></span>
+                        <span th:if="${session.userAuth} == 'N'" th:unless="${someCondition}" th:text="${'X'}"></span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</th:block>
+
+<th:block layout:fragment="modal">
+</th:block>
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        function handleCheckboxChange(checkbox) {
+            var fbUserId = checkbox.getAttribute('data-userid');
+            var rowIndex = checkbox.getAttribute('data-rowindex');
+            var isChecked = checkbox.checked;
+
+            // Ajax를 사용하여 서버로 데이터 전송
+            $.ajax({
+                type: 'POST',
+                url: '/fee/check', // 여기에 컨트롤러의 엔드포인트 주소를 적어주세요
+                contentType: 'application/json',
+                data: JSON.stringify({ fbUserId: fbUserId, rowIndex: rowIndex, isChecked: isChecked }),
+                success: function(response) {
+                    console.log('Data sent successfully:', response);
+                },
+                error: function(error) {
+                    console.error('Error sending data:', error);
+                }
+            });
+        }
+    </script>
+</th:block>
+
+</html>

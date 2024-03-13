@@ -9,4 +9,9 @@
         ,fb_user_id
         ,fee_month
     </sql>
+
+    <insert id="feeInsert" parameterType="footBall.fee.FeeDto">
+        INSERT INTO fee (FB_USER_ID,FEE_MONTH)
+        VALUES (#{fbUserId},#{rowIndex});
+    </insert>
 </mapper>

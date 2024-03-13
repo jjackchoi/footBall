@@ -24,13 +24,27 @@ public class AttendeeController {
     @GetMapping("/weeklyAttendee")
     public String weeklyAttendee(Model model){
         // 미참여(미투표) 인원 조회
-        List<UserResponse> nonattendanceUsers = attendeeService.getNonattendanceUser();
+        List<UserResponse> nonattendanceUsers = attendeeService.findNonattendanceUser();
         model.addAttribute("nonattendanceUsers", nonattendanceUsers);
 
         // 투표한 인원 조회
-        List<UserResponse> votedUsers = attendeeService.votedUser();
+        List<UserResponse> votedUsers = attendeeService.findVotedUser();
         model.addAttribute("votedUsers", votedUsers);
         return "weeklyAttendee/weeklyAttendee";
+    }
+
+    // 미참여(미투표) 인원 조회
+    @ResponseBody
+    @GetMapping("/weeklyAttendee/findNonattendanceUser")
+    public List<UserResponse> findNonattendanceUser(){
+        return attendeeService.findNonattendanceUser();
+    }
+
+    // 투표한 유저 찾기
+    @ResponseBody
+    @GetMapping("/weeklyAttendee/findVotedUser")
+    public List<UserResponse> findVotedUser(){
+        return attendeeService.findVotedUser();
     }
 
     // 투표 대상 날짜 데이터 넣기

@@ -18,7 +18,7 @@
     </sql>
 
     <!--미참여 인원 조회하기-->
-    <select id="getNonattendanceUser" resultType="footBall.user.UserResponse" parameterType="java.time.LocalDateTime">
+    <select id="findNonattendanceUser" resultType="footBall.user.UserResponse" parameterType="java.time.LocalDateTime">
         SELECT *
         FROM fb_user
         WHERE 1=1
@@ -43,7 +43,7 @@
     </select>
 
     <!--투표 인원 조회하기-->
-    <select id="getAttendedUser" parameterType="java.time.LocalDateTime" resultType="footBall.user.UserResponse">
+    <select id="findVotedUser" parameterType="java.time.LocalDateTime" resultType="footBall.user.UserResponse">
         SELECT fu.fb_user_id ,fu.fb_user_email ,fu.fb_user_pswd ,fu.fb_user_nickname
             ,fu.fb_user_name ,fu.fb_user_birth ,fu.fb_user_phone ,fu.fb_user_address
             ,fu.fb_user_auth ,fu.fb_user_del_yn ,fu.fb_user_reg_date ,fu.fb_user_mod_date

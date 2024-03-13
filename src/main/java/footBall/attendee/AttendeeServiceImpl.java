@@ -21,18 +21,18 @@ public class AttendeeServiceImpl implements AttendeeService{
 
     // 미참여 인원 가져오기
     @Override
-    public List<UserResponse> getNonattendanceUser() {
+    public List<UserResponse> findNonattendanceUser() {
         // 일요일 가져오기
         LocalDateTime sunday = this.getSunday();
-        return sqlSession.selectList("AttendeeMapper.getNonattendanceUser", sunday);
+        return sqlSession.selectList("AttendeeMapper.findNonattendanceUser", sunday);
     }
 
     // 투표한 인원 조회
     @Override
-    public List<UserResponse> votedUser() {
+    public List<UserResponse> findVotedUser() {
         // 일요일 가져오기
         LocalDateTime sunday = this.getSunday();
-        return sqlSession.selectList("AttendeeMapper.getAttendedUser", sunday);
+        return sqlSession.selectList("AttendeeMapper.findVotedUser", sunday);
     }
 
     // 투표 대상 날짜 생성

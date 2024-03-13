@@ -7,7 +7,7 @@ import java.util.List;
 public interface AttendeeService {
 
     // 미참여 인원 가져오기
-    List<UserResponse> getNonattendanceUser();
+    List<UserResponse> findNonattendanceUser();
 
     // 투표 대상 날짜 생성
     int createDate(VoteDto params);
@@ -22,7 +22,7 @@ public interface AttendeeService {
     int findDate();
 
     // 투표한 인원 조회
-    List<UserResponse> votedUser();
+    List<UserResponse> findVotedUser();
 
     // 투표 값 업데이트
     int updateVote(AttendDto params);

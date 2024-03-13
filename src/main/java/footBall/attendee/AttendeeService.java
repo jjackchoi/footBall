@@ -26,4 +26,7 @@ public interface AttendeeService {
 
     // 투표 값 업데이트
     int updateVote(AttendDto params);
+
+    // 미참여인원 투표
+    int createVote(AttendDto params);
 }

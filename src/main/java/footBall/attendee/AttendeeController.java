@@ -95,4 +95,15 @@ public class AttendeeController {
         }
     }
 
+    // 미참여인원 투표
+    @ResponseBody
+    @PostMapping("/weeklyAttendee/createVote")
+    public String createVote(@RequestBody AttendDto params){
+        int created = attendeeService.createVote(params);
+        if (created > 0){
+            return "success";
+        }else{
+            return "fail";
+        }
+    }
 }

@@ -288,48 +288,77 @@
             radio.addEventListener('click', function() {
                 // 세션id 가져오기
                 let sessionId = [[ ${{session.userId}} ]];
+
                 // 로그인을 미수행 시 멈춤
                 if(sessionId == null || sessionId == ''){
                     alert('로그인을 해주세요!');
                     this.checked = false;
                     return;
                 }
-                // 모델에서 투표자의 fbUserId 가져오기
-                let votedUserIdList = /*[[ ${votedUsers.![fbUserId]} ]]*/ [];
-                let votedUserExVal = 0;
+
+                // 투표자의 fbUserId 가져오기
+                let votedUserIdList = [];
+                $.ajax({
+                    url: '/weeklyAttendee/findVotedUser',
+                    type: 'GET',
+                    dataType: 'json',
+                    async: false,
+                    success : function (response) {
+                        // 변수에 담기
+                        response.forEach(votedUser => {
+                            votedUserIdList.push(votedUser.fbUserId);
+                        })
+                    },
+                    error : function (request, status, error) {
+                        console.log(error)
+                    }
+                })
                 console.log(votedUserIdList);
+
                 // 로그인된 세션의 id가 투표한 인원의 id에 포함되어 있는지 확인(1이면 포함)
+                let votedUserExVal = 0;
                 for(var i = 0; i < votedUserIdList.length; i++){
                     if (sessionId == votedUserIdList[i]){
                         votedUserExVal++;
                     }
                 }
+
                 // 라디오버튼 선택된 값
                 let selectedValue = this.value;
                 console.log("선택된 체크박스 값은 : " + selectedValue);
 
                 // votedUserExVal에 따라서 insert update 구분
-                if(votedUserExVal > 0) {
-                    $.ajax({
-                        url: "/weeklyAttendee/updateVote",
-                        type: "POST",
-                        contentType: "application/json",
-                        data: JSON.stringify(
-                            { fbUserId: sessionId,
-                              attendStatus: selectedValue }
-                        ),
-                        async : false,
-                        success: function(response) {
-                            console.log(response);
-                            lenderVoted();
-                            lenderNonpart();
-                        },
-                        error : function(request, status, error){
-                            console.log(error);
-                        }
-                    })
+                let urlString = ''; // url 초기화
+                if(votedUserExVal > 0){ // 값 변경
+                    urlString = 'updateVote';
+                }else { // 값 넣기
+                    urlString = 'createVote';
                 }
 
+                // 참석 여부에 따른 방식으로 비동기통신
+                $.ajax({
+                    url: `/weeklyAttendee/${urlString}`,
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(
+                        { fbUserId: sessionId,
+                          attendStatus: selectedValue }
+                    ),
+                    async : false,
+                    success: function(response) {
+                        console.log(response);
+                        lenderVoted();
+                        lenderNonpart();
+                        if(urlString == 'createVote'){
+                            votedUserIdList.push(sessionId);
+                        }
+                    },
+                    error : function(request, status, error){
+                        console.log(error);
+                    }
+                })
+
+                // 라디오버튼의 선택한 값이 전의 값과 같지 않으면 해당 값 넣어주기
                 if(selectedValue != previousValue){
                     previousValue = selectedValue;
                 }

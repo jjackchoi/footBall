@@ -69,12 +69,25 @@ public class AttendeeServiceImpl implements AttendeeService{
     // 투표 값 업데이트
     @Override
     public int updateVote(AttendDto params) {
+        Map<String, Object> objectMap = mappingParams(params);
+        return sqlSession.update("AttendeeMapper.updateVote", objectMap);
+    }
+
+    // 미참여인원 투표
+    @Override
+    public int createVote(AttendDto params) {
+        Map<String, Object> objectMap = mappingParams(params);
+        return sqlSession.insert("AttendeeMapper.createVote", objectMap);
+    }
+
+    // 가져온 파라미터값들과 투표대상날짜 매핑
+    public Map<String, Object> mappingParams(AttendDto params){
         LocalDateTime sunday = getSunday();
         Map<String, Object> objectMap = new HashMap<>();
-        objectMap.put("object1", params.getAttendStatus());
-        objectMap.put("object2", params.getFbUserId());
-        objectMap.put("object3", sunday);
-        return sqlSession.update("AttendeeMapper.updateVote", objectMap);
+        objectMap.put("attendStatus", params.getAttendStatus());
+        objectMap.put("fbUserId", params.getFbUserId());
+        objectMap.put("sunday", sunday);
+        return objectMap;
     }
 
     // 일요일 가져오기
@@ -84,11 +97,9 @@ public class AttendeeServiceImpl implements AttendeeService{
 
         // 날짜의 요일 가져오기
         DayOfWeek todayOfWeek = today.getDayOfWeek();
-        log.info(String.valueOf(todayOfWeek));
 
         // 요일 숫자 출력(월요일:1, 화요일:2,..., 일요일:7)
         int todayOfWeekValue = todayOfWeek.getValue();
-        log.info("오늘 날짜의 요일 숫자 " + todayOfWeekValue);
 
         // 투표 대상 일요일 날짜 가져오기
         LocalDateTime sunday = null;

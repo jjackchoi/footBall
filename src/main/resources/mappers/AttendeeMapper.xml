@@ -121,4 +121,17 @@
             , #{fbUserId}, #{attendStatus}
         )
     </insert>
+
+    <!--투표한 해당 유저의 참석여부 값 가져오기-->
+    <select id="getAttendStatus" parameterType="java.util.Map" resultType="String">
+        SELECT attend_status
+        FROM attend
+        WHERE 1=1
+        AND fb_user_id = #{fbUserId}
+        AND vote_id = (
+            SELECT vote_id
+            FROM vote
+            WHERE vote_date = #{sunday}
+        )
+    </select>
 </mapper>

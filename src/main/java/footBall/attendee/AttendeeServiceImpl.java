@@ -80,6 +80,15 @@ public class AttendeeServiceImpl implements AttendeeService{
         return sqlSession.insert("AttendeeMapper.createVote", objectMap);
     }
 
+    // 투표한 해당 유저의 참석여부 값 가져오기
+    @Override
+    public String getAttendStatus(Long fbUserId) {
+        Map<String, Object> objectMap = new HashMap<>();
+        objectMap.put("fbUserId", fbUserId);
+        objectMap.put("sunday", getSunday());
+        return sqlSession.selectOne("AttendeeMapper.getAttendStatus",objectMap);
+    }
+
     // 가져온 파라미터값들과 투표대상날짜 매핑
     public Map<String, Object> mappingParams(AttendDto params){
         LocalDateTime sunday = getSunday();

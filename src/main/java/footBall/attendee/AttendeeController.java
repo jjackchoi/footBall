@@ -4,6 +4,8 @@ import footBall.user.UserResponse;
 import footBall.user.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -105,5 +107,13 @@ public class AttendeeController {
         }else{
             return "fail";
         }
+    }
+
+    // 투표한 해당 유저의 참석여부 값 가져오기
+    @ResponseBody
+    @GetMapping("/weeklyAttendee/getAttendStatus/{fbUserId}")
+    public ResponseEntity<String> getAttendStatus(@PathVariable Long fbUserId){
+        log.info(String.valueOf(fbUserId));
+        return ResponseEntity.status(HttpStatus.OK).body(attendeeService.getAttendStatus(fbUserId));
     }
 }

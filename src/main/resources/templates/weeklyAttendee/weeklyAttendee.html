@@ -32,7 +32,7 @@
                 <div class="d-none" id="voteBox">
                     <li class="list-group-item justify-content-between align-items-start">
                         <div class="ms-2 me-auto d-flex align-items-center">
-                            <input type="radio" name="attendance" value="Y">
+                            <input type="radio" name="attendance" id="attendBtn" value="Y">
                             <span class="fw-bold ms-2">참석</span>
                         </div>
                         <div class="ms-2 me-auto d-flex align-items-center" id="attend">
@@ -41,7 +41,7 @@
                     </li>
                     <li class="list-group-item justify-content-between align-items-start">
                         <div class="ms-2 me-auto d-flex align-items-center">
-                            <input type="radio" name="attendance" value="N">
+                            <input type="radio" name="attendance" id="nonAttendBtn" value="N">
                             <span class="fw-bold ms-2">불참</span>
                         </div>
                         <div class="ms-2 me-auto d-flex align-items-center" id="nonAttend">
@@ -50,7 +50,7 @@
                     </li>
                     <li class="list-group-item justify-content-between align-items-start">
                         <div class="ms-2 me-auto d-flex align-items-center">
-                            <input type="radio" name="attendance" value="P">
+                            <input type="radio" name="attendance" id="pendingBtn" value="P">
                             <span class="fw-bold ms-2">미정</span>
                         </div>
                         <div class="ms-2 me-auto d-flex align-items-center" id="pending">
@@ -79,6 +79,33 @@
             lenderVoted();
             lenderNonpart();
             lenderVoteButton(sunday, sessionAuth);
+            fixRadioBtn();
+        }
+
+        // 화면 로드 시 사용자의 참석여부에 따른 라디오버튼 고정
+        function fixRadioBtn(){
+            let sessionId = /*[[ ${session.userId} ]]*/ null;
+            if(sessionId !== null){
+                console.log(`sessionId는 ${sessionId}입니다`);
+                $.ajax({
+                    url: `/weeklyAttendee/getAttendStatus/${sessionId}`,
+                    type: 'GET',
+                    async: false,
+                    success: function(response){
+                        console.log(response);
+                        if(response == 'Y'){
+                            document.querySelector('#attendBtn').checked = true;
+                        }else if(response == 'N'){
+                            document.querySelector('#nonAttendBtn').checked = true;
+                        }else if(response == 'P'){
+                            document.querySelector('#pendingBtn').checked = true;
+                        }
+                    },
+                    error : function (request, status, error) {
+                        console.log(error)
+                    }
+                })
+            }
         }
 
         // 투표한 인원 렌더링
@@ -118,7 +145,7 @@
             })
         }
 
-        // 화면 로드 시 미참여인원 렌더링
+        // 미참여인원 렌더링
         function lenderNonpart(){
             $.ajax({
                 url: '/weeklyAttendee/findNonattendanceUser',

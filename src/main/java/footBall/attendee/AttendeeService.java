@@ -29,4 +29,7 @@ public interface AttendeeService {
 
     // 미참여인원 투표
     int createVote(AttendDto params);
+
+    // 투표한 해당 유저의 참석여부 값 가져오기
+    String getAttendStatus(Long fbUserId);
 }

@@ -167,3 +167,14 @@ INSERT INTO attend(
  	)
  	, 26, 'Y'
 );
+
+/*화면 로드 시 사용자의 참석여부에 따른 라디오버튼 고정*/
+SELECT attend_status 
+FROM attend
+WHERE 1=1
+AND fb_user_id = 1
+AND vote_id = (
+	SELECT vote_id
+	FROM vote
+	WHERE vote_date = "2024-03-17 00:00:00.000"
+);

@@ -14,9 +14,6 @@
 <th:block layout:fragment="content">
     <h1 class="mt-4">회비현황</h1>
     <div class="right" style="text-align: right">
-        <button type="button" class="btn btn-primary" onclick="sendCheckedRows()">
-            수정버튼
-        </button>
     </div>
     <ol class="breadcrumb mb-4">
 
@@ -44,11 +41,9 @@
                     <tr th:if="${session.userAuth} == 'N'" th:each="post, rowStat : ${posts}">
                         <td th:text="${post.getFbUserName()}"></td>
                         <td th:each="i, colStat : ${#numbers.sequence(1, 12)}">
-                            <input th:if="${session.userAuth} == 'Y'" type="checkbox" th:attr="data-userId=${post.getFbUserId()}, data-feeMonth=${0 * 12 + colStat.index + 1}" onchange="handleCheckboxChange(this)" />
-
                             <!-- 출력 상자를 표시하는 경우 -->
-                            <span th:if="${session.userAuth} == 'N'" th:attr="data-userid=${post.getFbUserId()}, data-rowindex=${0 * 12 + colStat.index + 1}" th:text="${'O'}"></span>
-                            <span th:if="${session.userAuth} == 'N'" th:unless="${someCondition}" th:text="${'X'}"></span>
+                            <span id="feeSpan" class="d-none" th:if="${session.userAuth} == 'N'"
+                                  th:attr="data-userId=${post.getFbUserId()}, data-feeMonth=${0 * 12 + colStat.index + 1}" th:text="${'O'}"></span>
                         </td>
                     </tr>
                 </tbody>
@@ -66,6 +61,7 @@
         // 화면 로드 시 사용자의 회비납부여부에 따른 체크박스 고정
         function fixCheckbox(){
             let sessionId = /*[[ ${session.userId} ]]*/ null;
+            let sessionAuth = /*[[ ${session.userAuth} ]]*/ null;
             if(sessionId !== null){
                 console.log(`sessionId는 ${sessionId}입니다`);
                 $.ajax({
@@ -76,9 +72,11 @@
                     success: function(response){
                         console.log(response);
                         response.forEach(fee => {
-                            console.log(fee);
-                            console.log(`${fee.fbUserId}, ${fee.feeMonth}`)
-<!--                            document.querySelector("input[type='checkbox'][data-userId='fee.fbUserId'][data-feeMonth='fee.feeMonth']").checked = true;-->
+                            if(sessionAuth == 'Y'){
+                                document.querySelector(`input[type='checkbox'][data-userId='${fee.fbUserId}'][data-feeMonth='${fee.feeMonth}']`).checked = true;
+                            }else if(sessionAuth == 'N'){
+                                document.querySelector(`#feeSpan[data-userId='${fee.fbUserId}'][data-feeMonth='${fee.feeMonth}']`).classList.remove("d-none");
+                            }
                         })
                     },
                     error : function (request, status, error) {

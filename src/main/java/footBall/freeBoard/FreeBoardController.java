@@ -6,6 +6,7 @@ import footBall.user.UserResponse;
 import footBall.user.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -34,12 +35,17 @@ public class FreeBoardController {
         return "freeBoard/freeBoard";
     }
 
+    @GetMapping("/freeBoard/allSearch")
+    public ResponseEntity<List<FreeBoardResponse>> searchFreeBoardPosts() {
+        List<FreeBoardResponse> searchResult = freeBoardService.findAll();
+        return ResponseEntity.ok().body(searchResult);
+    }
+
     // 검색 결과 조회
     @GetMapping("/freeBoard/search")
-    public String searchFreeBoardPosts(@RequestParam(name = "freeBoardTitle") String freeBoardTitle, Model model) {
+    public ResponseEntity<List<FreeBoardResponse>> searchFreeBoardPosts(@RequestParam(name = "freeBoardTitle") String freeBoardTitle) {
         List<FreeBoardResponse> searchResult = freeBoardService.searchFreeBoardPosts(freeBoardTitle);
-        model.addAttribute("posts", searchResult);
-        return "freeBoard/freeBoard";
+        return ResponseEntity.ok().body(searchResult);
     }
     
     // 글 작성 및 수정

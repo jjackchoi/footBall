@@ -9,16 +9,16 @@
     <div class="container mt-5" style="background-image: url('/assets/img/football.jpg'); min-height: 80vh; background-size: cover; background-position: center;">
     <h1 class="mt-4">자유게시판</h1>
     <div class="right" style="text-align: right">
-        <a th:href="@{'/freeBoard'}" class="btn btn-success">
-            모든글 조회
-        </a>
+        <button type="button" class="btn btn-success" id="viewAllPostsBtn">
+            모든 글 조회
+        </button>
         <button type="button" class="btn btn-primary" data-toggle="modal" onclick="openModal()">
             글 작성
         </button>
     </div>
             <!-- 검색 입력란과 버튼 -->
-        <form th:action="@{/freeBoard/search}" method="get">
-            <div class="input-group mb-3">
+        <form id="searchForm" action="/freeBoard/search" method="get">
+            <div class="input-group mb-3" style="margin-top: 20px;">
                 <input type="text" class="form-control" placeholder="검색어를 입력하세요" name="freeBoardTitle" aria-label="Recipient's username" aria-describedby="button-addon2">
                 <button class="btn btn-outline-secondary" type="submit" id="button-addon2">검색</button>
             </div>
@@ -116,6 +116,77 @@
 <th:block layout:fragment="script">
     <script th:inline="javascript">
         var userId = /*[[${session.userId}]]*/ null; // 세션의 userId 값을 가져옴
+
+        $(document).ready(function() {
+            $('#searchForm').submit(function(event) {
+                // 폼 제출 기본 동작 방지
+                event.preventDefault();
+
+                // 폼 데이터 직렬화
+                var formData = $(this).serialize();
+
+                // AJAX 요청 보내기
+                $.ajax({
+                    type: 'GET',
+                    url: $(this).attr('action'),
+                    data: formData,
+                    success: function(response) {
+                        // 성공적으로 검색 결과를 받았을 때 실행할 코드 작성
+                        console.log('검색 결과:', response);
+
+                        // 테이블 초기화
+                        $('.table tbody').empty();
+
+                        // 검색 결과를 테이블에 추가
+                        $.each(response, function(index, post) {
+                            var date = new Date(post.freeBoardRegDate);
+                            var formattedDate = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2) + ' ' + ('0' + date.getHours()).slice(-2) + '시 ' + ('0' + date.getMinutes()).slice(-2) + '분';
+                            var newRow = $('<tr>');
+                            newRow.append('<td>' + post.freeBoardAuthor + '</td>');
+                            newRow.append('<td><a href="/freeBoard/details/' + post.freeBoardId + '">' + post.freeBoardTitle + '</a></td>');
+                            newRow.append('<td>' + post.freeBoardText + '</td>');
+                            newRow.append('<td>' + formattedDate + '</td>');
+                            $('.table tbody').append(newRow);
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        // 오류가 발생했을 때 실행할 코드 작성
+                        console.error('검색 오류:', error);
+                    }
+                });
+            });
+        });
+
+            $(document).ready(function() {
+                $('#viewAllPostsBtn').click(function() {
+                    // AJAX 요청 보내기
+                    $.ajax({
+                        type: 'GET',
+                        url: '/freeBoard/allSearch', // 모든 글을 조회하는 엔드포인트로 변경해야 합니다.
+                        success: function(response) {
+                            // 성공적으로 글 목록을 받았을 때 실행할 코드 작성
+                            console.log('모든 글 조회 결과:', response);
+                            // 테이블 초기화
+                            $('.table tbody').empty();
+                            // 조회된 글 목록을 테이블에 추가
+                            $.each(response, function(index, post) {
+                                var date = new Date(post.freeBoardRegDate);
+                                var formattedDate = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2) + ' ' + ('0' + date.getHours()).slice(-2) + '시 ' + ('0' + date.getMinutes()).slice(-2) + '분';
+                                var newRow = $('<tr>');
+                                newRow.append('<td>' + post.freeBoardAuthor + '</td>');
+                                newRow.append('<td><a href="/freeBoard/details/' + post.freeBoardId + '">' + post.freeBoardTitle + '</a></td>');
+                                newRow.append('<td>' + post.freeBoardText + '</td>');
+                                newRow.append('<td>' + formattedDate + '</td>');
+                                $('.table tbody').append(newRow);
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            // 오류가 발생했을 때 실행할 코드 작성
+                            console.error('모든 글 조회 오류:', error);
+                        }
+                    });
+                });
+            });
 
         function openModal() {
             // 세션의 userId 값이 null이면 알림 창 띄우기, 그렇지 않으면 모달 열기

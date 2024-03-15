@@ -29,42 +29,69 @@
         <div class="card-body">
             <table class="table">
                 <thead>
-                <tr>
-                    <th>회원</th>
-                    <th th:each="i : ${#numbers.sequence(1, 12)}" th:text="|${i}월|"></th>
-                </tr>
+                    <tr>
+                        <th>회원</th>
+                        <th th:each="i : ${#numbers.sequence(1, 12)}" th:text="|${i}월|"></th>
+                    </tr>
                 </thead>
                 <tbody class="postList">
-                <tr th:if="${session.userAuth} == 'Y'" th:each="post, rowStat : ${posts}">
-                    <td th:text="${post.getFbUserName()}"></td>
-                    <td th:each="i, colStat : ${#numbers.sequence(1, 12)}">
-                        <input type="checkbox" th:attr="data-userid=${post.getFbUserId()}, data-rowindex=${rowStat.index * 12 + colStat.index + 1}" onchange="handleCheckboxChange(this)" />
-                    </td>
-                </tr>
-                <tr th:if="${session.userAuth} == 'N'" th:each="post, rowStat : ${posts}">
-                    <td th:text="${post.getFbUserName()}"></td>
-                    <td th:each="i, colStat : ${#numbers.sequence(1, 12)}">
-                        <input th:if="${session.userAuth} == 'Y'" type="checkbox" th:attr="data-userid=${post.getFbUserId()}, data-rowindex=${rowStat.index * 12 + colStat.index + 1}" onchange="handleCheckboxChange(this)" />
+                    <tr th:if="${session.userAuth} == 'Y'" th:each="post, rowStat : ${posts}">
+                        <td th:text="${post.getFbUserName()}"></td>
+                        <td th:each="i, colStat : ${#numbers.sequence(1, 12)}">
+                            <input type="checkbox" th:attr="data-userId=${post.getFbUserId()}, data-feeMonth=${0 * 12 + colStat.index + 1}" onchange="handleCheckboxChange(this)" />
+                        </td>
+                    </tr>
+                    <tr th:if="${session.userAuth} == 'N'" th:each="post, rowStat : ${posts}">
+                        <td th:text="${post.getFbUserName()}"></td>
+                        <td th:each="i, colStat : ${#numbers.sequence(1, 12)}">
+                            <input th:if="${session.userAuth} == 'Y'" type="checkbox" th:attr="data-userId=${post.getFbUserId()}, data-feeMonth=${0 * 12 + colStat.index + 1}" onchange="handleCheckboxChange(this)" />
 
-                        <!-- 출력 상자를 표시하는 경우 -->
-                        <span th:if="${session.userAuth} == 'N'" th:attr="data-userid=${post.getFbUserId()}, data-rowindex=${rowStat.index * 12 + colStat.index + 1}" th:text="${'O'}"></span>
-                        <span th:if="${session.userAuth} == 'N'" th:unless="${someCondition}" th:text="${'X'}"></span>
-                    </td>
-                </tr>
+                            <!-- 출력 상자를 표시하는 경우 -->
+                            <span th:if="${session.userAuth} == 'N'" th:attr="data-userid=${post.getFbUserId()}, data-rowindex=${0 * 12 + colStat.index + 1}" th:text="${'O'}"></span>
+                            <span th:if="${session.userAuth} == 'N'" th:unless="${someCondition}" th:text="${'X'}"></span>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
     </div>
 </th:block>
 
-<th:block layout:fragment="modal">
-</th:block>
-
 <th:block layout:fragment="script">
     <script th:inline="javascript">
+        window.onload = () => {
+            fixCheckbox();
+        }
+
+        // 화면 로드 시 사용자의 회비납부여부에 따른 체크박스 고정
+        function fixCheckbox(){
+            let sessionId = /*[[ ${session.userId} ]]*/ null;
+            if(sessionId !== null){
+                console.log(`sessionId는 ${sessionId}입니다`);
+                $.ajax({
+                    url: `/fee/check`,
+                    type: 'GET',
+                    dataType: 'json',
+                    async: false,
+                    success: function(response){
+                        console.log(response);
+                        response.forEach(fee => {
+                            console.log(fee);
+                            console.log(`${fee.fbUserId}, ${fee.feeMonth}`)
+<!--                            document.querySelector("input[type='checkbox'][data-userId='fee.fbUserId'][data-feeMonth='fee.feeMonth']").checked = true;-->
+                        })
+                    },
+                    error : function (request, status, error) {
+                        console.log(error)
+                    }
+                })
+            }
+        }
+
+        // 체크박스를 클릭했을 때 데이터 생성 및 삭제
         function handleCheckboxChange(checkbox) {
-            var fbUserId = checkbox.getAttribute('data-userid');
-            var rowIndex = checkbox.getAttribute('data-rowindex');
+            var fbUserId = checkbox.getAttribute('data-userId');
+            var feeMonth = checkbox.getAttribute('data-feeMonth');
             var isChecked = checkbox.checked;
 
             // Ajax를 사용하여 서버로 데이터 전송
@@ -72,7 +99,11 @@
                 type: 'POST',
                 url: '/fee/check', // 여기에 컨트롤러의 엔드포인트 주소를 적어주세요
                 contentType: 'application/json',
-                data: JSON.stringify({ fbUserId: fbUserId, rowIndex: rowIndex, isChecked: isChecked }),
+                data: JSON.stringify({
+                    fbUserId: fbUserId,
+                    feeMonth: feeMonth,
+                    isChecked: isChecked
+                }),
                 success: function(response) {
                     console.log('Data sent successfully:', response);
                 },

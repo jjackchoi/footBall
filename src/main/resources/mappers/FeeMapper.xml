@@ -10,8 +10,23 @@
         ,fee_month
     </sql>
 
-    <insert id="feeInsert" parameterType="footBall.fee.FeeDto">
+    <!--회비 납부 o-->
+    <insert id="createFee" parameterType="footBall.fee.FeeDto">
         INSERT INTO fee (FB_USER_ID,FEE_MONTH)
-        VALUES (#{fbUserId},#{rowIndex});
+        VALUES (#{fbUserId},#{feeMonth});
     </insert>
+
+    <!--회비 납부 x-->
+    <delete id="deleteFee" parameterType="footBall.fee.FeeDto">
+        DELETE FROM FEE
+        WHERE FB_USER_ID = #{fbUserId}
+        AND FEE_MONTH = #{feeMonth}
+    </delete>
+
+    <!--모든 회비정보 불러오기-->
+    <select id="getAllUserFee" resultType="footBall.fee.FeeDto">
+        SELECT <include refid="feeColumns" />
+        FROM FEE
+    </select>
+
 </mapper>

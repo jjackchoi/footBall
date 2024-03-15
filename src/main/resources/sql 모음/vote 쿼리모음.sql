@@ -29,6 +29,8 @@ select count(*)
 from vote
 where VOTE_DATE = '2024-03-10 00:00:00.000';
 
-
+/*금주대상 이전의 투표 전부조회*/
+select * from vote
+where vote_date < '2024-03-17 00:00:00';
 
 

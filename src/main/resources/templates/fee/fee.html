@@ -35,7 +35,8 @@
                     <tr th:if="${session.userAuth} == 'Y'" th:each="post, rowStat : ${posts}">
                         <td th:text="${post.getFbUserName()}"></td>
                         <td th:each="i, colStat : ${#numbers.sequence(1, 12)}">
-                            <input type="checkbox" th:attr="data-userId=${post.getFbUserId()}, data-feeMonth=${0 * 12 + colStat.index + 1}" onchange="handleCheckboxChange(this)" />
+                            <input type="checkbox" th:attr="data-userId=${post.getFbUserId()},
+                            data-feeMonth=${0 * 12 + colStat.index + 1}" onchange="handleCheckboxChange(this)" />
                         </td>
                     </tr>
                     <tr th:if="${session.userAuth} == 'N'" th:each="post, rowStat : ${posts}">

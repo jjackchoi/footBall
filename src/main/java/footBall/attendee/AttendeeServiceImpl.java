@@ -47,6 +47,12 @@ public class AttendeeServiceImpl implements AttendeeService{
         return sqlSession.delete("AttendeeMapper.deleteDate", params);
     }
 
+    // 투표 대상 날짜 데이터의 id에 종속되어있는 참석 데이터 삭제
+    @Override
+    public int deleteAttend(VoteDto params) {
+        return sqlSession.delete("AttendeeMapper.deleteAttend", params);
+    }
+
     // 투표 대상 날짜 조회
     @Override
     public VoteDto getDate(VoteDto params) {

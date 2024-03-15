@@ -65,12 +65,15 @@ public class AttendeeController {
     @ResponseBody
     @DeleteMapping("/weeklyAttendee/voteDate")
     public String deleteDate(@RequestBody VoteDto params){
-       int deleted = attendeeService.deleteDate(params);
-       if (deleted > 0) {
-           return "success";
-       } else {
-           return "fail";
-       }
+        // 투표 대상 날짜 데이터의 id에 종속되어있는 참석 데이터 삭제
+        attendeeService.deleteAttend(params);
+        // 참석 데이터 삭제가 완료되면 날짜 데이터 삭제
+        int deleted = attendeeService.deleteDate(params);
+        if (deleted > 0){
+            return "success";
+        }else {
+            return "fail";
+        }
     }
 
     // 투표 대상 데이터 존재여부 판별

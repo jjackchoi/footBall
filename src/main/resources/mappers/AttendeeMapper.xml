@@ -81,6 +81,17 @@
         WHERE vote_date = #{voteDate}
     </delete>
 
+    <!--투표 대상 날짜 데이터의 id에 종속되어있는 참석 데이터 삭제-->
+    <delete id="deleteAttend" parameterType="footBall.attendee.VoteDto">
+        DELETE FROM attend
+        WHERE
+        vote_id = (
+            SELECT vote_id
+            FROM vote
+            WHERE vote_date = #{voteDate}
+        )
+    </delete>
+
     <!--투표 대상 날짜 조회-->
     <select id="getDate" parameterType="footBall.attendee.VoteDto" resultType="footBall.attendee.VoteDto">
         SELECT *

@@ -15,6 +15,9 @@ public interface AttendeeService {
     // 투표 대상 날짜 삭제
     int deleteDate(VoteDto params);
 
+    // 투표 대상 날짜 데이터의 id에 종속되어있는 참석 데이터 삭제
+    int deleteAttend(VoteDto params);
+
     // 투표 대상 날짜 조회
     VoteDto getDate(VoteDto params);
 
@@ -32,4 +35,5 @@ public interface AttendeeService {
 
     // 투표한 해당 유저의 참석여부 값 가져오기
     String getAttendStatus(Long fbUserId);
+
 }

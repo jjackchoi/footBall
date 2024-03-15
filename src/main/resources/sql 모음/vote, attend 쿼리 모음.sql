@@ -172,9 +172,22 @@ INSERT INTO attend(
 SELECT attend_status 
 FROM attend
 WHERE 1=1
-AND fb_user_id = 1
+AND fb_user_id = 26
 AND vote_id = (
 	SELECT vote_id
 	FROM vote
+	WHERE vote_date = "2024-03-17 00:00:00.000"
+);
+
+/*투표 대상 날짜 삭제*/
+DELETE FROM vote
+WHERE vote_date = "2024-03-17 00:00:00.000";
+
+/*투표 대상 날짜 데이터의 id에 종속되어있는 참석 데이터 삭제*/
+DELETE FROM attend 
+WHERE
+vote_id = (
+	SELECT vote_id 
+	FROM vote 
 	WHERE vote_date = "2024-03-17 00:00:00.000"
 );

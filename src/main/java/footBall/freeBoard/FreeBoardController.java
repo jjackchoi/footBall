@@ -100,4 +100,12 @@ public class FreeBoardController {
         return "redirect:/freeBoard";
     }
 
+    @GetMapping("/freeBoard/page/{pageNumber}")
+    @ResponseBody
+    public List<FreeBoardResponse> getPostsByPage(@PathVariable int pageNumber) {
+        int postsPerPage = 10; // 페이지당 글 수
+        int offset = (pageNumber - 1) * postsPerPage; // 오프셋 계산
+        return freeBoardService.getByPage(postsPerPage, offset);
+    }
+
 }

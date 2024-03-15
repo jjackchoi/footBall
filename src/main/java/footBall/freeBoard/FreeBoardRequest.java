@@ -13,5 +13,7 @@ public class FreeBoardRequest {
     private String freeBoardTitle; //자유게시판 제목
     private String freeBoardText; //자유게시판 내용
     private String freeBoardImgPath; //자유게시판 이미지
+    private String offset;
+    private String postsPerPage;
 
 }

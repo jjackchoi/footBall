@@ -85,6 +85,8 @@
         and free_board_del_yn = 'N'
         and FB_USER_ID = #{fbUserId}
     </select>
+
+    <!--검색창을 이용한 조회-->
     <select id="findKeyword" parameterType="String" resultType="footBall.freeBoard.FreeBoardResponse">
         SELECT * FROM free_board
         WHERE (free_board_title LIKE CONCAT('%', #{freeBoardTitle}, '%')
@@ -92,6 +94,13 @@
         OR FREE_BOARD_AUTHOR LIKE CONCAT('%', #{freeBoardTitle}, '%'))
         AND free_board_del_yn = 'N'
         order by free_board_id desc
+    </select>
+
+    <select id="getByPage" resultType="footBall.freeBoard.FreeBoardResponse">
+        SELECT * FROM free_board
+        order by free_board_id desc
+        LIMIT #{postsPerPage} OFFSET #{offset}
 
     </select>
+
 </mapper>

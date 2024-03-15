@@ -22,4 +22,6 @@ public interface FreeBoardService {
     List<FreeBoardResponse> findByUserId(Integer userId);
 
     List<FreeBoardResponse> searchFreeBoardPosts(String keyword);
+
+    List<FreeBoardResponse> getByPage(int postsPerPage, int offset);
 }

@@ -1,10 +1,12 @@
 package footBall.freeBoard;
 
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class FreeBoardServiceImpl implements FreeBoardService{
@@ -45,4 +47,11 @@ public class FreeBoardServiceImpl implements FreeBoardService{
     public List<FreeBoardResponse> searchFreeBoardPosts(String freeBoardTitle) {
         return sqlSession.selectList("FreeBoardMapper.findKeyword",freeBoardTitle);
     }
+
+    @Override
+    public List<FreeBoardResponse> getByPage(int postsPerPage, int offset) {
+        return sqlSession.selectList("FreeBoardMapper.getByPage", Map.of("postsPerPage", postsPerPage, "offset", offset));
+    }
+
+
 }

@@ -90,6 +90,8 @@
         WHERE (free_board_title LIKE CONCAT('%', #{freeBoardTitle}, '%')
         OR free_board_text LIKE CONCAT('%', #{freeBoardTitle}, '%')
         OR FREE_BOARD_AUTHOR LIKE CONCAT('%', #{freeBoardTitle}, '%'))
-        AND free_board_del_yn = 'N';
+        AND free_board_del_yn = 'N'
+        order by free_board_id desc
+
     </select>
 </mapper>

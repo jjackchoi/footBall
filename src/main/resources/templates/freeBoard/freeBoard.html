@@ -18,9 +18,11 @@
     </div>
             <!-- 검색 입력란과 버튼 -->
         <form id="searchForm" action="/freeBoard/search" method="get">
-            <div class="input-group mb-3" style="margin-top: 20px;">
-                <input type="text" class="form-control" placeholder="검색어를 입력하세요" name="freeBoardTitle" aria-label="Recipient's username" aria-describedby="button-addon2">
-                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">검색</button>
+            <div class="input-group mb-3 mt-3" style="display: flex; justify-content: flex-end;">
+                <input type="text" class="form-control me-1" placeholder="검색어를 입력하세요" name="freeBoardTitle" style="max-width: 200px;">
+                <span class="input-group-btn">
+                    <button class="btn btn-outline-secondary" type="submit">검색</button>
+                </span>
             </div>
         </form>
 

@@ -96,11 +96,17 @@
         order by free_board_id desc
     </select>
 
-    <select id="getByPage" resultType="footBall.freeBoard.FreeBoardResponse">
-        SELECT * FROM free_board
-        order by free_board_id desc
-        LIMIT #{postsPerPage} OFFSET #{offset}
+    <!--데이터 총 개수-->
+    <select id="allCount" resultType="int">
+        select count(*)
+        from free_board
+    </select>
 
+    <select id="findPaginatedData" resultType="footBall.freeBoard.FreeBoardResponse" parameterType="map">
+        SELECT *
+        FROM free_board
+        order by free_board_id desc
+        LIMIT #{offset}, #{pageSize}
     </select>
 
 </mapper>

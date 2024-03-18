@@ -7,16 +7,16 @@
 
 <th:block layout:fragment="content">
     <div class="container mt-5" style="background-image: url('/assets/img/football.jpg'); min-height: 80vh; background-size: cover; background-position: center;">
-    <h1 class="mt-4">자유게시판</h1>
-    <div class="right" style="text-align: right">
-        <button type="button" class="btn btn-success" id="viewAllPostsBtn">
-            모든 글 조회
-        </button>
-        <button type="button" class="btn btn-primary" data-toggle="modal" onclick="openModal()">
-            글 작성
-        </button>
-    </div>
-            <!-- 검색 입력란과 버튼 -->
+        <h1 class="mt-4">자유게시판</h1>
+        <div class="right" style="text-align: right">
+            <button type="button" class="btn btn-success" id="viewAllPostsBtn">
+                모든 글 조회
+            </button>
+            <button type="button" class="btn btn-primary" data-toggle="modal" onclick="openModal()">
+                글 작성
+            </button>
+        </div>
+        <!-- 검색 입력란과 버튼 -->
         <form id="searchForm" action="/freeBoard/search" method="get">
             <div class="input-group mb-3 mt-3" style="display: flex; justify-content: flex-end;">
                 <input type="text" class="form-control me-1" placeholder="검색어를 입력하세요" name="freeBoardTitle" style="max-width: 200px;">
@@ -50,51 +50,15 @@
             </tbody>
         </table>
     </div>
-    <div class="pagination-container mt-4">
-        <ul class="pagination justify-content-center">
-            <!-- 페이지 번호가 여기에 동적으로 추가될 것입니다. -->
-        </ul>
+    <!-- 페이징 표시 -->
+    <div id="pagination" style="display: flex; justify-content: center; margin-top: 20px;">
+        <!-- 페이지 번호가 동적으로 생성될 위치 -->
     </div>
-
-    <!--    <ol class="breadcrumb mb-4">
-
-        </ol>-->
-<!--    <div class="card mb-4">
-        <div class="card-header">
-            <i class="fas fa-table me-1"></i>
-            자유게시판
-
-        <div class="card-body">
-            <table id="datatablesSimple">
-                <thead>
-                <tr>
-                    <th>글작성자</th>
-                    <th>글제목</th>
-                    <th>글내용</th>
-                    <th>작성일자</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="post : ${posts}">
-                    <td th:text="${post.getFreeBoardAuthor()}"></td>
-                    <td>
-                        <a th:href="@{'/freeBoard/details/' + ${post.freeBoardId}}">
-                            <span th:text="${post.freeBoardTitle}"></span>
-                        </a>
-                    </td>
-                    <td th:text="${post.getFreeBoardText()}"></td>
-                    <td th:if="${post.freeBoardRegDate != null}" th:text="${#temporals.format(post.freeBoardRegDate, 'yyyy-MM-dd HH시 mm분')}"></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>-->
 </th:block>
 
 <th:block layout:fragment="modal">
     <!-- 글 작성 팝업 모달 -->
-    <div class="modal fade" id="writePostModal" tabindex="-1" role="dialog" aria-labelledby="writePostModalLabel"
-         aria-hidden="true" th:fragment="modal">
+    <div class="modal fade" id="writePostModal" tabindex="-1" role="dialog" aria-labelledby="writePostModalLabel" aria-hidden="true" th:fragment="modal">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -165,36 +129,36 @@
             });
         });
 
-            $(document).ready(function() {
-                $('#viewAllPostsBtn').click(function() {
-                    // AJAX 요청 보내기
-                    $.ajax({
-                        type: 'GET',
-                        url: '/freeBoard/allSearch', // 모든 글을 조회하는 엔드포인트로 변경해야 합니다.
-                        success: function(response) {
-                            // 성공적으로 글 목록을 받았을 때 실행할 코드 작성
-                            console.log('모든 글 조회 결과:', response);
-                            // 테이블 초기화
-                            $('.table tbody').empty();
-                            // 조회된 글 목록을 테이블에 추가
-                            $.each(response, function(index, post) {
-                                var date = new Date(post.freeBoardRegDate);
-                                var formattedDate = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2) + ' ' + ('0' + date.getHours()).slice(-2) + '시 ' + ('0' + date.getMinutes()).slice(-2) + '분';
-                                var newRow = $('<tr>');
-                                newRow.append('<td>' + post.freeBoardAuthor + '</td>');
-                                newRow.append('<td><a href="/freeBoard/details/' + post.freeBoardId + '">' + post.freeBoardTitle + '</a></td>');
-                                newRow.append('<td>' + post.freeBoardText + '</td>');
-                                newRow.append('<td>' + formattedDate + '</td>');
-                                $('.table tbody').append(newRow);
-                            });
-                        },
-                        error: function(xhr, status, error) {
-                            // 오류가 발생했을 때 실행할 코드 작성
-                            console.error('모든 글 조회 오류:', error);
-                        }
-                    });
+        $(document).ready(function() {
+            $('#viewAllPostsBtn').click(function() {
+                // AJAX 요청 보내기
+                $.ajax({
+                    type: 'GET',
+                    url: '/freeBoard/allSearch', // 모든 글을 조회하는 엔드포인트로 변경해야 합니다.
+                    success: function(response) {
+                        // 성공적으로 글 목록을 받았을 때 실행할 코드 작성
+                        console.log('모든 글 조회 결과:', response);
+                        // 테이블 초기화
+                        $('.table tbody').empty();
+                        // 조회된 글 목록을 테이블에 추가
+                        $.each(response, function(index, post) {
+                            var date = new Date(post.freeBoardRegDate);
+                            var formattedDate = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2) + ' ' + ('0' + date.getHours()).slice(-2) + '시 ' + ('0' + date.getMinutes()).slice(-2) + '분';
+                            var newRow = $('<tr>');
+                            newRow.append('<td>' + post.freeBoardAuthor + '</td>');
+                            newRow.append('<td><a href="/freeBoard/details/' + post.freeBoardId + '">' + post.freeBoardTitle + '</a></td>');
+                            newRow.append('<td>' + post.freeBoardText + '</td>');
+                            newRow.append('<td>' + formattedDate + '</td>');
+                            $('.table tbody').append(newRow);
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        // 오류가 발생했을 때 실행할 코드 작성
+                        console.error('모든 글 조회 오류:', error);
+                    }
                 });
             });
+        });
 
         function openModal() {
             // 세션의 userId 값이 null이면 알림 창 띄우기, 그렇지 않으면 모달 열기
@@ -206,20 +170,18 @@
         }
 
         function closeModal() {
-             $('#writePostModal').modal('hide');
+            $('#writePostModal').modal('hide');
         }
 
-
-
-        <!-- 글 작성 완료 시 실행되는 스크립트 -->
+        // 글 작성 완료 시 실행되는 스크립트
         function submitPostForm() {
             var freeBoardTitle = $('#freeBoardTitle').val();
             var freeBoardText = $('#freeBoardText').val();
-            if(freeBoardTitle == "" || freeBoardTitle == null){
+            if (freeBoardTitle == "" || freeBoardTitle == null) {
                 alert("제목을 입력해주세요");
                 return;
             }
-            if(freeBoardText == "" || freeBoardText == null){
+            if (freeBoardText == "" || freeBoardText == null) {
                 alert("내용을 입력해주세요");
                 return;
             }
@@ -228,94 +190,74 @@
             $.ajax({
                 type: 'POST',
                 url: '/freeBoard/save', // 실제로 데이터를 저장하는 엔드포인트로 변경해야 합니다.
-                data: {freeBoardTitle: freeBoardTitle, freeBoardText: freeBoardText},
-                success: function (result) {
+                data: {
+                    freeBoardTitle: freeBoardTitle,
+                    freeBoardText: freeBoardText
+                },
+                success: function(result) {
                     // 작성 완료 후 팝업 닫기
                     $('#writePostModal').modal('hide');
                     // 메인 화면 새로고침
                     location.reload();
                 },
-                error: function () {
+                error: function() {
                     alert('글 작성 실패');
                 }
             });
         }
 
-        $(document).ready(function() {
-            var currentPage = 1; // 현재 페이지 번호
-            var postsPerPage = 10; // 페이지당 글 수
-
-            // 페이지네이션 클릭 이벤트 핸들러
-            $(document).on('click', '.pagination-container .pagination .page-link', function(event) {
-                event.preventDefault();
-                var pageNumber = $(this).attr('data-page');
-                currentPage = parseInt(pageNumber);
-
-                // 해당 페이지의 데이터를 불러오는 함수 호출
-                loadPostsByPage(pageNumber);
-            });
-
-                    // 페이지네이션을 생성하고 페이지 번호를 추가하는 함수
+        // 클라이언트 측에서 페이지 번호를 생성하는 함수
         function generatePagination(currentPage, totalPages) {
-            var paginationContainer = $('.pagination-container ul');
-            paginationContainer.empty(); // 이전에 추가된 페이지 번호를 모두 지움
+            var pagination = document.getElementById('pagination');
+            pagination.innerHTML = ''; // 기존의 페이지 번호를 비움
 
-            // 첫 페이지, 이전 페이지 링크 추가
-            paginationContainer.append('<li class="page-item"><a class="page-link" href="#" data-page="1">처음</a></li>');
-            paginationContainer.append('<li class="page-item"><a class="page-link" href="#" data-page="' + (currentPage - 1) + '">이전</a></li>');
+            // 현재 페이지가 속한 그룹의 시작 페이지 계산
+            var startPage = Math.floor((currentPage - 1) / 5) * 5 + 1;
+            // 그룹의 마지막 페이지 계산
+            var endPage = Math.min(startPage + 4, totalPages);
 
-            // 페이지 번호 추가
-            for (var i = 1; i <= totalPages; i++) {
-                paginationContainer.append('<li class="page-item"><a class="page-link" href="#" data-page="' + i + '">' + i + '</a></li>');
+            // 이전 버튼 추가
+            if (currentPage > 1) {
+                var prevButton = document.createElement('button');
+                prevButton.textContent = '이전';
+                prevButton.classList.add('btn', 'btn-outline-secondary', 'mx-1', 'rounded-circle');
+                prevButton.onclick = function() {
+                    window.location.href = '/freeBoard?page=' + (currentPage - 1);
+                };
+                pagination.appendChild(prevButton);
             }
 
-            // 다음 페이지, 마지막 페이지 링크 추가
-            paginationContainer.append('<li class="page-item"><a class="page-link" href="#" data-page="' + (currentPage + 1) + '">다음</a></li>');
-            paginationContainer.append('<li class="page-item"><a class="page-link" href="#" data-page="' + totalPages + '">마지막</a></li>');
-        }
-
-                    // 페이지를 로드하는 함수
-        function loadPostsByPage(pageNumber) {
-            // AJAX 요청 보내기
-            $.ajax({
-                type: 'GET',
-                url: '/freeBoard/page/' + pageNumber, // 페이지 번호에 따른 데이터를 가져오는 엔드포인트로 변경해야 합니다.
-                success: function(response) {
-                    // 성공적으로 데이터를 받았을 때 실행할 코드 작성
-                    console.log('페이지', pageNumber, '데이터:', response);
-
-                    // 테이블 초기화
-                    $('.table tbody').empty();
-
-                    // 페이지에 해당하는 데이터를 테이블에 추가
-                    $.each(response, function(index, post) {
-                        var date = new Date(post.freeBoardRegDate);
-                        var formattedDate = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2) + ' ' + ('0' + date.getHours()).slice(-2) + '시 ' + ('0' + date.getMinutes()).slice(-2) + '분';
-                        var newRow = $('<tr>');
-                        newRow.append('<td>' + post.freeBoardAuthor + '</td>');
-                        newRow.append('<td><a href="/freeBoard/details/' + post.freeBoardId + '">' + post.freeBoardTitle + '</a></td>');
-                        newRow.append('<td>' + post.freeBoardText + '</td>');
-                        newRow.append('<td>' + formattedDate + '</td>');
-                        $('.table tbody').append(newRow);
-                    });
-
-                    // 총 페이지 수 계산
-                    var totalPages = Math.ceil(response.totalPosts / postsPerPage);
-
-                    // 페이지네이션을 생성하고 페이지 번호를 추가
-                    generatePagination(pageNumber, totalPages);
-                },
-                error: function(xhr, status, error) {
-                    // 오류가 발생했을 때 실행할 코드 작성
-                    console.error('페이지', pageNumber, '데이터 오류:', error);
+            // 페이지 번호 버튼 추가
+            for (var i = startPage; i <= endPage; i++) {
+                var button = document.createElement('button');
+                button.textContent = i;
+                button.classList.add('btn', 'btn-outline-secondary', 'mx-1', 'rounded-circle');
+                if (i === currentPage) {
+                    button.classList.add('active');
                 }
-            });
+                button.onclick = function() {
+                    window.location.href = '/freeBoard?page=' + this.textContent;
+                };
+                pagination.appendChild(button);
+            }
+
+            // 다음 버튼 추가
+            if (currentPage < totalPages) {
+                var nextButton = document.createElement('button');
+                nextButton.textContent = '다음';
+                nextButton.classList.add('btn', 'btn-outline-secondary', 'mx-1', 'rounded-circle');
+                nextButton.onclick = function() {
+                    window.location.href = '/freeBoard?page=' + (currentPage + 1);
+                };
+                pagination.appendChild(nextButton);
+            }
         }
 
-            // 초기 페이지 로드
-            loadPostsByPage(currentPage);
-        });
 
+        // 페이지 로드 시 페이지 번호를 생성
+        window.onload = function() {
+            generatePagination([[${currentPage}]], [[${totalPages}]]);
+        };
     </script>
 </th:block>
 

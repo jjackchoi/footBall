@@ -11,8 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 public class FreeBoardController {
@@ -27,13 +26,50 @@ public class FreeBoardController {
 
     // 자유게시판 페이지
     @GetMapping("/freeBoard")
-    public String index(Model model,HttpSession session){
-        if(session.getAttribute("userId") != null){
-            List<FreeBoardResponse> posts = freeBoardService.findAll();
+    public String index(@RequestParam(name = "page", defaultValue = "1") int page,
+                        Model model,
+                        HttpSession session) {
+        if (session.getAttribute("userId") != null) {
+            int pageSize = 10; // 페이지당 데이터 수
+            int totalDataCount = freeBoardService.allCount(); // 총 데이터 수
+            int totalPages = (int) Math.ceil((double) totalDataCount / pageSize); // 전체 페이지 수
+
+            // 현재 페이지에 따른 OFFSET 계산
+            int offset = (page - 1) * pageSize;
+
+            List<FreeBoardResponse> posts;
+
+            if (totalDataCount == 0) {
+                // 데이터가 없는 경우
+                posts = Collections.emptyList();
+            } else if (page == totalPages) {
+                // 마지막 페이지의 경우 나머지 데이터 수만큼만 가져오도록 설정
+                int remainingDataCount = totalDataCount % pageSize;
+                if (remainingDataCount == 0) {
+                    remainingDataCount = pageSize;
+                }
+
+                Map<String, Integer> params = new HashMap<>();
+                params.put("offset", offset);
+                params.put("pageSize", remainingDataCount);
+
+                posts = freeBoardService.findPaginatedData(params);
+            } else {
+                // 그 외 페이지는 pageSize만큼 데이터를 가져옴
+                Map<String, Integer> params = new HashMap<>();
+                params.put("offset", offset);
+                params.put("pageSize", pageSize);
+
+                posts = freeBoardService.findPaginatedData(params);
+            }
+
             model.addAttribute("posts", posts);
+            model.addAttribute("currentPage", page);
+            model.addAttribute("totalPages", totalPages);
         }
         return "freeBoard/freeBoard";
     }
+
 
     @GetMapping("/freeBoard/allSearch")
     public ResponseEntity<List<FreeBoardResponse>> searchFreeBoardPosts() {
@@ -43,8 +79,11 @@ public class FreeBoardController {
 
     // 검색 결과 조회
     @GetMapping("/freeBoard/search")
-    public ResponseEntity<List<FreeBoardResponse>> searchFreeBoardPosts(@RequestParam(name = "freeBoardTitle") String freeBoardTitle) {
-        List<FreeBoardResponse> searchResult = freeBoardService.searchFreeBoardPosts(freeBoardTitle);
+    public ResponseEntity<List<FreeBoardResponse>> searchFreeBoardPosts(@RequestParam(name = "freeBoardTitle") String freeBoardTitle,HttpSession session) {
+        List<FreeBoardResponse> searchResult = new ArrayList<FreeBoardResponse>();
+        if(session.getAttribute("userId") != null){
+            searchResult = freeBoardService.searchFreeBoardPosts(freeBoardTitle);
+        }
         return ResponseEntity.ok().body(searchResult);
     }
     
@@ -98,14 +137,6 @@ public class FreeBoardController {
         fbcService.deleteList(freeBoardId);
         freeBoardService.deleteOne(freeBoardId);
         return "redirect:/freeBoard";
-    }
-
-    @GetMapping("/freeBoard/page/{pageNumber}")
-    @ResponseBody
-    public List<FreeBoardResponse> getPostsByPage(@PathVariable int pageNumber) {
-        int postsPerPage = 10; // 페이지당 글 수
-        int offset = (pageNumber - 1) * postsPerPage; // 오프셋 계산
-        return freeBoardService.getByPage(postsPerPage, offset);
     }
 
 }

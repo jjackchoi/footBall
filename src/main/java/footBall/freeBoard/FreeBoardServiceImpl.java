@@ -43,14 +43,22 @@ public class FreeBoardServiceImpl implements FreeBoardService{
         return sqlSession.selectList("FreeBoardMapper.findByUserId",userId);
     }
 
+    // 검색한리스트
     @Override
     public List<FreeBoardResponse> searchFreeBoardPosts(String freeBoardTitle) {
         return sqlSession.selectList("FreeBoardMapper.findKeyword",freeBoardTitle);
     }
-
+    //데이터 전체개수
     @Override
-    public List<FreeBoardResponse> getByPage(int postsPerPage, int offset) {
-        return sqlSession.selectList("FreeBoardMapper.getByPage", Map.of("postsPerPage", postsPerPage, "offset", offset));
+    public int allCount() {
+        return sqlSession.selectOne("FreeBoardMapper.allCount");
+
+    }
+
+    //페이징 후 리스트
+    @Override
+    public List<FreeBoardResponse> findPaginatedData(Map<String, Integer> params) {
+        return sqlSession.selectList("FreeBoardMapper.findPaginatedData",params);
     }
 
 

@@ -1,6 +1,7 @@
 package footBall.freeBoard;
 
 import java.util.List;
+import java.util.Map;
 
 public interface FreeBoardService {
     // 글 조회
@@ -21,7 +22,12 @@ public interface FreeBoardService {
     // 내가쓴글조회
     List<FreeBoardResponse> findByUserId(Integer userId);
 
+    // 검색한리스트
     List<FreeBoardResponse> searchFreeBoardPosts(String keyword);
 
-    List<FreeBoardResponse> getByPage(int postsPerPage, int offset);
+    //전체글 카운트
+    int allCount();
+
+    //페이징에 맞는 리스트
+    List<FreeBoardResponse> findPaginatedData(Map<String, Integer> params);
 }

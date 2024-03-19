@@ -61,6 +61,11 @@
                 WHERE vote_date = #{sunday}
             )
         )
+        AND a.vote_id = (
+            SELECT vote_id
+            FROM vote
+            WHERE vote_date = #{sunday}
+        )
         AND fu.fb_user_del_yn = 'N'
         ORDER BY fu.fb_user_id DESC;
     </select>

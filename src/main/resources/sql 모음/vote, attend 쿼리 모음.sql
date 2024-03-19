@@ -191,3 +191,8 @@ vote_id = (
 	FROM vote 
 	WHERE vote_date = "2024-03-17 00:00:00.000"
 );
+
+/*vote_id로 vote_date 가져오기*/
+SELECT vote_date
+FROM vote
+WHERE vote_id = 9;

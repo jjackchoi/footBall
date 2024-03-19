@@ -18,7 +18,7 @@
     <ol class="breadcrumb mb-4">
 
     </ol>
-    <div class="card mb-4">
+    <div class="card mb-4" style="width: 700px;">
         <div class="card-header">
             <i class="fas fa-table me-1"></i>
             지나간 참석자 보기
@@ -34,7 +34,7 @@
                 <tbody class="postList">
                     <tr th:each="vote : ${votes}">
                         <td>
-                            <a th:href="@{/previousAttendee}">
+                            <a th:href="@{'/previousAttendee/'+${vote.voteId}}">
                                 <span th:text="${#temporals.format(vote.voteDate, 'yyyy-MM-dd')}"></span>
                             </a>
                         </td>

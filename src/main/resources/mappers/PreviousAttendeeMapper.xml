@@ -24,4 +24,31 @@
             WHERE vote_date < #{sunday}
         ]]>
     </select>
+
+    <!--투표한 인원 조회-->
+    <select id="getVotedUser" parameterType="Long" resultType="footBall.user.UserResponse">
+        SELECT fu.fb_user_id ,fu.fb_user_email ,fu.fb_user_pswd ,fu.fb_user_nickname
+            ,fu.fb_user_name ,fu.fb_user_birth ,fu.fb_user_phone ,fu.fb_user_address
+            ,fu.fb_user_auth ,fu.fb_user_del_yn ,fu.fb_user_reg_date ,fu.fb_user_mod_date
+            ,a.attend_status
+        FROM fb_user fu
+        LEFT JOIN attend a
+        ON fu.fb_user_id = a.fb_user_id
+        WHERE 1=1
+        AND fu.fb_user_id IN(
+            SELECT fb_user_id
+            FROM attend
+            WHERE vote_id = #{voteId}
+        )
+        AND a.vote_id = #{voteId}
+        AND fu.fb_user_del_yn = 'N'
+        ORDER BY fu.fb_user_id DESC;
+    </select>
+
+    <!--투표id로 투표대상날짜 가져오기-->
+    <select id="getVoteDate" parameterType="Long" resultType="footBall.attendee.VoteDto">
+        SELECT vote_date
+        FROM vote
+        WHERE vote_id = #{voteId};
+    </select>
 </mapper>

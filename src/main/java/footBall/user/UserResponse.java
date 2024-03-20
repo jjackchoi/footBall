@@ -22,4 +22,8 @@ public class UserResponse {
 
     private String attendStatus;         // 참석여부
 
+    public void clearPassword(){
+        this.fbUserPswd =  "";
+    }
+
 }

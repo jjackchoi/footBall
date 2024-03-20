@@ -1,5 +1,6 @@
 package footBall.user;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,9 +53,9 @@ public class UserController {
 
     // 회원가입 버튼 클릭 시
     @PostMapping("/signup")
-    public String signup(UserRequest dtos){
-        userService.userRegister(dtos);
-        log.info(dtos.toString());
+    public String signup(UserRequest params){
+        userService.userRegister(params);
+        log.info(params.toString());
         return "redirect:/login";
     }
 
@@ -70,16 +71,21 @@ public class UserController {
 
     // 로그인 버튼 클릭 시
     @PostMapping("/login")
-    public String loginDo(UserRequest dto, HttpSession session){
+    public String loginDo(UserRequest dto, HttpServletRequest request){
+        // 1. 로그인 입력 값으로 회원 id 조회
         log.info(dto.toString());
         int id = userService.login(dto);
         if(id == 0){ // 로그인 실패 시
             return "redirect:/login";
         }
-        UserResponse userInfo =userService.findOne(id);
+
+        // 2. 세션에 회원 정보 저장 & 세션 유지 시간 설정
+        UserResponse userInfo = userService.findOne(id);
+        HttpSession session = request.getSession();
         session.setAttribute("userId", id);
         session.setAttribute("userNickname", userInfo.getFbUserNickname());
         session.setAttribute("userAuth", userInfo.getFbUserAuth());
+        session.setMaxInactiveInterval(60 * 30);
         return "redirect:/";
     }
 

@@ -1,6 +1,8 @@
 package footBall.user;
 
 import lombok.Data;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.thymeleaf.util.StringUtils;
 
 @Data
 public class UserRequest {
@@ -13,5 +15,12 @@ public class UserRequest {
     private String fbUserBirth;      //	유저 생년월일
     private String fbUserPhone;      //	유저 휴대폰번호
     private String fbUserAddress;    //	유저 주소
+
+    public void encodingPassword(PasswordEncoder passwordEncoder){
+        if(StringUtils.isEmpty(fbUserPswd)){
+            return;
+        }
+        fbUserPswd = passwordEncoder.encode(fbUserPswd);
+    }
 
 }

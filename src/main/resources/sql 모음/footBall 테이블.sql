@@ -115,3 +115,6 @@ CREATE TABLE FEE(
 
 /*회비 테이블 칼럼 조회*/
 show columns from FEE;
+
+/*pk, fk 상관없이 해당데이터 삭제하고 싶을 때 0, 원복 1*/
+set foreign_key_checks = ${value};

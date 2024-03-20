@@ -1,2 +1,15 @@
 2024-03-20
 스프링 시큐리티 적용해서 유저비밀번호 암호화
+회원가입
+1. UserRequest에 encodingPassword 메서드(회원가입 시 비밀번호에 암호화) 추가
+2. UserResponse에 clearPassword 메서드(로그인 시 비밀번호 정보 날리기) 추가
+3. 스프링 시큐리티 암호화 라이브러리 & 빈 추가
+	- spring-security-crypto 라이브러리 추가하기
+	- PassowrdEncoder 빈(Bean) 추가하기
+4. UserServiceImpl에 PassowrdEncoder 필드 추가
+	- 회원가입 메서드에 encodingPassword메서드로 비밀번호 인코딩
+로그인
+5. UserServiceImpl의 로그인메서드 수정 
+	- passowrdEncoder.matches 메서드 이용하여 입력비밀번호와 db비번 비교
+6. UserController의 로그인메서드 수정
+	- 매개변수로 HttpSevletRequest 추가와 session의 유지시간 추가

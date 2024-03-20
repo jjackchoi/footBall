@@ -24,7 +24,7 @@
         insert into fb_user(
             <include refid="userColumns"/>
         )
-        value(
+        values(
              #{fbUserId}
             ,#{fbUserEmail}
             ,#{fbUserPswd}

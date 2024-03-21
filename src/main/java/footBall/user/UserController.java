@@ -100,6 +100,13 @@ public class UserController {
         }
     }
 
+    // 비밀번호 찾기 페이지
+    @GetMapping("/findPassword")
+    public String findPassword(){
+        return "findPassword";
+    }
+
+
     // 내정보화면
     @GetMapping("/myPage")
     public String myPage(HttpSession session, Model model){
@@ -107,12 +114,5 @@ public class UserController {
         System.out.println(userResponse);
         model.addAttribute("user",userResponse);
         return "myPage";
-    }
-
-    // 메인화면
-
-    @GetMapping("/test")
-    public String testLayout(){
-        return "layout/basic";
     }
 }

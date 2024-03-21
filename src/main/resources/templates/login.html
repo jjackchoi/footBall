@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>로그인</title>
+        <title>뿟볼 : 로그인</title>
         <link th:href="@{/css/styles.css}" rel="stylesheet" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
     </head>
@@ -18,7 +18,7 @@
                         <div class="row justify-content-center">
                             <div class="col-lg-5">
                                 <div class="card shadow-lg border-0 rounded-lg mt-5">
-                                    <div class="card-header"><h3 class="text-center font-weight-light my-4">Login</h3></div>
+                                    <div class="card-header"><h3 class="text-center font-weight-light my-4">뿟볼</h3></div>
                                     <div class="card-body">
                                         <form th:action="@{/login}" method="post">
                                             <!--이메일 입력-->
@@ -31,20 +31,18 @@
                                                 <input class="form-control" name="fbUserPswd" id="inputPassword" type="password" placeholder="Password" />
                                                 <label for="inputPassword">Password</label>
                                             </div>
-                                            <!--비밀번호 기억 체크박스-->
-                                            <div class="form-check mb-3">
-                                                <input class="form-check-input" id="inputRememberPassword" type="checkbox" value="" />
-                                                <label class="form-check-label" for="inputRememberPassword">Remember Password</label>
-                                            </div>
-                                            <!--비밀번호 찾기 및 로그인-->
-                                            <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
-                                                <a class="small" href="password.html">비밀번호를 잃어버리셨나요?</a>
-                                                <button class="btn btn-primary" type="submit">로그인</button>
+                                            <!--로그인-->
+                                            <div class="d-flex align-items-center justify-content-center mt-4 mb-0">
+                                                <button class="btn btn-primary" type="submit" style="width: 100%;">로그인</button>
                                             </div>
                                         </form>
                                     </div>
                                     <div class="card-footer text-center py-3">
-                                        <div class="small"><a href="/signup">Need an account? Sign up!</a></div>
+                                        <div class="small">
+                                            <a href="/findPassword" style="text-decoration: none;">비밀번호 찾기</a>
+                                            <span style="border-left: 1px solid black; height: 10px; margin: 0 5px;"></span>
+                                            <a href="/signup" style="text-decoration: none;">회원가입</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -56,12 +54,7 @@
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid px-4">
                         <div class="d-flex align-items-center justify-content-between small">
-                            <div class="text-muted">Copyright &copy; Your Website 2021</div>
-                            <div>
-                                <a href="#">Privacy Policy</a>
-                                &middot;
-                                <a href="#">Terms &amp; Conditions</a>
-                            </div>
+                            <div class="text-muted">Copyright &copy; 뿟볼 2024</div>
                         </div>
                     </div>
                 </footer>

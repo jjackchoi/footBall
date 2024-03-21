@@ -1,7 +1,10 @@
 package footBall.user;
 
+import footBall.util.MailDto;
+import footBall.util.MailService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,10 +17,11 @@ import java.util.List;
 
 @Controller
 @Slf4j
+@RequiredArgsConstructor
 public class UserController {
 
-    @Autowired
-    private UserServiceImpl userService;
+    private final UserServiceImpl userService;
+    private final MailService mailService;
 
     // 회원가입 페이지
     @GetMapping("/signup")
@@ -106,8 +110,19 @@ public class UserController {
         return "findPassword";
     }
 
+    // 인증 번호 발송
+    @ResponseBody
+    @PostMapping("/findPassword/sendAuth")
+    public String sendAuth(@RequestBody MailDto param){
+        param.setTitle("[뿟볼] 인증번호 발송");
+        param.setContent("인증번호 입니다. \n" +
+                mailService.createRandomPw() + "를 입력해주세요!");
+        mailService.sendSimpleEmail(param);
+        return "success";
+    }
 
-    // 내정보화면
+
+    // 내 정보 화면
     @GetMapping("/myPage")
     public String myPage(HttpSession session, Model model){
         UserResponse userResponse = userService.findOne((Integer) session.getAttribute("userId"));

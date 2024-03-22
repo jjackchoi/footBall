@@ -112,18 +112,25 @@ public class UserController {
         return "findPassword";
     }
 
-    // 인증 번호 발송
+    // 비밀번호 변경 페이지
+//    @GetMapping("/findPassword")
+//    public String editPassword(@PathVariable String fbUserName, @PathVariable String fbUserEmail) {
+//
+//    }
+
+    // 인증번호 발송
     @ResponseBody
     @PostMapping("/findPassword/sendAuth")
-    public String sendAuth(@RequestBody UserRequest params, HttpSession session){
+    public ResponseEntity<String> sendAuth(@RequestBody UserRequest params, HttpSession session){
 
         // 이름과 이메일로 유저 존재 판별
         if (userService.checkByNameAndEmail(params) == null){
-            return "false";
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
         // 6자리 난수 생성
         String authNum = mailService.createRandomPw();
+
         // 이메일로 인증번호 보내기
         MailDto mail = new MailDto();
         mail.setTitle("[뿟볼] 인증번호 발송");
@@ -140,12 +147,34 @@ public class UserController {
         authNumMap.put("endTime", endTime);
         authNumMap.put("authNum", authNum);
 
+        session.setMaxInactiveInterval(0);
         session.setMaxInactiveInterval(300);
         session.setAttribute("authNum", authNumMap);
 
-        return "success";
+        return ResponseEntity.status(HttpStatus.OK).body("success");
     }
 
+    // 인증번호 확인
+    @ResponseBody
+    @PostMapping("/findPassword/confirmAuth")
+    public ResponseEntity<String> confirmAuth(@RequestParam("insertedNum") String insertedNum, HttpSession session){
+
+        // authNum 초기화
+        Map<String, Object> authNumMap = new HashMap<>();
+        String authNum = "";
+        if (session != null){  // session값이 존재 할 때(메일이 발송된 상태일 경우)
+            authNumMap = (Map<String, Object>)session.getAttribute("authNum");
+            authNum = (String) authNumMap.get("authNum");
+            // 일치여부 확인 후 응답
+            if (authNum.equals(insertedNum)){
+                return ResponseEntity.status(HttpStatus.OK).body("success");
+            }else {
+                return ResponseEntity.status(HttpStatus.OK).body("fail");
+            }
+        }else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
 
     // 내 정보 화면
     @GetMapping("/myPage")

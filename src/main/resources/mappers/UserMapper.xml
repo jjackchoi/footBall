@@ -101,4 +101,11 @@
             AND 	fb_user_name = #{fbUserName}
         )
     </select>
+
+    <!--비밀번호 변경(조건: 이메일, 이름)-->
+    <update id="modifyPassword" parameterType="footBall.user.UserRequest">
+        UPDATE fb_user
+        SET fb_user_pswd = #{fbUserPswd}
+        WHERE fb_user_name = #{fbUserName} AND fb_user_email = #{fbUserEmail};
+    </update>
 </mapper>

@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -107,20 +108,14 @@ public class UserController {
     }
 
     // 비밀번호 찾기 페이지
-    @GetMapping("/findPassword")
+    @GetMapping("/password/find")
     public String findPassword(){
-        return "findPassword";
+        return "password/findPassword";
     }
-
-    // 비밀번호 변경 페이지
-//    @GetMapping("/findPassword")
-//    public String editPassword(@PathVariable String fbUserName, @PathVariable String fbUserEmail) {
-//
-//    }
 
     // 인증번호 발송
     @ResponseBody
-    @PostMapping("/findPassword/sendAuth")
+    @PostMapping("/password/sendAuth")
     public ResponseEntity<String> sendAuth(@RequestBody UserRequest params, HttpSession session){
 
         // 이름과 이메일로 유저 존재 판별
@@ -156,9 +151,14 @@ public class UserController {
 
     // 인증번호 확인
     @ResponseBody
-    @PostMapping("/findPassword/confirmAuth")
-    public ResponseEntity<String> confirmAuth(@RequestParam("insertedNum") String insertedNum, HttpSession session){
+    @PostMapping("/password/confirmAuth")
+    public ResponseEntity<String> confirmAuth(@RequestParam("insertedNum") String insertedNum,
+                                              @RequestParam("insertedName") String insertedName,
+                                              @RequestParam("insertedEmail") String insertedEmail,
+                                              HttpServletRequest request){
 
+        // 세션 불러오기(없으면 null)
+        HttpSession session = request.getSession(false);
         // authNum 초기화
         Map<String, Object> authNumMap = new HashMap<>();
         String authNum = "";
@@ -167,6 +167,12 @@ public class UserController {
             authNum = (String) authNumMap.get("authNum");
             // 일치여부 확인 후 응답
             if (authNum.equals(insertedNum)){
+                // 기존의 인증번호 정보 삭제
+                session.removeAttribute("authNum");
+                // 입력한 이름, 이메일 세션에 저장 및 세션 유지시간 확장
+                session.setAttribute("userName",insertedName);
+                session.setAttribute("userEmail",insertedEmail);
+                session.setMaxInactiveInterval(300);
                 return ResponseEntity.status(HttpStatus.OK).body("success");
             }else {
                 return ResponseEntity.status(HttpStatus.OK).body("fail");
@@ -174,6 +180,35 @@ public class UserController {
         }else{
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
+    }
+
+    // 비밀번호 변경 페이지
+    @GetMapping("/password/modify")
+    public String modifyPasswordPage(HttpSession session, Model model) {
+        // 세션 값 변수에 담기
+        String userName = (String) session.getAttribute("userName");
+        String userEmail = (String) session.getAttribute("userEmail");
+        // 세션에 값이 있어야 만 해당 페이지 조회
+        if (userEmail != null && !userEmail.isEmpty()){
+            return "password/modifyPassword";
+        }
+        return "redirect:/password/find";
+    }
+
+    // 비밀번호 변경
+    @ResponseBody
+    @PostMapping("/password/modify")
+    public ResponseEntity<String> modifyPassword(@RequestBody UserRequest params, HttpServletRequest request){
+        HttpSession session = request.getSession(false); // 세션이 없으면 null 반환
+
+        // session이 null이 아닐 때 비밀번호 변경
+        if (session != null){
+            userService.modifyPassword(params);
+            return ResponseEntity.status(HttpStatus.OK).body("success");
+        }
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+
     }
 
     // 내 정보 화면

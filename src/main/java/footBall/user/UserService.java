@@ -26,4 +26,7 @@ public interface UserService {
 
     // 이름과 이메일로 존재여부 판별
     Integer checkByNameAndEmail(UserRequest params);
+
+    // 비밀번호 수정(params: 이메일, 이름, 비밀번호)
+    int modifyPassword(UserRequest params);
 }

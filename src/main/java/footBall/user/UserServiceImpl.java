@@ -43,6 +43,7 @@ public class UserServiceImpl implements UserService{
 
     // 로그인
     @Override
+    @Transactional
     public int login(UserRequest dto) {
         // 1. 회원 정보 및 비밀번호 조회
         UserResponse userDto = sqlSession.selectOne("UserMapper.getUserByEmail", dto.getFbUserEmail());
@@ -72,5 +73,13 @@ public class UserServiceImpl implements UserService{
     @Override
     public Integer checkByNameAndEmail(UserRequest params) {
         return sqlSession.selectOne("UserMapper.checkByNameAndEmail", params);
+    }
+
+    // 비밀번호 수정(params: 이메일, 이름, 비밀번호)
+    @Override
+    @Transactional
+    public int modifyPassword(UserRequest params) {
+        params.encodingPassword(passwordEncoder);
+        return sqlSession.update("UserMapper.modifyPassword", params);
     }
 }

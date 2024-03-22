@@ -22,7 +22,12 @@ public class MailService {
         message.setTo(mailDto.getRecipient()); // 수신자
         message.setText(mailDto.getContent()); // 내용
 
-        javaMailSender.send(message);
+        // 별도의 쓰레드로 처리
+        new Thread(new Runnable() {
+            public void run() {
+                javaMailSender.send(message);
+            }
+        }).start();
     }
 
     // 6자리 랜덤 비밀번호 생성

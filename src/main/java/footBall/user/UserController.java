@@ -13,7 +13,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @Slf4j
@@ -113,11 +115,34 @@ public class UserController {
     // 인증 번호 발송
     @ResponseBody
     @PostMapping("/findPassword/sendAuth")
-    public String sendAuth(@RequestBody MailDto param){
-        param.setTitle("[뿟볼] 인증번호 발송");
-        param.setContent("인증번호 입니다. \n" +
-                mailService.createRandomPw() + "를 입력해주세요!");
-        mailService.sendSimpleEmail(param);
+    public String sendAuth(@RequestBody UserRequest params, HttpSession session){
+
+        // 이름과 이메일로 유저 존재 판별
+        if (userService.checkByNameAndEmail(params) == null){
+            return "false";
+        }
+
+        // 6자리 난수 생성
+        String authNum = mailService.createRandomPw();
+        // 이메일로 인증번호 보내기
+        MailDto mail = new MailDto();
+        mail.setTitle("[뿟볼] 인증번호 발송");
+        mail.setRecipient(params.getFbUserEmail());
+        mail.setContent("해당 인증번호를 화면에 입력해 주세요! \n" + authNum);
+        mailService.sendSimpleEmail(mail);
+
+        // 인증번호과 생성시간 및 만료시간 세션에 추가
+        Map<String, Object> authNumMap = new HashMap<>();
+        Long createTime = System.currentTimeMillis(); // 인증번호 생성시간
+        Long endTime = createTime + (300*1000); // 인증번호 만료시간 300밀리초 * 1000 = 5분
+
+        authNumMap.put("createTime", createTime);
+        authNumMap.put("endTime", endTime);
+        authNumMap.put("authNum", authNum);
+
+        session.setMaxInactiveInterval(300);
+        session.setAttribute("authNum", authNumMap);
+
         return "success";
     }
 

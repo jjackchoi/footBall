@@ -125,6 +125,7 @@
 
         <!--세션의 userId 값을 가져옴-->
         let userId = /*[[${session.userId}]]*/ null;
+        let userAuth = /*[[${session.userAuth}]]*/ null;
 
         // 게시글 렌더링
         function lenderPost() {
@@ -165,8 +166,12 @@
                         let title = post.suggestionBoardTitle; // 제목
                         if(post.suggestionBoardSecYn == 'Y'){ // 비밀글여부에 따른 제목 값 변환
                             if(userId != post.fbUserId){
-                                title = "비밀글 입니다. <i class='icon fas fa-key'></i>";
-                            }else{
+                                if(userAuth == 'Y'){
+                                    title = post.suggestionBoardTitle + "<i class='icon fas fa-key'></i>";
+                                }else {
+                                    title = "비밀글 입니다. <i class='icon fas fa-key'></i>";
+                                }
+                            }else if(userId == post.fbUserId){
                                 title = post.suggestionBoardTitle + "<i class='icon fas fa-key'></i>";
                             }
                         }
@@ -174,7 +179,11 @@
                         if(post.suggestionBoardSecYn != 'Y'){ // 비밀글이 아닐 때
                             dataSecret = 'N';
                         }else if(post.suggestionBoardSecYn == 'Y' && userId != post.fbUserId){ // 비밀글이고 세션사용자와 작성자가 다를 때
-                            dataSecret = 'Y';
+                            if(userAuth == 'Y'){
+                                dataSecret = 'N';
+                            }else {
+                                dataSecret = 'Y';
+                            }
                         }else if(post.suggestionBoardSecYn == 'Y' && userId == post.fbUserId){ // 비밀글이고 세션사용자와 작성자가 같을 때
                             dataSecret = 'N';
                         }

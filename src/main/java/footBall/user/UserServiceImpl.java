@@ -67,4 +67,10 @@ public class UserServiceImpl implements UserService{
     public UserResponse findOne(Integer id) {
         return sqlSession.selectOne("UserMapper.findOne",id);
     }
+
+    // 이름과 이메일로 존재여부 판별
+    @Override
+    public Integer checkByNameAndEmail(UserRequest params) {
+        return sqlSession.selectOne("UserMapper.checkByNameAndEmail", params);
+    }
 }

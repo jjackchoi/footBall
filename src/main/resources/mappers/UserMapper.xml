@@ -88,4 +88,17 @@
         from fb_user
         where FB_USER_ID = #{fbUserId}
     </select>
+
+    <!--이름과 이메일로 존재여부 판별-->
+    <select id="checkByNameAndEmail" parameterType="footBall.user.UserRequest" resultType="Integer">
+        SELECT 1 result
+        FROM DUAL
+        WHERE EXISTS(
+            SELECT	1
+            FROM 	fb_user
+            WHERE 	1=1
+            AND     fb_user_email = #{fbUserEmail}
+            AND 	fb_user_name = #{fbUserName}
+        )
+    </select>
 </mapper>

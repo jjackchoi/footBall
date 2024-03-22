@@ -21,6 +21,9 @@ public interface UserService {
     // 닉네임 조회
     String findNickname(int id);
 
-    //정보 조회
+    // 정보 조회
     UserResponse findOne(Integer id);
+
+    // 이름과 이메일로 존재여부 판별
+    Integer checkByNameAndEmail(UserRequest params);
 }

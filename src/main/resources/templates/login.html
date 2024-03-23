@@ -7,7 +7,7 @@
         <meta name="description" content="" />
         <meta name="author" content="" />
         <title>뿟볼 : 로그인</title>
-        <link th:href="@{/css/styles.css}" rel="stylesheet" />
+        <link th:href="@{/css/styles.css}" rel="stylesheet"/>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
     </head>
     <body class="bg-primary">
@@ -17,14 +17,19 @@
                     <div class="container">
                         <div class="row justify-content-center">
                             <div class="col-lg-5">
-                                <div class="card shadow-lg border-0 rounded-lg mt-5">
+                                <div style="text-align: center;">
+                                    <a th:href="@{'/'}">
+                                        <img src="/assets/img/logo.jpg" style="width: 250px; height: 180px;">
+                                    </a>
+                                </div>
+                                <div class="card shadow-lg border-0 rounded-lg mt-3">
                                     <div class="card-header"><h1 class="text-center my-4 font-weight-bold">로그인</h1></div>
                                     <div class="card-body">
                                         <p style="text-align: center; margin-bottom: 0;">
                                             드림FC에 오신걸 환영합니다.
                                             <br>
                                             <span style="display: block;">
-                                                회원가입 한 <strong>드림FC 이메일과 비밀번호</strong>를 입력해주세요.
+                                                <strong>드림FC 이메일과 비밀번호</strong>를 입력해주세요.
                                             </span>
                                         </p>
                                     </div>

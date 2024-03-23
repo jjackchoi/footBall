@@ -22,15 +22,21 @@
     <!-- Bootstrap-datepicker JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 </head>
-<body class="bg-primary">
-<div id="layoutAuthentication" class="backgroundBody">
+<body class="bg-primary backgroundBody">
+<div id="layoutAuthentication">
     <div id="layoutAuthentication_content">
         <main>
             <div class="container">
                 <div class="row justify-content-center">
-                    <div class="col-lg-7">
-                        <div class="card shadow-lg border-0 rounded-lg mt-5">
-                            <div class="card-header"><h1 class="text-center font-weight-light my-4">회원가입</h1>
+                    <div class="col-lg-5 mb-5">
+                        <div style="text-align: center;">
+                            <a th:href="@{'/'}">
+                                <img src="/assets/img/logo.jpg" style="width: 250px; height: 180px;">
+                            </a>
+                        </div>
+                        <div class="card shadow-lg border-0 rounded-lg mt-3">
+                            <div class="card-header">
+                                <h2 class="text-center my-4">회원가입</h2>
                             </div>
                             <div class="card-body">
                                 <form id="signupForm" method="post">

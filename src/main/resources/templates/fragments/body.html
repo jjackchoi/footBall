@@ -35,6 +35,27 @@
         <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
             <div class="sb-sidenav-menu">
                 <div class="nav">
+
+                    <div class="sb-sidenav-menu-heading">소개</div>
+                    <a class="nav-link" th:href="@{/}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+                        동호회 소개
+                    </a>
+                    <a class="nav-link" th:href="@{/}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+                        멤버 소개
+                    </a>
+
+                    <div class="sb-sidenav-menu-heading">팀 구성</div>
+                    <a class="nav-link" th:href="@{/weeklyAttendee}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-futbol"></i></div>
+                        금주의 참석인원
+                    </a>
+                    <a class="nav-link" th:href="@{/previousAttendee}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-futbol"></i></div>
+                        지나간 참석자 명단
+                    </a>
+
                     <div class="sb-sidenav-menu-heading">게시판</div>
                     <a class="nav-link" th:href="@{'/freeBoard'}">
                         <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
@@ -44,18 +65,11 @@
                         <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                         건의게시판
                     </a>
-                    <div class="sb-sidenav-menu-heading">팀 구성</div>
-                    <a class="nav-link" th:href="@{/weeklyAttendee}">
-                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                        금주의 참석인원
-                    </a>
-                    <a class="nav-link" th:href="@{/previousAttendee}">
-                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                        지나간 참석자 명단
-                    </a>
+
+                    <div class="sb-sidenav-menu-heading">회비</div>
                     <a class="nav-link" th:href="@{/fee}">
-                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                        회비
+                        <div class="sb-nav-link-icon"><i class="fas fa-coins"></i></div>
+                        회비 납부 현황
                     </a>
                 </div>
             </div>

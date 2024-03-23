@@ -3046,32 +3046,32 @@ textarea.form-control-lg {
 
 .btn-primary {
   color: #fff;
-  background-color: #0d6efd;
-  border-color: #0d6efd;
+  background-color: #198754;
+  border-color: #198754;
 }
 .btn-primary:hover {
   color: #fff;
-  background-color: #0b5ed7;
-  border-color: #0a58ca;
+  background-color: #157347;
+  border-color: #146c43;
 }
 .btn-check:focus + .btn-primary, .btn-primary:focus {
   color: #fff;
-  background-color: #0b5ed7;
-  border-color: #0a58ca;
+  background-color: #157347;
+  border-color: #146c43;
   box-shadow: 0 0 0 0.25rem rgba(49, 132, 253, 0.5);
 }
 .btn-check:checked + .btn-primary, .btn-check:active + .btn-primary, .btn-primary:active, .btn-primary.active, .show > .btn-primary.dropdown-toggle {
   color: #fff;
-  background-color: #0a58ca;
-  border-color: #0a53be;
+  background-color: #146c43;
+  border-color: #13653f;
 }
 .btn-check:checked + .btn-primary:focus, .btn-check:active + .btn-primary:focus, .btn-primary:active:focus, .btn-primary.active:focus, .show > .btn-primary.dropdown-toggle:focus {
-  box-shadow: 0 0 0 0.25rem rgba(49, 132, 253, 0.5);
+  box-shadow: 0 0 0 0.25rem rgba(60, 153, 110, 0.5);
 }
 .btn-primary:disabled, .btn-primary.disabled {
   color: #fff;
-  background-color: #0d6efd;
-  border-color: #0d6efd;
+  background-color: #198754;
+  border-color: #198754;
 }
 
 .btn-secondary {
@@ -11698,4 +11698,14 @@ body {
   width: 20px !important;
   font-size: 0.75rem;
   border-radius: 0.25rem !important;
+}
+
+.backgroundBody {
+    background-image: url('/assets/img/footBallLoginBackground.jpg'); /* 배경 이미지 경로 설정 */
+    background-size: cover; /* 화면에 꽉 차도록 배경 이미지 크기 조절 */
+    background-position: center; /* 배경 이미지를 가운데로 정렬 */
+    background-repeat: no-repeat; /* 배경 이미지 반복 방지 */
+    height: 100vh; /* 화면의 높이를 전체 높이로 설정 */
+    margin: 0; /* body 요소의 기본 마진 제거 */
+    padding: 0; /* body 요소의 기본 패딩 제거 */
 }

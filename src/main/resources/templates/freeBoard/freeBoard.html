@@ -6,28 +6,33 @@
 </th:block>
 
 <th:block layout:fragment="content">
-    <div class="container mt-5" style="background-image: url('/assets/img/football.jpg'); min-height: 80vh; background-size: cover; background-position: center;">
-        <h1 class="mt-4">자유게시판</h1>
-        <div class="right" style="text-align: right">
-            <button type="button" class="btn btn-success" id="viewAllPostsBtn">
-                모든 글 조회
-            </button>
-            <button type="button" class="btn btn-primary" data-toggle="modal" onclick="openModal()">
-                글 작성
-            </button>
+    <!-- 제목 -->
+    <div class="mt-4 mb-2 d-flex align-items-center">
+        <i class="fas fa-table me-1 fa-2x me-1"></i>
+        <h2 class="mb-0"> 자유게시판</h2>
+    </div>
+    <!-- 버튼 -->
+    <div class="right" style="text-align: right">
+        <button type="button" class="btn btn-success" id="viewAllPostsBtn">
+            모든 글 조회
+        </button>
+        <button type="button" class="btn btn-primary" data-toggle="modal" onclick="openModal()">
+            글 작성
+        </button>
+    </div>
+    <!-- 검색 입력란과 버튼 -->
+    <form id="searchForm" action="/freeBoard/search" method="get">
+        <div class="input-group mb-3 mt-3" style="display: flex; justify-content: flex-end;">
+            <input type="text" class="form-control me-1" placeholder="검색어를 입력하세요" name="freeBoardTitle" style="max-width: 200px;">
+            <span class="input-group-btn">
+                <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-search"></i></button>
+            </span>
         </div>
-        <!-- 검색 입력란과 버튼 -->
-        <form id="searchForm" action="/freeBoard/search" method="get">
-            <div class="input-group mb-3 mt-3" style="display: flex; justify-content: flex-end;">
-                <input type="text" class="form-control me-1" placeholder="검색어를 입력하세요" name="freeBoardTitle" style="max-width: 200px;">
-                <span class="input-group-btn">
-                    <button class="btn btn-outline-secondary" type="submit">검색</button>
-                </span>
-            </div>
-        </form>
+    </form>
 
-        <!-- 테이블 -->
-        <table class="table table-bordered">
+    <!-- 테이블 -->
+    <div>
+        <table class="table">
             <thead>
             <tr>
                 <th>글작성자</th>
@@ -49,10 +54,10 @@
             </tr>
             </tbody>
         </table>
-    </div>
-    <!-- 페이징 표시 -->
-    <div id="pagination" style="display: flex; justify-content: center; margin-top: 20px;">
-        <!-- 페이지 번호가 동적으로 생성될 위치 -->
+        <!-- 페이징 표시 -->
+        <div id="pagination" style="display: flex; justify-content: center; margin-top: 20px;">
+            <!-- 페이지 번호가 동적으로 생성될 위치 -->
+        </div>
     </div>
 </th:block>
 

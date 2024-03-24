@@ -70,7 +70,7 @@ public class FreeBoardController {
         return "freeBoard/freeBoard";
     }
 
-
+    // 게시글 전체 조회
     @GetMapping("/freeBoard/allSearch")
     public ResponseEntity<List<FreeBoardResponse>> searchFreeBoardPosts() {
         List<FreeBoardResponse> searchResult = freeBoardService.findAll();
@@ -115,11 +115,10 @@ public class FreeBoardController {
 
     }
 
-    // 글 단건조회
+    // 글 단 건조회
     @GetMapping("/freeBoard/details/{id}")
     public String boardOne(@PathVariable int id, Model model){
         FreeBoardResponse param = freeBoardService.findOne(id);
-        System.out.println(param);
         List<FbcResponse> comment = fbcService.findList(id);
         model.addAttribute("post",param);
         model.addAttribute("comments",comment);

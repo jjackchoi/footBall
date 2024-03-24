@@ -3486,14 +3486,14 @@ textarea.form-control-lg {
 
 .btn-link {
   font-weight: 400;
-  color: #0d6efd;
+  color: #fff;
   text-decoration: underline;
 }
 .btn-link:hover {
-  color: #0a58ca;
+  color: #fff;
 }
 .btn-link:disabled, .btn-link.disabled {
-  color: #6c757d;
+  color: #fff;
 }
 
 .btn-lg, .btn-group-lg > .btn {
@@ -3953,12 +3953,13 @@ textarea.form-control-lg {
   padding-left: 0;
   margin-bottom: 0;
   list-style: none;
+  border-bottom: 1px solid rgba(0, 128, 0, 0.2);
 }
 
 .nav-link {
   display: block;
   padding: 0.5rem 1rem;
-  color: #0d6efd;
+  color: #212529;
   text-decoration: none;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
 }
@@ -3968,10 +3969,10 @@ textarea.form-control-lg {
   }
 }
 .nav-link:hover, .nav-link:focus {
-  color: #0a58ca;
+  color: #1c1f23;
 }
 .nav-link.disabled {
-  color: #6c757d;
+  color: #212529;
   pointer-events: none;
   cursor: default;
 }
@@ -11386,14 +11387,14 @@ body {
   z-index: 1038;
 }
 .sb-nav-fixed #layoutSidenav #layoutSidenav_nav .sb-sidenav {
-  padding-top: 56px;
+  padding-top: 100px;
 }
 .sb-nav-fixed #layoutSidenav #layoutSidenav_nav .sb-sidenav .sb-sidenav-menu {
   overflow-y: auto;
 }
 .sb-nav-fixed #layoutSidenav #layoutSidenav_content {
   padding-left: 225px;
-  top: 56px;
+  top: 100px;
 }
 
 #layoutError {
@@ -11420,7 +11421,7 @@ body {
 
 .sb-topnav {
   padding-left: 0;
-  height: 56px;
+  height: 100px;
   z-index: 1039;
 }
 .sb-topnav .navbar-brand {
@@ -11708,4 +11709,8 @@ body {
     height: 100vh; /* 화면의 높이를 전체 높이로 설정 */
     margin: 0; /* body 요소의 기본 마진 제거 */
     padding: 0; /* body 요소의 기본 패딩 제거 */
+}
+
+.border-green {
+    border: green;
 }

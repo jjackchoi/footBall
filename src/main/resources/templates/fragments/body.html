@@ -44,9 +44,16 @@
                         <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                         동호회 소개
                     </a>
-                    <a class="nav-link" th:href="@{/}">
+                    <a class="nav-link" th:href="@{/introduction/member}">
                         <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                         멤버 소개
+                    </a>
+                </div>
+                <div class="nav">
+                    <div class="sb-sidenav-menu-heading">공지사항</div>
+                    <a class="nav-link" th:href="@{/}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-bullhorn"></i></div>
+                        공지사항
                     </a>
                 </div>
                 <div class="nav">
@@ -61,6 +68,13 @@
                     </a>
                 </div>
                 <div class="nav">
+                    <div class="sb-sidenav-menu-heading">회비</div>
+                    <a class="nav-link" th:href="@{/fee}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-coins"></i></div>
+                        회비 납부 현황
+                    </a>
+                </div>
+                <div class="nav">
                     <div class="sb-sidenav-menu-heading">게시판</div>
                     <a class="nav-link" th:href="@{'/freeBoard'}">
                         <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
@@ -69,20 +83,6 @@
                     <a class="nav-link" th:href="@{/suggestionBoard}">
                         <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                         건의게시판
-                    </a>
-                </div>
-                <div class="nav">
-                    <div class="sb-sidenav-menu-heading">회비</div>
-                    <a class="nav-link" th:href="@{/fee}">
-                        <div class="sb-nav-link-icon"><i class="fas fa-coins"></i></div>
-                        회비 납부 현황
-                    </a>
-                </div>
-                <div class="nav">
-                    <div class="sb-sidenav-menu-heading">공지사항</div>
-                    <a class="nav-link" th:href="@{/}">
-                        <div class="sb-nav-link-icon"><i class="fas fa-bullhorn"></i></div>
-                        공지사항
                     </a>
                 </div>
             </div>

@@ -15,6 +15,9 @@ public interface UserService {
     // 닉네임으로 유저 조회
     List<UserResponse> getUserByNickname(String nickname);
 
+    // 유저 멤버만 조회
+    List<UserResponse> getAllMember();
+
     // 로그인
     int login(UserRequest dto);
     

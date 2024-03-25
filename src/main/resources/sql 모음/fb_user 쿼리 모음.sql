@@ -39,9 +39,22 @@ and FB_USER_EMAIL = 'parkhyenwoo@naver.com'
 and FB_USER_DEL_YN = 0;
 
 select
-           *
-        from
-            fb_user
-        where 1=1
-        and fb_user_email = 'parkhyenwoo@naver.com'
-        and fb_user_del_yn = 0;
+   *
+from
+    fb_user
+where 1=1
+and fb_user_email = 'parkhyenwoo@naver.com'
+and fb_user_del_yn = 0;
+
+/*업데이트*/
+UPDATE fb_user
+SET fb_user_pswd = #{fbUserPswd}
+WHERE fb_user_name = #{fbUserName} AND fb_user_email = #{fbUserEmail};   
+
+/*유저 멤버만 조회*/
+SELECT *
+FROM fb_user
+WHERE 1=1
+AND fb_user_member_yn = 'Y'
+AND fb_user_del_yn = 'N'
+ORDER BY fb_user_birth ASC;

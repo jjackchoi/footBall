@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/basic">
+
+<th:block layout:fragment="add-css">
+    <style>
+        .member-list {
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            padding: 1rem 0;
+        }
+        .member-item {
+            flex-basis: calc(20% - 20px); /* 한 줄에 5개씩 표시하도록 설정 (여백 포함) */
+            margin: 10px;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+        .member-item img {
+            width: 100%;
+            height: 200px;
+            margin-bottom: 10px;
+        }
+        .img {
+            width: 100%;
+            height: 200px;
+            margin-bottom: 10px;
+        }
+        .member-details {
+            overflow: hidden;
+        }
+    </style>
+</th:block>
+
+<th:block layout:fragment="title">
+    <title>멤버 소개</title>
+</th:block>
+
+<th:block layout:fragment="content">
+    <!-- 제목 -->
+    <div class="mt-4 mb-2 d-flex align-items-center">
+        <i class="fas fa-users me-1 fa-2x me-1"></i>
+        <h2 class="mb-0">멤버 소개</h2>
+    </div>
+    <dvi>
+        <ul class="member-list">
+            <li th:each="member, iterStat : ${members}" class="member-item">
+                <div class="img">
+                    <img src="/assets/img/delecious.jpg" alt="Member Image">
+                </div>
+                <div class="member-details">
+                    <h2 th:text="${member.fbUserName}"></h2>
+                </div>
+            </li>
+        </ul>
+    </dvi>
+
+<!--    &lt;!&ndash; 버튼 &ndash;&gt;-->
+<!--    <div class="right" style="text-align: right">-->
+<!--        <button type="button" class="btn btn-success" id="viewAllPostsBtn">-->
+<!--            모든 글 조회-->
+<!--        </button>-->
+<!--        <button type="button" class="btn btn-primary" data-toggle="modal" onclick="openModal()">-->
+<!--            글 작성-->
+<!--        </button>-->
+<!--    </div>-->
+<!--    &lt;!&ndash; 검색 입력란과 버튼 &ndash;&gt;-->
+<!--    <form id="searchForm" action="/freeBoard/search" method="get">-->
+<!--        <div class="input-group mb-3 mt-3" style="display: flex; justify-content: flex-end;">-->
+<!--            <input type="text" class="form-control me-1" placeholder="검색어를 입력하세요" name="freeBoardTitle" style="max-width: 200px;">-->
+<!--            <span class="input-group-btn">-->
+<!--                <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-search"></i></button>-->
+<!--            </span>-->
+<!--        </div>-->
+<!--    </form>-->
+
+<!--    &lt;!&ndash; 테이블 &ndash;&gt;-->
+<!--    <div>-->
+<!--        <div style="height: 450px;">-->
+<!--            <table class="table">-->
+<!--                <thead>-->
+<!--                <tr>-->
+<!--                    <th>글작성자</th>-->
+<!--                    <th>글제목</th>-->
+<!--                    <th>글내용</th>-->
+<!--                    <th>작성일자</th>-->
+<!--                </tr>-->
+<!--                </thead>-->
+<!--                <tbody>-->
+<!--                <tr th:each="post : ${posts}">-->
+<!--                    <td th:text="${post.getFreeBoardAuthor()}"></td>-->
+<!--                    <td>-->
+<!--                        <a th:href="@{'/freeBoard/details/' + ${post.freeBoardId}}">-->
+<!--                            <span th:text="${post.freeBoardTitle}"></span>-->
+<!--                        </a>-->
+<!--                    </td>-->
+<!--                    <td th:text="${post.getFreeBoardText()}"></td>-->
+<!--                    <td th:if="${post.freeBoardRegDate != null}" th:text="${#temporals.format(post.freeBoardRegDate, 'yyyy-MM-dd HH시 mm분')}"></td>-->
+<!--                </tr>-->
+<!--                </tbody>-->
+<!--            </table>-->
+<!--        </div>-->
+<!--        &lt;!&ndash; 페이징 표시 &ndash;&gt;-->
+<!--        <div id="pagination" style="display: flex; justify-content: center; margin-top: 20px;">-->
+<!--            &lt;!&ndash; 페이지 번호가 동적으로 생성될 위치 &ndash;&gt;-->
+<!--        </div>-->
+<!--    </div>-->
+</th:block>
+
+<th:block layout:fragment="modal">
+    <!-- 글 작성 팝업 모달 -->
+    <div class="modal fade" id="writePostModal" tabindex="-1" role="dialog" aria-labelledby="writePostModalLabel" aria-hidden="true" th:fragment="modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="writePostModalLabel">자유게시판 글 작성</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModal()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- 글 작성 폼 -->
+                    <form id="postForm">
+                        <label for="freeBoardTitle">제목</label>
+                        <input id="freeBoardTitle" name="freeBoardTitle" class="form-control">
+                        <label for="freeBoardText">내용</label>
+                        <textarea id="freeBoardText" name="freeBoardText" rows="8" class="form-control"></textarea>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModal()">닫기</button>
+                    <button type="button" class="btn btn-primary" onclick="submitPostForm()">작성 완료</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        var userId = /*[[${session.userId}]]*/ null; // 세션의 userId 값을 가져옴
+    </script>
+</th:block>
+
+</html>

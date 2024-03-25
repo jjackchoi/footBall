@@ -32,28 +32,30 @@
 
     <!-- 테이블 -->
     <div>
-        <table class="table">
-            <thead>
-            <tr>
-                <th>글작성자</th>
-                <th>글제목</th>
-                <th>글내용</th>
-                <th>작성일자</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="post : ${posts}">
-                <td th:text="${post.getFreeBoardAuthor()}"></td>
-                <td>
-                    <a th:href="@{'/freeBoard/details/' + ${post.freeBoardId}}">
-                        <span th:text="${post.freeBoardTitle}"></span>
-                    </a>
-                </td>
-                <td th:text="${post.getFreeBoardText()}"></td>
-                <td th:if="${post.freeBoardRegDate != null}" th:text="${#temporals.format(post.freeBoardRegDate, 'yyyy-MM-dd HH시 mm분')}"></td>
-            </tr>
-            </tbody>
-        </table>
+        <div style="height: 450px;">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>글작성자</th>
+                    <th>글제목</th>
+                    <th>글내용</th>
+                    <th>작성일자</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="post : ${posts}">
+                    <td th:text="${post.getFreeBoardAuthor()}"></td>
+                    <td>
+                        <a th:href="@{'/freeBoard/details/' + ${post.freeBoardId}}">
+                            <span th:text="${post.freeBoardTitle}"></span>
+                        </a>
+                    </td>
+                    <td th:text="${post.getFreeBoardText()}"></td>
+                    <td th:if="${post.freeBoardRegDate != null}" th:text="${#temporals.format(post.freeBoardRegDate, 'yyyy-MM-dd HH시 mm분')}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
         <!-- 페이징 표시 -->
         <div id="pagination" style="display: flex; justify-content: center; margin-top: 20px;">
             <!-- 페이지 번호가 동적으로 생성될 위치 -->

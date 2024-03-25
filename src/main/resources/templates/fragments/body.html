@@ -36,7 +36,7 @@
 </nav>
 <div id="layoutSidenav">
     <div id="layoutSidenav_nav">
-        <nav class="sb-sidenav accordion" id="sidenavAccordion">
+        <nav class="sb-sidenav accordion" id="sidenavAccordion" style="background-color: #fff;">
             <div class="sb-sidenav-menu" style="border-right: 1px solid rgba(0, 128, 0, 0.2); background-color: rgba(0, 0, 0, 0.03);" >
                 <div class="nav">
                     <div class="sb-sidenav-menu-heading">소개</div>
@@ -78,6 +78,13 @@
                         회비 납부 현황
                     </a>
                 </div>
+                <div class="nav">
+                    <div class="sb-sidenav-menu-heading">공지사항</div>
+                    <a class="nav-link" th:href="@{/}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-bullhorn"></i></div>
+                        공지사항
+                    </a>
+                </div>
             </div>
             <div class="sb-sidenav-footer" style="border: 1px solid rgba(0, 128, 0, 0.2);">
                 <div class="small"></div>
@@ -87,7 +94,7 @@
     </div>
     <div id="layoutSidenav_content">
         <main>
-            <div class="container-fluid px-4">
+            <div class="container-fluid px-4" style="max-width: 1080px; margin: 50px auto">
                 <!--MAIN-->
                 <th:block layout:fragment="content"></th:block>
                 <!--END MAIN CONTENT-->

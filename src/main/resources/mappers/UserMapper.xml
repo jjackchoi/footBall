@@ -18,6 +18,9 @@
         ,fb_user_reg_date
         ,fb_user_mod_date
         ,fb_user_member_yn
+        ,fb_user_specialty
+        ,fb_user_main_position
+        ,fb_user_img
     </sql>
 
     <!--유저 회원가입-->
@@ -39,6 +42,9 @@
             ,now()
             ,null
             ,'N'
+            ,null
+            ,null
+            ,null
         )
     </insert>
 
@@ -122,5 +128,13 @@
         UPDATE fb_user
         SET fb_user_pswd = #{fbUserPswd}
         WHERE fb_user_name = #{fbUserName} AND fb_user_email = #{fbUserEmail};
+    </update>
+
+    <!--멤버 정보 기입 및 수정-->
+    <update id="insertMemInfo" parameterType="footBall.user.UserRequest">
+        UPDATE fb_user
+        SET fb_user_specialty = #{fbUserSpecialty},
+            fb_user_main_position = #{fbUserMainPosition}
+        WHERE fb_user_id = #{fbUserId};
     </update>
 </mapper>

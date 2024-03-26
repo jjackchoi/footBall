@@ -32,4 +32,7 @@ public interface UserService {
 
     // 비밀번호 수정(params: 이메일, 이름, 비밀번호)
     int modifyPassword(UserRequest params);
+
+    // 멤버 정보 기입 및 수정
+    int insertMemInfo(UserRequest params);
 }

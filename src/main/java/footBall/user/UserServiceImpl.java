@@ -88,4 +88,10 @@ public class UserServiceImpl implements UserService{
         params.encodingPassword(passwordEncoder);
         return sqlSession.update("UserMapper.modifyPassword", params);
     }
+
+    // 멤버 정보 기입 및 수정
+    @Override
+    public int insertMemInfo(UserRequest params) {
+        return sqlSession.update("UserMapper.insertMemInfo", params);
+    }
 }

@@ -58,3 +58,9 @@ WHERE 1=1
 AND fb_user_member_yn = 'Y'
 AND fb_user_del_yn = 'N'
 ORDER BY fb_user_birth ASC;
+
+/*멤버 정보 기입 및 수정*/
+UPDATE fb_user 
+SET fb_user_specialty = '슈팅',
+	fb_user_main_position = '공격수'
+WHERE fb_user_id = 1;

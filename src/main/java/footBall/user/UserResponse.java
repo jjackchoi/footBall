@@ -19,6 +19,9 @@ public class UserResponse {
     private String fbUserDelYn;     // 유저 삭제여부
     private LocalDateTime fbUserRegDate;  // 유저 등록일
     private LocalDateTime fbUserModDate;  // 유저 수정일
+    private String fbUserSpecialty; // 유저 특기
+    private String fbUserMainPosition;    // 유저 주포지션
+    private String fbUserImg;       // 유저 이미지
 
     private String attendStatus;         // 참석여부
 

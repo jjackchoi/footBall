@@ -58,8 +58,13 @@
             <dvi>
                 <ul class="member-list">
                     <li th:each="member, iterStat : ${members}" class="member-item">
-                        <div class="img">
-                            <img th:src="'/assets/img/userImg/' + ${member.fbUserImg}" alt="Member image">
+                        <!--프로필 사진 없을 때-->
+                        <div th:if="${#strings.isEmpty(member.fbUserImg)}" class="img">
+                            <img th:src="'/assets/img/userImg/user_icon.jpg'">
+                        </div>
+                        <!--프로필 사진 있을 때-->
+                        <div th:unless="${#strings.isEmpty(member.fbUserImg)}" class="img">
+                            <img th:src="'/assets/img/userImg/' + ${member.fbUserImg}">
                         </div>
                         <div class="member-details">
                             <label class="d-flex">

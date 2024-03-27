@@ -8,98 +8,205 @@
 <th:block layout:fragment="add-css">
     <style>
         .default-thumbnail {
-            width: 166px;
+            width: 200px;
             height: 200px;
+            border: 0px;
         }
     </style>
 </th:block>
 
 <th:block layout:fragment="content">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-6 text-center">
-                <h1 style="margin-bottom: 40px;">내 정보 보기</h1>
-
-                <!-- 프로필 사진 -->
-                <div class="mb-3">
-                    <img src="프로필사진경로" alt="프로필 사진" class="img-thumbnail default-thumbnail">
+    <!-- 제목 -->
+    <div class="mt-4 mb-4 d-flex align-items-center">
+        <i class="fas fa-user-edit me-1 fa-2x me-1"></i>
+        <h2 class="mb-0">내 정보 수정</h2>
+    </div>
+    <div class="row">
+        <div class="col-xl-4">
+            <!--프로필 사진 수정-->
+            <div class="card mb-4 d-flex mb-xl-0">
+                <div class="card-header d-flex align-items-center">
+                    <i class="fas fa-edit me-1-2x me-1"></i>
+                    <p class="mb-0 fw-bold">프로필 사진 수정</p>
                 </div>
-
-                <!-- 파일 첨부 -->
-                <form th:action method="post" enctype="multipart/form-data">
-                    <div class="mb-3">
-                        <input type="text" name="fbUserImg">
-                        <input type="file" class="form-control" id="inputFile" aria-describedby="fileHelp">
-                    </div>
-                </form>
-
-
-                <div class="row g-3 align-items-center mb-3">
-                    <div class="col-md-4 text-end">
-                        <label for="inputEmail" class="col-form-label">이메일 :</label>
-                    </div>
-                    <div class="col-md-8">
-                        <input type="email" id="inputEmail" class="form-control" aria-describedby="passwordHelpInline" th:value="${user.getFbUserEmail()}" disabled>
-                    </div>
+                <div class="card-body text-center">
+                    <!-- Profile picture image-->
+                    <img class="img-account-profile default-thumbnail rounded-circle mb-2"
+                         th:src="'/assets/img/userImg/' + ${user.fbUserImg}" alt="">
+                    <!-- Profile picture help block-->
+                    <div class="small font-italic text-muted mb-4">5MB가 넘지 않은 jpg,png 파일을 선택해주세요 </div>
+                    <!-- Profile picture upload button-->
+                    <button class="btn btn-primary" type="button">사진 올리기</button>
                 </div>
-
-                <div class="row g-3 align-items-center mb-3">
-                    <div class="col-md-4 text-end">
-                        <label for="inputNickname" class="col-form-label">닉네임 :</label>
-                    </div>
-                    <div class="col-md-8">
-                        <input type="text" id="inputNickname" class="form-control" aria-describedby="passwordHelpInline" th:value="${user.getFbUserNickname()}" >
-                    </div>
+            </div>
+        </div>
+        <div class="col-xl-8">
+            <!--정보 수정-->
+            <div class="card mb-4">
+                <div class="card-header d-flex align-items-center">
+                    <i class="fas fa-edit me-1-2x me-1"></i>
+                    <p class="mb-0 fw-bold">정보 수정</p>
                 </div>
-
-                <div class="row g-3 align-items-center mb-3">
-                    <div class="col-md-4 text-end">
-                        <label for="inputPassword" class="col-form-label">비밀번호 :</label>
-                    </div>
-                    <div class="col-md-8">
-                        <input type="password" id="inputPassword" class="form-control" aria-describedby="passwordHelpInline">
-                    </div>
+                <div class="card-body">
+                    <form>
+                        <!--닉네임-->
+                        <div class="mb-3">
+                            <label class="small mb-1" for="inputUserNickname">이름</label>
+                            <input class="form-control" id="inputUserNickname" type="text" placeholder="Enter your username"
+                                   th:value="${user.fbUserNickname}" readonly>
+                        </div>
+                        <!--이름-->
+                        <div class="mb-3">
+                            <label class="small mb-1" for="inputUsername">이름</label>
+                            <input class="form-control" id="inputUsername" type="text" placeholder="Enter your username"
+                                   th:value="${user.fbUserName}">
+                        </div>
+                        <!--비밀번호-->
+                        <div class="row gx-3 mb-3">
+                            <div class="mb-3">
+                                <label class="small mb-1" for="inputUsername">비밀번호 변경</label>
+                                <input class="form-control" id="currentUserPswd" type="password" placeholder="현재 비밀번호를 입력해주세요">
+                            </div>
+                            <div class="col-md-6">
+                                <input class="form-control" id="userPswd" type="password" placeholder="변경할 비밀번호를 입력해주세요.">
+                            </div>
+                            <div class="col-md-6">
+                                <input class="form-control" id="userPswdConf" type="password" placeholder="다시 확인해주세요.">
+                            </div>
+                        </div>
+                        <!-- Form Row        -->
+                        <div class="row gx-3 mb-3">
+                            <!-- Form Group (organization name)-->
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputOrgName">Organization name</label>
+                                <input class="form-control" id="inputOrgName" type="text" placeholder="Enter your organization name" value="Start Bootstrap">
+                            </div>
+                            <!-- Form Group (location)-->
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputLocation">Location</label>
+                                <input class="form-control" id="inputLocation" type="text" placeholder="Enter your location" value="San Francisco, CA">
+                            </div>
+                        </div>
+                        <!-- Form Group (email address)-->
+                        <div class="mb-3">
+                            <label class="small mb-1" for="inputEmailAddress">Email address</label>
+                            <input class="form-control" id="inputEmailAddress" type="email" placeholder="Enter your email address" value="name@example.com">
+                        </div>
+                        <!-- Form Row-->
+                        <div class="row gx-3 mb-3">
+                            <!-- Form Group (phone number)-->
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputPhone">Phone number</label>
+                                <input class="form-control" id="inputPhone" type="tel" placeholder="Enter your phone number" value="555-123-4567">
+                            </div>
+                            <!-- Form Group (birthday)-->
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputBirthday">Birthday</label>
+                                <input class="form-control" id="inputBirthday" type="text" name="birthday" placeholder="Enter your birthday" value="06/10/1988">
+                            </div>
+                        </div>
+                        <!-- Save changes button-->
+                        <button class="btn btn-primary" type="button">Save changes</button>
+                    </form>
                 </div>
-
-                <div class="row g-3 align-items-center mb-3">
-                    <div class="col-md-4 text-end">
-                        <label for="inputName" class="col-form-label">이름 :</label>
-                    </div>
-                    <div class="col-md-8">
-                        <input type="text" id="inputName" class="form-control" aria-describedby="passwordHelpInline" th:value="${user.getFbUserName()}">
-                    </div>
-                </div>
-
-                <div class="row g-3 align-items-center mb-3">
-                    <div class="col-md-4 text-end">
-                        <label for="inputbirth" class="col-form-label">생일 :</label>
-                    </div>
-                    <div class="col-md-8">
-                        <input type="text" id="inputbirth" class="form-control" aria-describedby="passwordHelpInline" th:value="${user.getFbUserBirth()}">
-                    </div>
-                </div>
-
-                <div class="row g-3 align-items-center mb-3">
-                    <div class="col-md-4 text-end">
-                        <label for="inputPhone" class="col-form-label">핸드폰번호 :</label>
-                    </div>
-                    <div class="col-md-8">
-                        <input type="number" id="inputPhone" class="form-control" aria-describedby="passwordHelpInline" th:value="${user.getFbUserPhone()}">
-                    </div>
-                </div>
-
-                <div class="row g-3 align-items-center mb-3">
-                    <div class="col-md-4 text-end">
-                        <label for="inputAddress" class="col-form-label">주소 :</label>
-                    </div>
-                    <div class="col-md-8">
-                        <input type="text" id="inputAddress" class="form-control" aria-describedby="passwordHelpInline" th:value="${user.getFbUserAddress()}">
-                    </div>
-                </div>
-
             </div>
         </div>
     </div>
+<!--    <div class="container">-->
+<!--        <div class="row justify-content-center">-->
+<!--            <div class="col-md-6 mb-5 text-center">-->
+<!--                <h1 style="margin-bottom: 40px;">내 정보 보기</h1>-->
+<!--                <div class="card mb-4 mb-xl-0">-->
+<!--                    <div class="card-header">프로필사진</div>-->
+<!--                    <div class="card-body text-center">-->
+<!--                        &lt;!&ndash; Profile picture image&ndash;&gt;-->
+<!--                        <img class="img-account-profile default-thumbnail rounded-circle mb-2"-->
+<!--                             th:src="'/assets/img/userImg/' + ${user.fbUserImg}">-->
+<!--                        &lt;!&ndash; Profile picture help block&ndash;&gt;-->
+<!--                        <div class="small font-italic text-muted mb-4">JPG 혹은 PNG 파일로 5MB를 넘지 않아야 합니다</div>-->
+<!--                        &lt;!&ndash; Profile picture upload button&ndash;&gt;-->
+<!--                        <button class="btn btn-primary" type="button">새로운 이미지 올리기</button>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                &lt;!&ndash; 프로필 사진 &ndash;&gt;-->
+<!--&lt;!&ndash;                <div class="mb-3">&ndash;&gt;-->
+<!--&lt;!&ndash;                    <img th:src="'/assets/img/userImg/user_icon.jpg'" alt="프로필 사진" class="img-thumbnail default-thumbnail">&ndash;&gt;-->
+<!--&lt;!&ndash;                </div>&ndash;&gt;-->
+
+<!--                &lt;!&ndash; 파일 첨부 &ndash;&gt;-->
+<!--&lt;!&ndash;                <form th:action method="post" enctype="multipart/form-data">&ndash;&gt;-->
+<!--&lt;!&ndash;                    <div class="mb-3">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <input type="file" class="form-control" id="inputFile" aria-describedby="fileHelp">&ndash;&gt;-->
+<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                </form>&ndash;&gt;-->
+
+
+<!--                <div class="row g-3 align-items-center mb-3">-->
+<!--                    <div class="col-md-4 text-end">-->
+<!--                        <label for="inputEmail" class="col-form-label">이메일 :</label>-->
+<!--                    </div>-->
+<!--                    <div class="col-md-8">-->
+<!--                        <input type="email" id="inputEmail" class="form-control" aria-describedby="passwordHelpInline" th:value="${user.getFbUserEmail()}" disabled>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                <div class="row g-3 align-items-center mb-3">-->
+<!--                    <div class="col-md-4 text-end">-->
+<!--                        <label for="inputNickname" class="col-form-label">닉네임 :</label>-->
+<!--                    </div>-->
+<!--                    <div class="col-md-8">-->
+<!--                        <input type="text" id="inputNickname" class="form-control" aria-describedby="passwordHelpInline" th:value="${user.getFbUserNickname()}" >-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                <div class="row g-3 align-items-center mb-3">-->
+<!--                    <div class="col-md-4 text-end">-->
+<!--                        <label for="inputPassword" class="col-form-label">비밀번호 :</label>-->
+<!--                    </div>-->
+<!--                    <div class="col-md-8">-->
+<!--                        <input type="password" id="inputPassword" class="form-control" aria-describedby="passwordHelpInline">-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                <div class="row g-3 align-items-center mb-3">-->
+<!--                        <div class="col-md-4 text-end">-->
+<!--                            <label for="inputName" class="col-form-label">이름 :</label>-->
+<!--                        </div>-->
+<!--                        <div class="col-md-8">-->
+<!--                            <input type="text" id="inputName" class="form-control" aria-describedby="passwordHelpInline" th:value="${user.getFbUserName()}">-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                <div class="row g-3 align-items-center mb-3">-->
+<!--                    <div class="col-md-4 text-end">-->
+<!--                        <label for="inputbirth" class="col-form-label">생일 :</label>-->
+<!--                    </div>-->
+<!--                    <div class="col-md-8">-->
+<!--                        <input type="text" id="inputbirth" class="form-control" aria-describedby="passwordHelpInline" th:value="${user.getFbUserBirth()}">-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                <div class="row g-3 align-items-center mb-3">-->
+<!--                    <div class="col-md-4 text-end">-->
+<!--                        <label for="inputPhone" class="col-form-label">핸드폰번호 :</label>-->
+<!--                    </div>-->
+<!--                    <div class="col-md-8">-->
+<!--                        <input type="number" id="inputPhone" class="form-control" aria-describedby="passwordHelpInline" th:value="${user.getFbUserPhone()}">-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                <div class="row g-3 align-items-center mb-3">-->
+<!--                    <div class="col-md-4 text-end">-->
+<!--                        <label for="inputAddress" class="col-form-label">주소 :</label>-->
+<!--                    </div>-->
+<!--                    <div class="col-md-8">-->
+<!--                        <input type="text" id="inputAddress" class="form-control" aria-describedby="passwordHelpInline" th:value="${user.getFbUserAddress()}">-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
 </th:block>
 </th:block>
 

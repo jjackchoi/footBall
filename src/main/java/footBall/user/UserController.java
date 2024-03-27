@@ -212,9 +212,15 @@ public class UserController {
     // 내 정보 화면
     @GetMapping("/myPage")
     public String myPage(HttpSession session, Model model){
-        UserResponse userResponse = userService.findOne((Integer) session.getAttribute("userId"));
-        System.out.println(userResponse);
-        model.addAttribute("user",userResponse);
-        return "myPage";
+        // session에서 userId 가져오기
+        Integer userId = (Integer) session.getAttribute("userId");
+        if (userId != null){ // session이 존재할 때만 정보 가져오기
+            UserResponse userResponse = userService.findOne(userId);
+            model.addAttribute("user",userResponse);
+            return "myPage";
+        }else{ // 없으면 메인으로 리다이렉트
+            return "redirect:/";
+        }
+
     }
 }

@@ -2,14 +2,37 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/basic">
 
 <th:block layout:fragment="title">
-    <title>자유게시판</title>
+    <title>내 정보 보기</title>
+</th:block>
+
+<th:block layout:fragment="add-css">
+    <style>
+        .default-thumbnail {
+            width: 166px;
+            height: 200px;
+        }
+    </style>
 </th:block>
 
 <th:block layout:fragment="content">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-6">
-                <center><h1 style="margin-bottom: 40px;">내 정보보기</h1></center>
+            <div class="col-md-6 text-center">
+                <h1 style="margin-bottom: 40px;">내 정보 보기</h1>
+
+                <!-- 프로필 사진 -->
+                <div class="mb-3">
+                    <img src="프로필사진경로" alt="프로필 사진" class="img-thumbnail default-thumbnail">
+                </div>
+
+                <!-- 파일 첨부 -->
+                <form th:action method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <input type="text" name="fbUserImg">
+                        <input type="file" class="form-control" id="inputFile" aria-describedby="fileHelp">
+                    </div>
+                </form>
+
 
                 <div class="row g-3 align-items-center mb-3">
                     <div class="col-md-4 text-end">

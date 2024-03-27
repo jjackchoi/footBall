@@ -59,7 +59,7 @@
                 <ul class="member-list">
                     <li th:each="member, iterStat : ${members}" class="member-item">
                         <div class="img">
-                            <img src="/assets/img/delecious.jpg" alt="Member Image">
+                            <img th:src="'/assets/img/userImg/' + ${member.fbUserImg}" alt="Member image">
                         </div>
                         <div class="member-details">
                             <label class="d-flex">
@@ -67,8 +67,8 @@
                                        onclick="handleCheckboxClick(this);" class="memCheckbox me-1"/>
                                 <span><h2 th:text="${member.fbUserName}"></h2></span>
                             </label>
-                            <p>주포지션 : <span th:text="공격"></span></p>
-                            <p>특기 : <span th:text="슈팅"></span></p>
+                            <p>주포지션 : <span th:text="${member.fbUserMainPosition}"></span></p>
+                            <p>특기 : <span th:text="${member.fbUserSpecialty}"></span></p>
                         </div>
                     </li>
                 </ul>

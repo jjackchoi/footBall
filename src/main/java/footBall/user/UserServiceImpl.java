@@ -5,7 +5,11 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Service
@@ -69,7 +73,7 @@ public class UserServiceImpl implements UserService{
         return sqlSession.selectOne("UserMapper.findNickname",id);
     }
 
-    // 정보조회
+    // 정보 조회
     @Override
     public UserResponse findOne(Integer id) {
         return sqlSession.selectOne("UserMapper.findOne",id);
@@ -93,5 +97,53 @@ public class UserServiceImpl implements UserService{
     @Override
     public int insertMemInfo(UserRequest params) {
         return sqlSession.update("UserMapper.insertMemInfo", params);
+    }
+
+    // 프로필 사진 업데이트
+    @Override
+    @Transactional
+    public void updateProfile(MultipartFile profileImg, String webPath, String filePath, UserResponse loginUser) throws IOException {
+        // 프로필 이미지 변경 실패 대비
+        String temp = loginUser.getFbUserImg(); // 이전 이미지 저장
+
+        String rename = null; // 변경 이름 저장 변수
+
+        // 업로드된 이미지가 있을 경우
+        if(profileImg.getSize() > 0){
+            // 파일 이름 변경
+            rename = fileRename(profileImg.getOriginalFilename());
+
+            // 바뀐 이름 loginuser에 세팅
+            loginUser.setFbUserImg(rename);
+        }else { // 없는 경우
+            loginUser.setFbUserImg(null);
+        }
+
+        // 프로필 이미지 수정
+        int result = sqlSession.update("UserMapper.updateProfile", loginUser);
+
+        if (result > 0) { // 성공
+            // 새 이미지가 업로드된 경우
+            if (rename != null) {
+                profileImg.transferTo(new File(filePath + rename));
+            }
+        }else { // 실패
+            // 이전 이미지로 프로필 다시 세팅
+            loginUser.setFbUserImg(temp);
+        }
+    }
+
+    // 파일명 변경 메소드
+    public static String fileRename(String originFileName) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        String date = sdf.format(new java.util.Date(System.currentTimeMillis()));
+
+        int ranNum = (int) (Math.random() * 100000); // 5자리 랜덤 숫자 생성
+
+        String str = "_" + String.format("%05d", ranNum);
+
+        String ext = originFileName.substring(originFileName.lastIndexOf("."));
+
+        return date + str + ext;
     }
 }

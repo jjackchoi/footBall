@@ -1,5 +1,8 @@
 package footBall.user;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.util.List;
 
 public interface UserService {
@@ -35,4 +38,7 @@ public interface UserService {
 
     // 멤버 정보 기입 및 수정
     int insertMemInfo(UserRequest params);
+
+    // 프로필 사진 업데이트
+    void updateProfile(MultipartFile profileImg, String webPath, String filePath, UserResponse loginUser) throws IOException;
 }

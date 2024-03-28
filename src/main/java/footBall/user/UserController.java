@@ -6,15 +6,20 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 @Controller
 @Slf4j
@@ -217,10 +222,31 @@ public class UserController {
         if (userId != null){ // session이 존재할 때만 정보 가져오기
             UserResponse userResponse = userService.findOne(userId);
             model.addAttribute("user",userResponse);
+            // 현재 시간을 모델에 추가
+            model.addAttribute("currentTimeMillis", System.currentTimeMillis());
             return "myPage";
         }else{ // 없으면 메인으로 리다이렉트
             return "redirect:/";
         }
-
     }
+
+    // 프로필사진 업로드
+    @PostMapping("/myPage/profile")
+    public String profile(HttpSession session, @RequestParam("profileImg") MultipartFile profileImg) throws IOException {
+        // session에서 userId 가져오기
+        Integer userId = (Integer) session.getAttribute("userId");
+        UserResponse loginUser = userService.findOne(userId);
+
+        // 웹 접근 경로
+        String webPath = "/assets/img/userImg/";
+
+        // 실제로 이미지 파일이 저장되어야 하는 서버 컴퓨터 경로
+        String filePath = "C:/springBoard/workspace/footBall/src/main/resources/static/assets/img/userImg/";
+
+        // 프로필 사진 업데이트
+        userService.updateProfile(profileImg, webPath, filePath, loginUser);
+
+        return "redirect:/myPage";
+    }
+
 }

@@ -30,6 +30,7 @@ dependencies {
 	implementation 'io.github.bonigarcia:webdrivermanager:5.0.3' /* WebDriverManager 의존성 */
 	implementation group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.7.6'  /* spring-security-crypto */
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '3.0.5' /* spring mail */
+	implementation 'commons-fileupload:commons-fileupload:1.5' /* 파일 업로드 */
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'

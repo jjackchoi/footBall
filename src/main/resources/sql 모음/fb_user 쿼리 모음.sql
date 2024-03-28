@@ -64,3 +64,8 @@ UPDATE fb_user
 SET fb_user_specialty = '슈팅',
 	fb_user_main_position = '공격수'
 WHERE fb_user_id = 1;
+
+/*프로필 사진 업데이트*/
+UPDATE fb_user 
+SET fb_user_img = 'sdfsdf.img'
+WHERE fb_user_id = 1;

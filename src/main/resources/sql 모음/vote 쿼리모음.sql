@@ -15,7 +15,7 @@ select * from vote;
 /*날짜로 조건부 조회*/
 select *
 from vote
-where VOTE_DATE = '2024-03-10 00:00:00.000';
+where VOTE_DATE = '2024-03-31 00:00:00.000';
 
 /*여러개 삭제*/
 delete from vote where vote_id in(12);

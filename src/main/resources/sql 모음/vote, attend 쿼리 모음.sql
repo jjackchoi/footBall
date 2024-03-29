@@ -79,7 +79,7 @@ AND FB_USER_ID IN (
 		WHERE VOTE_ID = (
 			SELECT VOTE_ID
 			FROM VOTE
-			WHERE VOTE_DATE = '2024-03-17 00:00:00.000'
+			WHERE VOTE_DATE = '2024-03-31 00:00:00.000'
 		)
 	) A
 	ON FU.FB_USER_ID = A.FB_USER_ID 
@@ -163,9 +163,9 @@ INSERT INTO attend(
 	(
 		SELECT vote_id
 		FROM vote
-	 	WHERE vote_date = '2024-03-17 00:00:00.000'
+	 	WHERE vote_date = '2024-03-31 00:00:00.000'
  	)
- 	, 26, 'Y'
+ 	, 16, 'N'
 );
 
 /*화면 로드 시 사용자의 참석여부에 따른 라디오버튼 고정*/

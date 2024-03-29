@@ -64,7 +64,7 @@
                         </div>
                         <!--프로필 사진 있을 때-->
                         <div th:unless="${#strings.isEmpty(member.fbUserImg)}" class="img">
-                            <img th:src="'/assets/img/userImg/' + ${member.fbUserImg}">
+                            <img th:src="@{/myPage/profile/} + ${member.fbUserId}">
                         </div>
                         <div class="member-details">
                             <label class="d-flex">

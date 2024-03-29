@@ -238,26 +238,25 @@ public class UserController {
         Integer userId = (Integer) session.getAttribute("userId");
         UserResponse loginUser = userService.findOne(userId);
 
-        // 웹 접근 경로
-        String webPath = "/assets/img/userImg/";
-
-        // 실제로 이미지 파일이 저장되어야 하는 서버 컴퓨터 경로
-        String filePath = "C:/springBoard/workspace/footBall/src/main/resources/static";
-
         // 프로필 사진 업데이트
-        userService.updateProfile(profileImg, webPath, filePath, loginUser);
+        userService.updateProfile(profileImg, loginUser);
 
         return "redirect:/myPage";
     }
-    // 프로필사진 가져오기(타임리프로 이미지 로드)
+    // 프로필 사진 가져오기(타임리프로 이미지 로드)
     @ResponseBody
     @GetMapping("/myPage/profile/{fbUserId}")
     public ResponseEntity<?> getProfile(@PathVariable int fbUserId) throws IOException{
         UserResponse user = userService.findOne(fbUserId);
+
+        // 프로필 사진의 경로를 이용하여 프로필 사진에 대한 파일을 읽음
         InputStream inputStream = new FileInputStream(user.getFbUserImg());
         log.info(user.getFbUserImg());
+
+        // IOUtils.toByteArray로 프로필 사진 파일을 바이트 배열로 변환
         byte[] imgByteArray = IOUtils.toByteArray(inputStream);
-        inputStream.close();
+
+        // 바이트 배열을 http에 반환
         return new ResponseEntity<>(imgByteArray, HttpStatus.OK);
     }
 

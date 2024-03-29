@@ -40,5 +40,5 @@ public interface UserService {
     int insertMemInfo(UserRequest params);
 
     // 프로필 사진 업데이트
-    void updateProfile(MultipartFile profileImg, String webPath, String filePath, UserResponse loginUser) throws IOException;
+    void updateProfile(MultipartFile profileImg,  UserResponse loginUser) throws IOException;
 }

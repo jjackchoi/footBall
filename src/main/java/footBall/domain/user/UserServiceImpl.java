@@ -1,5 +1,6 @@
 package footBall.domain.user;
 
+import footBall.common.file.FileUtils;
 import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -10,6 +11,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -18,6 +21,7 @@ public class UserServiceImpl implements UserService{
 
     private final SqlSession sqlSession;
     private final PasswordEncoder passwordEncoder;
+    public final FileUtils fileUtils;
 
     // 회원가입
     @Override
@@ -102,30 +106,34 @@ public class UserServiceImpl implements UserService{
     // 프로필 사진 업데이트
     @Override
     @Transactional
-    public void updateProfile(MultipartFile profileImg, String webPath, String filePath, UserResponse loginUser) throws IOException {
+    public void updateProfile(MultipartFile profileImg, UserResponse loginUser) throws IOException {
         // 프로필 이미지 변경 실패 대비
         String temp = loginUser.getFbUserImg(); // 이전 이미지 저장
 
         String rename = null; // 변경 이름 저장 변수
 
+        String uploadPath = "";
+
         // 업로드된 이미지가 있을 경우
         if(profileImg.getSize() > 0){
             // 파일 이름 변경
             rename = fileRename(profileImg.getOriginalFilename());
+            String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyMMdd")).toString();
+            uploadPath = fileUtils.getUploadPath(today) + File.separator + rename;
 
             // 바뀐 이름 loginuser에 세팅
-            loginUser.setFbUserImg(webPath + rename);
+            loginUser.setFbUserImg(uploadPath);
         }else { // 없는 경우
             loginUser.setFbUserImg(null);
         }
 
-        // 프로필 이미지 수정
+        // 프로필 이미지 경로 db에 업데이트
         int result = sqlSession.update("UserMapper.updateProfile", loginUser);
 
         if (result > 0) { // 성공
             // 새 이미지가 업로드된 경우
             if (rename != null) {
-                profileImg.transferTo(new File(filePath + webPath + rename));
+                profileImg.transferTo(new File(uploadPath));
             }
         }else { // 실패
             // 이전 이미지로 프로필 다시 세팅

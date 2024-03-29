@@ -7823,8 +7823,7 @@ textarea.form-control-lg {
 }
 
 .bg-primary {
-  --bs-bg-opacity: 1;
-  background-color: rgba(var(--bs-primary-rgb), var(--bs-bg-opacity)) !important;
+
 }
 
 .bg-secondary {
@@ -11702,13 +11701,9 @@ body {
 }
 
 .backgroundBody {
-    background-image: url('/assets/img/footBallLoginBackground.jpg'); /* 배경 이미지 경로 설정 */
+    background: url('/assets/img/footBallLoginBackground.jpg') no-repeat top center; /* 배경 이미지 경로 설정 */
     background-size: cover; /* 화면에 꽉 차도록 배경 이미지 크기 조절 */
-    background-position: center; /* 배경 이미지를 가운데로 정렬 */
-    background-repeat: no-repeat; /* 배경 이미지 반복 방지 */
-    height: 100vh; /* 화면의 높이를 전체 높이로 설정 */
-    margin: 0; /* body 요소의 기본 마진 제거 */
-    padding: 0; /* body 요소의 기본 패딩 제거 */
+    overflow: auto;
 }
 
 .border-green {

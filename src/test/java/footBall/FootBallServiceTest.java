@@ -1,7 +1,7 @@
 package footBall;
 
-import footBall.user.UserRequest;
-import footBall.user.UserServiceImpl;
+import footBall.domain.user.UserRequest;
+import footBall.domain.user.UserServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -17,7 +17,7 @@
     </sql>
 
     <!--자유게시판 전체조회-->
-    <select id="findAll" resultType="footBall.freeBoard.FreeBoardResponse">
+    <select id="findAll" resultType="footBall.domain.freeBoard.FreeBoardResponse">
         SELECT
             <include refid="boardColumns" />
         FROM
@@ -29,7 +29,7 @@
     </select>
 
     <!--아이디로 게시판 조회-->
-    <select id="findOne" parameterType="footBall.freeBoard.FreeBoardRequest" resultType="footBall.freeBoard.FreeBoardResponse">
+    <select id="findOne" parameterType="footBall.domain.freeBoard.FreeBoardRequest" resultType="footBall.domain.freeBoard.FreeBoardResponse">
         SELECT
             <include refid="boardColumns" />
         FROM
@@ -40,7 +40,7 @@
     </select>
 
     <!--게시글 작성-->
-    <insert id="boardCreate" parameterType="footBall.freeBoard.FreeBoardRequest">
+    <insert id="boardCreate" parameterType="footBall.domain.freeBoard.FreeBoardRequest">
         INSERT INTO free_board (
                                 fb_user_id
                                ,free_board_author
@@ -59,7 +59,7 @@
                ,'N');
     </insert>
     <!--글 수정-->
-    <update id="boardUpdate" parameterType="footBall.freeBoard.FreeBoardRequest">
+    <update id="boardUpdate" parameterType="footBall.domain.freeBoard.FreeBoardRequest">
         UPDATE free_board
         SET free_board_title = #{freeBoardTitle}
            ,free_board_text = #{freeBoardText}
@@ -76,7 +76,7 @@
     </update>
 
     <!--내가 쓴글 조회-->
-    <select id="findByUserId" parameterType="int" resultType="footBall.freeBoard.FreeBoardResponse">
+    <select id="findByUserId" parameterType="int" resultType="footBall.domain.freeBoard.FreeBoardResponse">
         SELECT
         <include refid="boardColumns" />
         FROM
@@ -87,7 +87,7 @@
     </select>
 
     <!--검색창을 이용한 조회-->
-    <select id="findKeyword" parameterType="String" resultType="footBall.freeBoard.FreeBoardResponse">
+    <select id="findKeyword" parameterType="String" resultType="footBall.domain.freeBoard.FreeBoardResponse">
         SELECT * FROM free_board
         WHERE (
             free_board_title LIKE CONCAT('%', #{freeBoardTitle}, '%')
@@ -104,7 +104,7 @@
         from free_board
     </select>
 
-    <select id="findPaginatedData" resultType="footBall.freeBoard.FreeBoardResponse" parameterType="map">
+    <select id="findPaginatedData" resultType="footBall.domain.freeBoard.FreeBoardResponse" parameterType="map">
         SELECT *
         FROM free_board
         WHERE free_board_del_yn = 'N'

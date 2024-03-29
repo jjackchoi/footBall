@@ -18,7 +18,7 @@
     </sql>
 
     <!--미참여 인원 조회하기-->
-    <select id="findNonattendanceUser" resultType="footBall.user.UserResponse" parameterType="java.time.LocalDateTime">
+    <select id="findNonattendanceUser" resultType="footBall.domain.user.UserResponse" parameterType="java.time.LocalDateTime">
         SELECT *
         FROM fb_user
         WHERE 1=1
@@ -43,7 +43,7 @@
     </select>
 
     <!--투표 인원 조회하기-->
-    <select id="findVotedUser" parameterType="java.time.LocalDateTime" resultType="footBall.user.UserResponse">
+    <select id="findVotedUser" parameterType="java.time.LocalDateTime" resultType="footBall.domain.user.UserResponse">
         SELECT fu.fb_user_id ,fu.fb_user_email ,fu.fb_user_pswd ,fu.fb_user_nickname
             ,fu.fb_user_name ,fu.fb_user_birth ,fu.fb_user_phone ,fu.fb_user_address
             ,fu.fb_user_auth ,fu.fb_user_del_yn ,fu.fb_user_reg_date ,fu.fb_user_mod_date
@@ -71,7 +71,7 @@
     </select>
 
     <!--투표 대상 날짜 생성-->
-    <insert id="createDate" parameterType="footBall.attendee.VoteDto" useGeneratedKeys="true" keyProperty="voteId">
+    <insert id="createDate" parameterType="footBall.domain.attendee.VoteDto" useGeneratedKeys="true" keyProperty="voteId">
         INSERT INTO vote(
             vote_date
         )
@@ -81,13 +81,13 @@
     </insert>
 
     <!--투표 대상 날짜 삭제-->
-    <delete id="deleteDate" parameterType="footBall.attendee.VoteDto">
+    <delete id="deleteDate" parameterType="footBall.domain.attendee.VoteDto">
         DELETE FROM vote
         WHERE vote_date = #{voteDate}
     </delete>
 
     <!--투표 대상 날짜 데이터의 id에 종속되어있는 참석 데이터 삭제-->
-    <delete id="deleteAttend" parameterType="footBall.attendee.VoteDto">
+    <delete id="deleteAttend" parameterType="footBall.domain.attendee.VoteDto">
         DELETE FROM attend
         WHERE
         vote_id = (
@@ -98,14 +98,14 @@
     </delete>
 
     <!--투표 대상 날짜 조회-->
-    <select id="getDate" parameterType="footBall.attendee.VoteDto" resultType="footBall.attendee.VoteDto">
+    <select id="getDate" parameterType="footBall.domain.attendee.VoteDto" resultType="footBall.domain.attendee.VoteDto">
         SELECT *
         FROM vote
         WHERE vote_date = #{voteDate};
     </select>
 
     <!--투표 대상 날짜 존재 여부 판별-->
-    <select id="findDate" parameterType="footBall.attendee.VoteDto" resultType="int">
+    <select id="findDate" parameterType="footBall.domain.attendee.VoteDto" resultType="int">
         SELECT COUNT(*)
         FROM vote
         WHERE vote_date = #{voteDate};

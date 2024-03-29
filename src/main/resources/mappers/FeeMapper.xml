@@ -11,20 +11,20 @@
     </sql>
 
     <!--회비 납부 o-->
-    <insert id="createFee" parameterType="footBall.fee.FeeDto">
+    <insert id="createFee" parameterType="footBall.domain.fee.FeeDto">
         INSERT INTO fee (FB_USER_ID,FEE_MONTH)
         VALUES (#{fbUserId},#{feeMonth});
     </insert>
 
     <!--회비 납부 x-->
-    <delete id="deleteFee" parameterType="footBall.fee.FeeDto">
+    <delete id="deleteFee" parameterType="footBall.domain.fee.FeeDto">
         DELETE FROM FEE
         WHERE FB_USER_ID = #{fbUserId}
         AND FEE_MONTH = #{feeMonth}
     </delete>
 
     <!--모든 회비정보 불러오기-->
-    <select id="getAllUserFee" resultType="footBall.fee.FeeDto">
+    <select id="getAllUserFee" resultType="footBall.domain.fee.FeeDto">
         SELECT <include refid="feeColumns" />
         FROM FEE
     </select>

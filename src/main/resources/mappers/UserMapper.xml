@@ -24,7 +24,7 @@
     </sql>
 
     <!--유저 회원가입-->
-    <insert id="register" parameterType="footBall.user.UserRequest" useGeneratedKeys="true" keyProperty="fbUserId">
+    <insert id="register" parameterType="footBall.domain.user.UserRequest" useGeneratedKeys="true" keyProperty="fbUserId">
         insert into fb_user(
             <include refid="userColumns"/>
         )
@@ -49,7 +49,7 @@
     </insert>
 
     <!--이메일로 유저 조회-->
-    <select id="getUserByEmail" parameterType="String" resultType="footBall.user.UserResponse">
+    <select id="getUserByEmail" parameterType="String" resultType="footBall.domain.user.UserResponse">
         select
             <include refid="userColumns"/>
         from
@@ -60,7 +60,7 @@
     </select>
 
     <!--닉네임으로 유저 조회-->
-    <select id="getUserByNickname" parameterType="String" resultType="footBall.user.UserResponse">
+    <select id="getUserByNickname" parameterType="String" resultType="footBall.domain.user.UserResponse">
         select
             <include refid="userColumns"/>
         from
@@ -71,7 +71,7 @@
     </select>
 
     <!--유저 전체조회-->
-    <select id="getAllUser" resultType="footBall.user.UserResponse">
+    <select id="getAllUser" resultType="footBall.domain.user.UserResponse">
         select
             <include refid="userColumns"/>
         from
@@ -83,7 +83,7 @@
     </select>
 
     <!--유저 멤버만 조회-->
-    <select id="getAllMember" resultType="footBall.user.UserResponse">
+    <select id="getAllMember" resultType="footBall.domain.user.UserResponse">
         SELECT
             <include refid="userColumns"/>
         FROM
@@ -103,7 +103,7 @@
     </select>
 
     <!--정보 조회<리스트>-->
-    <select id="findOne" parameterType="Integer" resultType="footBall.user.UserResponse">
+    <select id="findOne" parameterType="Integer" resultType="footBall.domain.user.UserResponse">
         select
             <include refid="userColumns"/>
         from fb_user
@@ -111,7 +111,7 @@
     </select>
 
     <!--이름과 이메일로 존재여부 판별-->
-    <select id="checkByNameAndEmail" parameterType="footBall.user.UserRequest" resultType="Integer">
+    <select id="checkByNameAndEmail" parameterType="footBall.domain.user.UserRequest" resultType="Integer">
         SELECT 1 result
         FROM DUAL
         WHERE EXISTS(
@@ -124,14 +124,14 @@
     </select>
 
     <!--비밀번호 변경(조건: 이메일, 이름)-->
-    <update id="modifyPassword" parameterType="footBall.user.UserRequest">
+    <update id="modifyPassword" parameterType="footBall.domain.user.UserRequest">
         UPDATE fb_user
         SET fb_user_pswd = #{fbUserPswd}
         WHERE fb_user_name = #{fbUserName} AND fb_user_email = #{fbUserEmail};
     </update>
 
     <!--멤버 정보 기입 및 수정-->
-    <update id="insertMemInfo" parameterType="footBall.user.UserRequest">
+    <update id="insertMemInfo" parameterType="footBall.domain.user.UserRequest">
         UPDATE fb_user
         SET fb_user_specialty = #{fbUserSpecialty},
             fb_user_main_position = #{fbUserMainPosition}

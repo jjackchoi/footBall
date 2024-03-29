@@ -39,11 +39,11 @@
                         <!--프로필 사진 있을 때-->
                         <div th:unless="${#strings.isEmpty(user.fbUserImg)}">
                             <img class="img-account-profile default-thumbnail rounded-circle mb-2 profileImg"
-                                 th:src="@{'/assets/img/userImg/' + ${user.fbUserImg} + '?_=' + ${currentTimeMillis}}" />
+                                 th:src="@{/myPage/profile/}+${session.userId}" />
                         </div>
                         <div class="small font-italic text-muted mb-4">5MB이하의 jpg,png 파일을 선택해주세요 </div>
                         <div class="col">
-                            <input class="d-none" type="file" name="profileImg" id="imgInput" accept="image/*">
+                            <input class="d-none" type="file" name="profileImg" id="imgInput" accept=".jpg .png">
                             <button class="btn btn-secondary d-block mb-2 w-100" type="button" onclick="uploadImg();">프로필 사진 선택</button>
                             <button class="btn btn-danger d-block mb-2 w-100" type="button" id="deleteImg">프로필 사진 삭제</button>
                             <input type="submit" class="btn btn-primary d-block mb-2 w-100" value="프로필 사진 변경하기">

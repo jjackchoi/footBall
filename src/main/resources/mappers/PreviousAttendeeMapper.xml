@@ -18,7 +18,7 @@
     </sql>
 
     <!--모든 투표 가져오기-->
-    <select id="getAllVote" resultType="footBall.attendee.VoteDto" parameterType="java.time.LocalDateTime">
+    <select id="getAllVote" resultType="footBall.domain.attendee.VoteDto" parameterType="java.time.LocalDateTime">
         <![CDATA[
             SELECT * FROM vote
             WHERE vote_date < #{sunday}
@@ -26,7 +26,7 @@
     </select>
 
     <!--투표한 인원 조회-->
-    <select id="getVotedUser" parameterType="Long" resultType="footBall.user.UserResponse">
+    <select id="getVotedUser" parameterType="Long" resultType="footBall.domain.user.UserResponse">
         SELECT fu.fb_user_id ,fu.fb_user_email ,fu.fb_user_pswd ,fu.fb_user_nickname
             ,fu.fb_user_name ,fu.fb_user_birth ,fu.fb_user_phone ,fu.fb_user_address
             ,fu.fb_user_auth ,fu.fb_user_del_yn ,fu.fb_user_reg_date ,fu.fb_user_mod_date
@@ -46,7 +46,7 @@
     </select>
 
     <!--투표id로 투표대상날짜 가져오기-->
-    <select id="getVoteDate" parameterType="Long" resultType="footBall.attendee.VoteDto">
+    <select id="getVoteDate" parameterType="Long" resultType="footBall.domain.attendee.VoteDto">
         SELECT vote_date
         FROM vote
         WHERE vote_id = #{voteId};

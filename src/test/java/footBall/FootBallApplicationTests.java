@@ -1,6 +1,6 @@
 package footBall;
 
-import footBall.attendee.AttendeeServiceImpl;
+import footBall.domain.attendee.AttendeeServiceImpl;
 import groovy.util.logging.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

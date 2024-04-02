@@ -44,7 +44,7 @@
             ,'N'
             ,null
             ,null
-            ,'user_icon.jpg'
+            ,null
         )
     </insert>
 

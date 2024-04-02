@@ -75,9 +75,10 @@
                         </div>
                         <!--이름-->
                         <div class="mb-3">
-                            <label class="small mb-1" for="inputUsername">이름</label>
-                            <input class="form-control" id="inputUsername" type="text" placeholder="Enter your username"
+                            <label class="small mb-1" for="inputUserName">이름</label>
+                            <input class="form-control" id="inputUserName" type="text" placeholder="Enter your username"
                                    th:value="${user.fbUserName}">
+                            <span id="name-error" class="error-message text-danger"></span>
                         </div>
                         <!--핸드폰 번호 및 생년월일-->
                         <div class="row gx-3 mb-3">
@@ -85,26 +86,31 @@
                             <div class="col-md-6">
                                 <label class="small mb-1" for="inputPhone">핸드폰 번호</label>
                                 <input class="form-control" id="inputPhone" type="tel" placeholder="Enter your phone number"
-                                       th:value="${user.fbUserPhone}">
+                                       th:value="${user.fbUserPhone}" oninput="addHyphen();">
+                                <span id="phone-error" class="error-message text-danger"></span>
                             </div>
                             <!-- 생년월일-->
                             <div class="col-md-6">
-                                <label class="small mb-1" for="inputBirth">생년월일</label>
-                                <input class="form-control" id="inputBirth" type="text" name="birthday" placeholder="Enter your birthday"
+                                <label class="small mb-1" for="inputUserBirth">생년월일</label>
+                                <input class="form-control" id="inputUserBirth" type="text" name="birthday" placeholder="Enter your birthday"
                                        th:value="${user.fbUserBirth}">
+                                <span id="birth-error" class="error-message text-danger"></span>
                             </div>
                         </div>
                         <!--주소-->
-                        <div class="mb-3">
-                            <label class="small mb-1" for="inputUserAddress">주소</label>
-                            <input class="form-control" id="inputUserAddress" type="text" placeholder="Enter your address"
-                                   th:value="${user.fbUserAddress}">
+                        <div class="mb-3 ">
+                            <label class="small mb-1" for="inputAddress">주소</label>
+                            <div class="input-group">
+                                <input class="form-control" id="inputAddress" type="text" placeholder="Enter your address"
+                                       th:value="${user.fbUserAddress}">
+                                <button type="button" id="btnAddress" class="btn btn-outline-secondary" onclick="findAddress();">주소찾기</button>
+                            </div>
                         </div>
                         <!--비밀번호-->
                         <div class="row gx-3 mb-3">
                             <div class="mb-3">
                                 <label class="small mb-1" for="inputUsername">비밀번호 변경</label>
-                                <input class="form-control" id="currentUserPswd" type="password" placeholder="현재 비밀번호를 입력해주세요">
+                                <input class="form-control" id="currentUserPswd" type="password" placeholder="* 현재 비밀번호를 입력해주세요">
                             </div>
                             <div class="col-md-6">
                                 <input class="form-control" id="userPswd" type="password" placeholder="변경할 비밀번호를 입력해주세요">
@@ -112,9 +118,10 @@
                             <div class="col-md-6">
                                 <input class="form-control" id="userPswdConf" type="password" placeholder="다시 확인해주세요">
                             </div>
+                            <span id="pswd-error" class="error-message text-danger"></span>
                         </div>
                         <!--정보 수정하기 버튼-->
-                        <button class="btn btn-primary d-block w-100" type="button">정보 수정하기</button>
+                        <button class="btn btn-primary d-block w-100" id="updateBtn" type="button">정보 수정하기</button>
                     </form>
                 </div>
             </div>
@@ -123,10 +130,8 @@
 </th:block>
 
 <th:block layout:fragment="script">
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <script th:inline="javascript">
-        window.onload = () => {
-
-        }
 
         // 프로필 이미지 추가/변경/삭제
         const profileImg = document.querySelector('.profileImg'); // img 요소
@@ -258,6 +263,98 @@
             // 파일 선택 input 클릭
             imgInput.click();
         }
+
+        // 정보 수정하기 클릭 시
+        document.querySelector('#updateBtn').addEventListener('click', () => {
+
+            // 변수화
+            const fbUserName = document.querySelector('#inputUserName');
+            const fbUserPhone = document.querySelector('#inputPhone');
+            const fbUserBirth = document.querySelector('#inputUserBirth');
+            const fbUserAddress = document.querySelector('#inputAddress');
+            const fbUserPswd = document.querySelector('#userPswd');
+            const fbUserPswdConf = document.querySelector('#userPswdConf');
+            const currentUserPswd = document.querySelector('#currentUserPswd');
+
+            // 배열에 요소 담기
+            const fbUserArray = [fbUserName, fbUserPhone, fbUserBirth, fbUserAddress];
+
+            // 배열에 기존값 담기
+            const modelUserArray =
+                [ [[${user.fbUserName}]],[[${user.fbUserPhone}]],[[${user.fbUserBirth}]],[[${user.fbUserAddress}]] ];
+
+            // 요소 값이 비어 있으면 기존값 담기
+            for(var i = 0; i < fbUserArray.length; i++){
+                if(!fbUserArray[i].value){
+                    fbUserArray[i].value = modelUserArray[i];
+                }
+            }
+
+            // 이름 유효성 검사
+            if (!validateName(fbUserName.value)) {
+                document.getElementById('name-error').textContent = "2글자 이상의 한글 혹은 영어이름을 기입해주세요.";
+                return;
+            } else {
+                document.getElementById('name-error').textContent = "";
+            }
+
+            // 핸드폰 유효성 검사
+            if (!validatePhone(fbUserPhone.value)) {
+                document.getElementById('phone-error').textContent = "올바르지 않은 핸드폰 번호 형식입니다.";
+                return;
+            }else{
+                document.getElementById('phone-error').textContent = "";
+            }
+
+            // 생년월일 유효성 검사
+            if(!validateBirth(fbUserBirth.value)){
+                document.getElementById('birth-error').textContent = "생년월일을 선택해 주세요.";
+                return;
+            }else{
+                document.getElementById('birth-error').textContent = "";
+            }
+
+            // 현재 비밀번호 유효성 검사
+            if (!validatePassword(fbUserPswd.value)) {
+                document.getElementById('pswd-error').textContent = "비밀번호는 최소 8자 이상, 영문과 특수 문자를 포함해야 합니다.";
+                return;
+            }else {
+                document.getElementById('pswd-error').textContent = "";
+            }
+
+            // 변경할 비밀번호 유효성 검사
+            if (fbUserPswd.value !== null && fbUserPswd.value !== '') {
+                if (!validatePassword(fbUserPswd.value)) {
+                    document.getElementById('pswd-error').textContent = "비밀번호는 최소 8자 이상, 영문과 특수 문자를 포함해야 합니다.";
+                    return;
+                }else if(fbUserPswd.value != fbUserPswdConf.value){
+                    document.getElementById('pswd-error').textContent = "비밀번호가 일치하지 않습니다. 다시한번 확인해주세요.";
+                    return;
+                }else{
+                    document.getElementById('pswd-error').textContent = "";
+                }
+            }
+
+
+<!--            $.ajax({-->
+<!--                type: 'POST',-->
+<!--                url: '',-->
+<!--                contentType: 'application/json',-->
+<!--                data: JSON.stringify({-->
+<!--                    fbUserName: fbUserName.value,-->
+<!--                    fbUserPhone: fbUserPhone.value,-->
+<!--                    fbUserBirth: fbUserBirth.value,-->
+<!--                    fbUserAddress: fbUserAddress.value,-->
+<!--                    fbUserPswd: fbUserPswd.value-->
+<!--                })-->
+<!--                success: function(response) {-->
+
+<!--                },-->
+<!--                error: function(xhr,status,error) {-->
+<!--                    console.error('회원정보 수정 중 오류가 발생했습니다.', error);-->
+<!--                }-->
+<!--            })-->
+        });
     </script>
 </th:block>
 

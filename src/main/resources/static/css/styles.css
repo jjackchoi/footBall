@@ -11701,7 +11701,7 @@ body {
 }
 
 .backgroundBody {
-    background: url('/assets/img/footBallLoginBackground.jpg') no-repeat top center; /* 배경 이미지 경로 설정 */
+    background: url('/assets/img/footBallLoginBackground.jpg') no-repeat top fixed; /* 배경 이미지 경로 설정 */
     background-size: cover; /* 화면에 꽉 차도록 배경 이미지 크기 조절 */
     overflow: auto;
 }

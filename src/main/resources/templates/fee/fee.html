@@ -26,12 +26,16 @@
                 <thead>
                     <tr>
                         <th>회원</th>
+                        <th class="text-center">일괄납부</th>
                         <th th:each="i : ${#numbers.sequence(1, 12)}" th:text="|${i}월|"></th>
                     </tr>
                 </thead>
                 <tbody class="postList">
                     <tr th:if="${session.userAuth} == 'Y'" th:each="post, rowStat : ${posts}">
                         <td th:text="${post.getFbUserName()}"></td>
+                        <td class="text-center">
+                            <input type="checkbox" onclick="handleBulkPayment(this)">
+                        </td>
                         <td th:each="i, colStat : ${#numbers.sequence(1, 12)}">
                             <input type="checkbox" th:attr="data-userId=${post.getFbUserId()},
                             data-feeMonth=${0 * 12 + colStat.index + 1}" onchange="handleCheckboxChange(this)" />
@@ -109,7 +113,19 @@
                 }
             });
         }
+
+        // 일괄납부 체크박스 클릭 시 해당 행의 모든 월별 체크박스 선택/해제
+        function handleBulkPayment(checkbox) {
+            var isChecked = checkbox.checked;
+            var row = checkbox.parentNode.parentNode; // 일괄납부 체크박스가 포함된 행
+            var monthCheckboxes = row.querySelectorAll('input[type="checkbox"][data-feeMonth]');
+
+            // 월별 체크박스 전체 선택 또는 해제
+            monthCheckboxes.forEach(function(monthCheckbox) {
+                monthCheckbox.checked = isChecked;
+                handleCheckboxChange(monthCheckbox); // 변경된 상태를 서버로 전송
+            });
+        }
     </script>
 </th:block>
-
 </html>

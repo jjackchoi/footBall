@@ -41,4 +41,10 @@ public interface UserService {
 
     // 프로필 사진 업데이트
     void updateProfile(MultipartFile profileImg,  UserResponse loginUser) throws IOException;
+
+    // 멤버 권한 Y로 업데이트
+    void grantAuthority(int parsedUserId);
+    
+    // 멤버 권한 N로 업데이트
+    void revokeAuthority(int parsedUserId);
 }

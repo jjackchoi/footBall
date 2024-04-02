@@ -144,4 +144,18 @@
         SET fb_user_img = #{fbUserImg}
         WHERE fb_user_id = #{fbUserId};
     </update>
+
+    <!--멤버 권한 N으로 업데이트-->
+    <update id="grantDelete" parameterType="int">
+        UPDATE fb_user
+        SET FB_USER_MEMBER_YN='N'
+        WHERE FB_USER_ID=#{fbUserId};
+    </update>
+
+    <!--멤버 권한 Y로 업데이트-->
+    <update id="grantUpdate" parameterType="int">
+        UPDATE fb_user
+        SET FB_USER_MEMBER_YN='Y'
+        WHERE FB_USER_ID=#{fbUserId};
+    </update>
 </mapper>

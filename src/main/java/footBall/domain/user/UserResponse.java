@@ -17,6 +17,7 @@ public class UserResponse {
     private String fbUserAddress;   // 유저 주소
     private String fbUserAuth;      // 유저 권한
     private String fbUserDelYn;     // 유저 삭제여부
+    private String fbUserMemberYn;  // 멤버 권한
     private LocalDateTime fbUserRegDate;  // 유저 등록일
     private LocalDateTime fbUserModDate;  // 유저 수정일
     private String fbUserSpecialty; // 유저 특기

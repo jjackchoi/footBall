@@ -141,6 +141,16 @@ public class UserServiceImpl implements UserService{
         }
     }
 
+    @Override
+    public void grantAuthority(int parsedUserId) {
+        sqlSession.update("UserMapper.grantUpdate",parsedUserId);
+    }
+
+    @Override
+    public void revokeAuthority(int parsedUserId) {
+        sqlSession.update("UserMapper.grantDelete",parsedUserId);
+    }
+
     // 파일명 변경 메소드
     public static String fileRename(String originFileName) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");

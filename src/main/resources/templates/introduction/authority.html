@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/basic">
+
+<th:block layout:fragment="title">
+    <title>멤버 권한부여</title>
+</th:block>
+
+<th:block layout:fragment="add-css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+    </style>
+</th:block>
+
+<th:block layout:fragment="content">
+    <div>
+        <div class="mt-4 mb-2 d-flex align-items-center">
+            <i class="fas fa-coins fa-2x me-1"></i>
+            <h2 class="mb-0">회원 멤버 확인 및 권한부여</h2>
+        </div>
+        <div class="mb-0">
+            멤버 권한을 주려면 체크박스를 체크해주세요.
+        </div>
+    </div>
+    <div class="card mb-4 mt-4">
+        <div class="card-header">
+            <i class="fas fa-table me-1"></i>
+            회원목록입니다.
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>회원 이름</th>
+                        <th>회원 닉네임</th>
+                        <th>멤버 구분</th>
+                    </tr>
+                </thead>
+                <tbody class="postList">
+                <tr th:if="${session.userAuth} == 'Y'" th:each="post, rowStat : ${posts}">
+                    <td th:text="${post.fbUserName}"></td>
+                    <td th:text="${post.fbUserNickname}"></td>
+                    <td>
+                        <input type="checkbox" class="userCheckbox" th:attr="data-userId=${post.getFbUserId()}"/>
+                    </td>
+                </tr>
+                <tr th:if="${session.userAuth} == 'N'" th:each="post, rowStat : ${posts}">
+                    <td th:text="${post.fbUserName}"></td>
+                    <td th:text="${post.fbUserNickname}"></td>
+                    <td th:text="아직멤버아님"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</th:block>
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        $(document).ready(function() {
+            // 서버에서 받은 데이터를 사용하여 체크박스를 설정
+            $.ajax({
+                url: '/introduction/authority/check',
+                type: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    response.forEach(item => {
+                        if (item.fbUserMemberYn === 'Y') {
+                            // 해당 사용자의 체크박스를 체크
+                            $('input[type="checkbox"][data-userId="' + item.fbUserId + '"]').prop('checked', true);
+                        }
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+
+        $('.userCheckbox').change(function() {
+            var fbUserId = $(this).attr('data-userId');
+            var isChecked = $(this).is(':checked');
+
+            // AJAX 요청
+            $.ajax({
+                type: 'POST',
+                url: '/introduction/authority/grant',
+                data: {
+                    fbUserId: fbUserId,
+                    isChecked: isChecked
+                },
+                success: function(response) {
+                    // 요청이 성공했을 때 실행할 작업
+                    console.log('권한 부여 성공');
+                },
+                error: function(xhr, status, error) {
+                    // 요청이 실패했을 때 실행할 작업
+                    console.error('권한 부여 실패:', error);
+                }
+            });
+        });
+    </script>
+</th:block>
+
+</html>

@@ -40,6 +40,10 @@
             <div class="sb-sidenav-menu" style="border-right: 1px solid rgba(0, 128, 0, 0.2); background-color: rgba(0, 0, 0, 0.03);" >
                 <div class="nav">
                     <div class="sb-sidenav-menu-heading">소개</div>
+                    <a class="nav-link" th:if = "${session.userAuth} == 'Y'" th:href="@{/introduction/authority}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+                        멤버권한부여(관리자용)
+                    </a>
                     <a class="nav-link" th:href="@{/}">
                         <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                         동호회 소개

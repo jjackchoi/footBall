@@ -254,6 +254,7 @@ public class UserController {
 
         return "redirect:/myPage";
     }
+
     // 프로필 사진 가져오기(타임리프로 이미지 로드)
     @ResponseBody
     @GetMapping("/myPage/profileImg/{fbUserId}")
@@ -282,6 +283,14 @@ public class UserController {
         // 값 세팅 후 업데이트
         params.setFbUserId(userId);
         userService.updateUserProfile(params);
+
+        // 수정한 값 세션에 재배치
+        UserResponse userInfo = userService.findOne(userId);
+        session.setAttribute("userId", userId);
+        session.setAttribute("userEmail", userInfo.getFbUserEmail());
+        session.setAttribute("userNickname", userInfo.getFbUserNickname());
+        session.setAttribute("userAuth", userInfo.getFbUserAuth());
+        session.setMaxInactiveInterval(60 * 30);
 
         return ResponseEntity.status(HttpStatus.OK).body("success");
     }

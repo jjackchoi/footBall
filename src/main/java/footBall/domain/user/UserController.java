@@ -52,22 +52,23 @@ public class UserController {
     // 회원가입 닉네임 중복검사
     @ResponseBody
     @GetMapping("/checkNickname")
-    public ResponseEntity<Boolean> checkNickname(String nickname){
+    public ResponseEntity<Boolean> checkNickname(String nickname, HttpSession session){
         log.info(nickname);
+        // 세션의 이메일로 유저 조회하기
+        List<UserResponse> sessionUser = userService.getUserByEmail((String)session.getAttribute("userEmail"));
+
+        // 입력 닉네임으로 유저 조회하기
         List<UserResponse> target = userService.getUserByNickname(nickname);
-        if (target.get(0) == null){
-            return ResponseEntity.status(HttpStatus.OK).body(true);
-        }
-        // 입력한 값하고 같을 경우는 true
-        if (target.get(0).getFbUserNickname().equals(nickname)){
-            return ResponseEntity.status(HttpStatus.OK).body(true);
-        }else{
-            // 존재여부에 따른 응답 보내기
-            if (target.size() >= 1){
-                return ResponseEntity.status(HttpStatus.OK).body(false);
-            }else {
+
+        // 사용자의 값하고 같을 경우는 true
+        if (target.size() >= 1){
+            if (nickname.equals(sessionUser.get(0).getFbUserNickname())){
                 return ResponseEntity.status(HttpStatus.OK).body(true);
+            }else {
+                return ResponseEntity.status(HttpStatus.OK).body(false);
             }
+        }else {
+            return ResponseEntity.status(HttpStatus.OK).body(true);
         }
     }
 

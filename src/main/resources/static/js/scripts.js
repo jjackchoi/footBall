@@ -36,7 +36,7 @@ window.addEventListener('DOMContentLoaded', event => {
     /* 비밀번호 유효성 검사 */
     function validatePassword(password) {
         // 영문, 특수문자의 조합으로 8자 이상 확인
-        const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[$@$!%*?&])[a-zA-Z\d$@$!%*?&]{8,}$/;
+        const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[!@#$%^&*]).{8,}$/;
         return passwordRegex.test(password);
     }
 
@@ -106,4 +106,21 @@ window.addEventListener('DOMContentLoaded', event => {
             left: (window.innerWidth - 720) / 2,
             top: (window.innerHeight - 500) / 2
         });
+    }
+
+    /* 닉네임 중복검사 */
+    function nicknameCheck(nickname){
+        let checkBool = false;
+        $.ajax({
+            type: 'GET',
+            url: `/checkNickname?nickname=${nickname.value}`,
+            async: false,
+            success: function(response){
+                checkBool = response;
+            },
+            error: function(xhr,status,error) {
+                console.error('회원정보 수정 중 오류가 발생했습니다.', error);
+            }
+        })
+        return checkBool;
     }

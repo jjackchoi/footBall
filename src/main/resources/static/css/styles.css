@@ -11709,3 +11709,9 @@ body {
 .border-green {
     border: green;
 }
+
+.default-thumbnail {
+    width: 200px;
+    height: 200px;
+    border: 0px;
+}

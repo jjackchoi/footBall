@@ -40,7 +40,10 @@ public interface UserService {
     int insertMemInfo(UserRequest params);
 
     // 프로필 사진 업데이트
-    void updateProfile(MultipartFile profileImg,  UserResponse loginUser) throws IOException;
+    void saveProfileImg(MultipartFile profileImg,  UserResponse loginUser) throws IOException;
+
+    // 내 정보 수정
+    void updateUserProfile(UserRequest params);
 
     // 멤버 권한 Y로 업데이트
     void grantAuthority(int parsedUserId);

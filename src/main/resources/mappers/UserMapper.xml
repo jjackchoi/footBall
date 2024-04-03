@@ -139,10 +139,22 @@
     </update>
 
     <!--프로필 사진 업데이트-->
-    <update id="updateProfile">
+    <update id="saveProfileImg">
         UPDATE fb_user
         SET fb_user_img = #{fbUserImg}
         WHERE fb_user_id = #{fbUserId};
+    </update>
+
+    <!--내 정보 업데이트-->
+    <update id="updateUserProfile" parameterType="footBall.domain.user.UserRequest">
+        UPDATE fb_user
+        SET fb_user_pswd = #{fbUserPswd},
+            fb_user_nickname = #{fbUserNickname},
+            fb_user_name = #{fbUserName},
+            fb_user_birth = #{fbUserBirth},
+            fb_user_phone = #{fbUserPhone},
+            fb_user_address = #{fbUserAddress}
+        WHERE fb_user_id = #{fbUserId}
     </update>
 
     <!--멤버 권한 N으로 업데이트-->

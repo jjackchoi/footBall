@@ -106,7 +106,7 @@ public class UserServiceImpl implements UserService{
     // 프로필 사진 업데이트
     @Override
     @Transactional
-    public void updateProfile(MultipartFile profileImg, UserResponse loginUser) throws IOException {
+    public void saveProfileImg(MultipartFile profileImg, UserResponse loginUser) throws IOException {
         // 프로필 이미지 변경 실패 대비
         String temp = loginUser.getFbUserImg(); // 이전 이미지 저장
 
@@ -128,7 +128,7 @@ public class UserServiceImpl implements UserService{
         }
 
         // 프로필 이미지 경로 db에 업데이트
-        int result = sqlSession.update("UserMapper.updateProfile", loginUser);
+        int result = sqlSession.update("UserMapper.saveProfileImg", loginUser);
 
         if (result > 0) { // 성공
             // 새 이미지가 업로드된 경우
@@ -138,6 +138,22 @@ public class UserServiceImpl implements UserService{
         }else { // 실패
             // 이전 이미지로 프로필 다시 세팅
             loginUser.setFbUserImg(temp);
+        }
+    }
+
+    // 내 정보 수정
+    @Override
+    public void updateUserProfile(UserRequest params){
+        // 비밀번호 미변경 시 기존의 비밀번호 업데이트(비밀번호 인코딩 x)
+        if (params.getFbUserPswd() == null || params.getFbUserPswd() == ""){
+            UserResponse userInfo = sqlSession.selectOne("UserMapper.findOne",params.getFbUserId());
+            String userPswd = userInfo.getFbUserPswd();
+            params.setFbUserPswd(userPswd);
+            sqlSession.update("UserMapper.updateUserProfile", params);
+        }else{ // 비밀번호 변경 시
+            // 입력 비밀번호 인코딩 처리
+            params.encodingPassword(passwordEncoder);
+            sqlSession.update("UserMapper.updateUserProfile", params);
         }
     }
 

@@ -5,15 +5,7 @@
     <title>내 정보 보기</title>
 </th:block>
 
-<th:block layout:fragment="add-css">
-    <style>
-        .default-thumbnail {
-            width: 200px;
-            height: 200px;
-            border: 0px;
-        }
-    </style>
-</th:block>
+<th:block layout:fragment="add-css"></th:block>
 
 <th:block layout:fragment="content">
     <!-- 제목 -->
@@ -29,7 +21,7 @@
                     <i class="fas fa-edit me-1-2x me-1"></i>
                     <p class="mb-0 fw-bold">프로필 사진 수정</p>
                 </div>
-                <form action="/myPage/profile" method="POST" id="profileForm" enctype="multipart/form-data">
+                <form action="/myPage/profileImg" method="POST" id="profileForm" enctype="multipart/form-data">
                     <div class="card-body text-center">
                         <!--프로필 사진 없을 때-->
                         <div th:if="${#strings.isEmpty(user.fbUserImg)}">
@@ -39,7 +31,7 @@
                         <!--프로필 사진 있을 때-->
                         <div th:unless="${#strings.isEmpty(user.fbUserImg)}">
                             <img class="img-account-profile default-thumbnail rounded-circle mb-2 profileImg"
-                                 th:src="@{/myPage/profile/}+${session.userId}" />
+                                 th:src="@{/myPage/profileImg/}+${session.userId}" />
                         </div>
                         <div class="small font-italic text-muted mb-4">5MB이하의 jpg,png 파일을 선택해주세요 </div>
                         <div class="col">
@@ -70,8 +62,15 @@
                         <!--닉네임-->
                         <div class="mb-3">
                             <label class="small mb-1" for="inputUserNickname">닉네임</label>
-                            <input class="form-control" id="inputUserNickname" type="text" placeholder="Enter your nickname"
-                                   th:value="${user.fbUserNickname}" readonly>
+                            <div class="input-group">
+                                <input class="form-control" id="inputUserNickname" type="text" placeholder="Enter your nickname"
+                                       th:value="${user.fbUserNickname}">
+                                <input type="hidden" id="hiddenInputNick">
+                                <button type="button" id="btnNickDuplicate" class="btn btn-outline-secondary" onclick="validateNickname();">
+                                    중복검사
+                                </button>
+                            </div>
+                            <span id="nickname-error" class="error-message text-danger"></span>
                         </div>
                         <!--이름-->
                         <div class="mb-3">
@@ -92,8 +91,8 @@
                             <!-- 생년월일-->
                             <div class="col-md-6">
                                 <label class="small mb-1" for="inputUserBirth">생년월일</label>
-                                <input class="form-control" id="inputUserBirth" type="text" name="birthday" placeholder="Enter your birthday"
-                                       th:value="${user.fbUserBirth}">
+                                <input class="form-control" type="date" id="inputUserBirth"
+                                       max="2005-12-31" min="1950-01-01" th:value="${user.fbUserBirth}">
                                 <span id="birth-error" class="error-message text-danger"></span>
                             </div>
                         </div>
@@ -108,10 +107,7 @@
                         </div>
                         <!--비밀번호-->
                         <div class="row gx-3 mb-3">
-                            <div class="mb-3">
-                                <label class="small mb-1" for="inputUsername">비밀번호 변경</label>
-                                <input class="form-control" id="currentUserPswd" type="password" placeholder="* 현재 비밀번호를 입력해주세요">
-                            </div>
+                            <label class="small mb-1" for="userPswd">비밀번호 변경</label>
                             <div class="col-md-6">
                                 <input class="form-control" id="userPswd" type="password" placeholder="변경할 비밀번호를 입력해주세요">
                             </div>
@@ -119,6 +115,12 @@
                                 <input class="form-control" id="userPswdConf" type="password" placeholder="다시 확인해주세요">
                             </div>
                             <span id="pswd-error" class="error-message text-danger"></span>
+                        </div>
+                        <!--현재 비밀번호 입력-->
+                        <div class="mb-3">
+                            <label class="small mb-1" for="currentUserPswd">* 현재 비밀번호 입력</label>
+                            <input class="form-control" id="currentUserPswd" type="password" placeholder="현재 비밀번호를 입력해주세요">
+                            <span id="currentPswd-error" class="error-message text-danger"></span>
                         </div>
                         <!--정보 수정하기 버튼-->
                         <button class="btn btn-primary d-block w-100" id="updateBtn" type="button">정보 수정하기</button>
@@ -268,6 +270,7 @@
         document.querySelector('#updateBtn').addEventListener('click', () => {
 
             // 변수화
+            const fbUserNickname = document.querySelector('#inputUserNickname');
             const fbUserName = document.querySelector('#inputUserName');
             const fbUserPhone = document.querySelector('#inputPhone');
             const fbUserBirth = document.querySelector('#inputUserBirth');
@@ -277,17 +280,33 @@
             const currentUserPswd = document.querySelector('#currentUserPswd');
 
             // 배열에 요소 담기
-            const fbUserArray = [fbUserName, fbUserPhone, fbUserBirth, fbUserAddress];
+            const fbUserArray = [fbUserName, fbUserPhone, fbUserAddress];
 
             // 배열에 기존값 담기
-            const modelUserArray =
-                [ [[${user.fbUserName}]],[[${user.fbUserPhone}]],[[${user.fbUserBirth}]],[[${user.fbUserAddress}]] ];
+            const modelUserArray = [ [[${user.fbUserName}]],[[${user.fbUserPhone}]],[[${user.fbUserAddress}]] ];
 
             // 요소 값이 비어 있으면 기존값 담기
             for(var i = 0; i < fbUserArray.length; i++){
                 if(!fbUserArray[i].value){
                     fbUserArray[i].value = modelUserArray[i];
                 }
+            }
+
+            // 닉네임 유효성 검사 및 중복 검사
+            if (!validateNick(fbUserNickname.value)) {
+                document.getElementById('nickname-error').textContent = "올바르지 않은 닉네임 형식입니다.";
+                return;
+            }else{
+                document.getElementById('nickname-error').textContent = "";
+            }
+
+            if(!nicknameCheck(fbUserNickname)) {
+                document.querySelector('#nickname-error').classList.remove('text-success');
+                document.querySelector('#nickname-error').classList.add('text-danger');
+                document.querySelector('#nickname-error').textContent = "중복된 닉네임 입니다.";
+                return;
+            }else {
+                document.querySelector('#nickname-error').textContent = "";
             }
 
             // 이름 유효성 검사
@@ -307,19 +326,20 @@
             }
 
             // 생년월일 유효성 검사
-            if(!validateBirth(fbUserBirth.value)){
-                document.getElementById('birth-error').textContent = "생년월일을 선택해 주세요.";
-                return;
-            }else{
-                document.getElementById('birth-error').textContent = "";
-            }
+            let inputDate = new Date(fbUserBirth.value);
+            let minDate = new Date("1950-01-01");
+            let maxDate = new Date("2005-12-31");
 
-            // 현재 비밀번호 유효성 검사
-            if (!validatePassword(fbUserPswd.value)) {
-                document.getElementById('pswd-error').textContent = "비밀번호는 최소 8자 이상, 영문과 특수 문자를 포함해야 합니다.";
+            if(inputDate < minDate) {
+                fbUserBirth.value = [[ ${user.fbUserBirth} ]];
+                document.getElementById('birth-error').textContent = "1950년 이후로 입력해주십시오.";
+                return;
+            }else if(inputDate > maxDate) {
+                fbUserBirth.value = [[ ${user.fbUserBirth} ]];
+                document.getElementById('birth-error').textContent = "2006년 이전으로 입력해주십시오.";
                 return;
             }else {
-                document.getElementById('pswd-error').textContent = "";
+                document.getElementById('birth-error').textContent = "";
             }
 
             // 변경할 비밀번호 유효성 검사
@@ -335,26 +355,84 @@
                 }
             }
 
+            // 현재 비밀번호 유효성 검사
+            if (!validatePassword(currentUserPswd.value)) {
+                document.getElementById('currentPswd-error').textContent = "정보 수정을 위해 현재 비밀번호를 입력해주십시오.(최소 8자 이상, 영문과 특수 문자를 포함)";
+                return;
+            }else {
+                document.getElementById('currentPswd-error').textContent = "";
+            }
 
-<!--            $.ajax({-->
-<!--                type: 'POST',-->
-<!--                url: '',-->
-<!--                contentType: 'application/json',-->
-<!--                data: JSON.stringify({-->
-<!--                    fbUserName: fbUserName.value,-->
-<!--                    fbUserPhone: fbUserPhone.value,-->
-<!--                    fbUserBirth: fbUserBirth.value,-->
-<!--                    fbUserAddress: fbUserAddress.value,-->
-<!--                    fbUserPswd: fbUserPswd.value-->
-<!--                })-->
-<!--                success: function(response) {-->
+            // 현재 비밀번호 확인
+            let pwdBoolean = false;
+            $.ajax({
+                type: 'POST',
+                url: '/myPage/profile/confirmPwd',
+                async: false,
+                data: {fbUserPswd: currentUserPswd.value},
+                success: function(response){
+                    pwdBoolean = response;
+                },
+                error: function(xhr,status,error) {
+                    console.error('회원정보 수정 중 오류가 발생했습니다.', error);
+                }
+            })
+            if(!pwdBoolean){
+                document.getElementById('currentPswd-error').textContent = "비밀번호를 확인해주세요.";
+                return;
+            }
 
-<!--                },-->
-<!--                error: function(xhr,status,error) {-->
-<!--                    console.error('회원정보 수정 중 오류가 발생했습니다.', error);-->
-<!--                }-->
-<!--            })-->
+            // 내 정보 업데이트
+            $.ajax({
+                type: 'POST',
+                url: '/myPage/profile',
+                contentType: 'application/json',
+                async: false,
+                data: JSON.stringify({
+                    fbUserNickname: fbUserNickname.value,
+                    fbUserName: fbUserName.value,
+                    fbUserPhone: fbUserPhone.value,
+                    fbUserBirth: fbUserBirth.value,
+                    fbUserAddress: fbUserAddress.value,
+                    fbUserPswd: fbUserPswd.value
+                }),
+                success: function(response) {
+                    if(response == 'success'){
+                    alert('정보가 정상적으로 수정되었습니다!');
+                    location.reload();
+                    }
+                },
+                error: function(xhr,status,error) {
+                    console.error('회원정보 수정 중 오류가 발생했습니다.', error);
+                }
+            })
         });
+
+        // 닉네임 유효성 검사 및 중복 검사
+        function validateNickname(){
+            // 요소 가져오기
+            const fbUserNickname = document.querySelector('#inputUserNickname');
+
+            // 유효성 검사
+            if (!validateNick(fbUserNickname.value)) {
+                document.getElementById('nickname-error').textContent = "올바르지 않은 닉네임 형식입니다.";
+                return;
+            }else{
+                document.getElementById('nickname-error').textContent = "";
+            }
+
+            // 중복 검사
+            let nickBoolean = nicknameCheck(fbUserNickname);
+            if(nickBoolean == true){
+                document.querySelector('#nickname-error').classList.remove('text-danger');
+                document.querySelector('#nickname-error').classList.add('text-success');
+                document.querySelector('#nickname-error').textContent = "사용가능한 닉네임 입니다.";
+            }else {
+                document.querySelector('#nickname-error').classList.remove('text-success');
+                document.querySelector('#nickname-error').classList.add('text-danger');
+                document.querySelector('#nickname-error').textContent = "중복된 닉네임 입니다.";
+            }
+        }
     </script>
 </th:block>
 

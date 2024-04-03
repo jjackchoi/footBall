@@ -55,10 +55,19 @@ public class UserController {
     public ResponseEntity<Boolean> checkNickname(String nickname){
         log.info(nickname);
         List<UserResponse> target = userService.getUserByNickname(nickname);
-        if (target.size() >= 1){
-            return ResponseEntity.status(HttpStatus.OK).body(false);
-        }else {
+        if (target.get(0) == null){
             return ResponseEntity.status(HttpStatus.OK).body(true);
+        }
+        // 입력한 값하고 같을 경우는 true
+        if (target.get(0).getFbUserNickname().equals(nickname)){
+            return ResponseEntity.status(HttpStatus.OK).body(true);
+        }else{
+            // 존재여부에 따른 응답 보내기
+            if (target.size() >= 1){
+                return ResponseEntity.status(HttpStatus.OK).body(false);
+            }else {
+                return ResponseEntity.status(HttpStatus.OK).body(true);
+            }
         }
     }
 
@@ -94,6 +103,7 @@ public class UserController {
         UserResponse userInfo = userService.findOne(id);
         HttpSession session = request.getSession();
         session.setAttribute("userId", id);
+        session.setAttribute("userEmail", userInfo.getFbUserEmail());
         session.setAttribute("userNickname", userInfo.getFbUserNickname());
         session.setAttribute("userAuth", userInfo.getFbUserAuth());
         session.setMaxInactiveInterval(60 * 30);
@@ -232,21 +242,21 @@ public class UserController {
     }
 
     // 프로필사진 업로드
-    @PostMapping("/myPage/profile")
-    public String profile(HttpSession session, @RequestParam("profileImg") MultipartFile profileImg) throws IOException {
+    @PostMapping("/myPage/profileImg")
+    public String saveProfileImg(HttpSession session, @RequestParam("profileImg") MultipartFile profileImg) throws IOException {
         // session에서 userId 가져오기
         Integer userId = (Integer) session.getAttribute("userId");
         UserResponse loginUser = userService.findOne(userId);
 
         // 프로필 사진 업데이트
-        userService.updateProfile(profileImg, loginUser);
+        userService.saveProfileImg(profileImg, loginUser);
 
         return "redirect:/myPage";
     }
     // 프로필 사진 가져오기(타임리프로 이미지 로드)
     @ResponseBody
-    @GetMapping("/myPage/profile/{fbUserId}")
-    public ResponseEntity<?> getProfile(@PathVariable int fbUserId) throws IOException{
+    @GetMapping("/myPage/profileImg/{fbUserId}")
+    public ResponseEntity<?> getProfileImg(@PathVariable int fbUserId) throws IOException{
         UserResponse user = userService.findOne(fbUserId);
 
         // 프로필 사진의 경로를 이용하여 프로필 사진에 대한 파일을 읽음
@@ -258,6 +268,44 @@ public class UserController {
 
         // 바이트 배열을 http에 반환
         return new ResponseEntity<>(imgByteArray, HttpStatus.OK);
+    }
+
+    // 내 정보 수정
+    @ResponseBody
+    @PostMapping("/myPage/profile")
+    public ResponseEntity<String> updateUserProfile(@RequestBody UserRequest params, HttpServletRequest request){
+        // 세션에서 로그인된 유저의 id 가져오기
+        HttpSession session = request.getSession();
+        int userId = (int)session.getAttribute("userId");
+
+        // 값 세팅 후 업데이트
+        params.setFbUserId(userId);
+        userService.updateUserProfile(params);
+
+        return ResponseEntity.status(HttpStatus.OK).body("success");
+    }
+
+    // 정보 수정 시 현재 비밀번호 확인
+    @ResponseBody
+    @PostMapping("/myPage/profile/confirmPwd")
+    public ResponseEntity<Boolean> confirmPwd(@RequestParam String fbUserPswd, HttpServletRequest request){
+        // 세션에서 로그인된 유저의 이메일 가져오기
+        HttpSession session = request.getSession();
+        String userEmail = (String) session.getAttribute("userEmail");
+
+        // 값 세팅 후 확인
+        UserRequest params = new UserRequest();
+        params.setFbUserPswd(fbUserPswd);
+        params.setFbUserEmail(userEmail);
+        int id = userService.login(params);
+
+        // 응답 값 보내기
+        if (id != 0){
+            return ResponseEntity.status(HttpStatus.OK).body(true);
+        }else {
+            return ResponseEntity.status(HttpStatus.OK).body(false);
+        }
+
     }
 
 }

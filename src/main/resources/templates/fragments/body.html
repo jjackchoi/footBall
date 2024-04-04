@@ -46,7 +46,7 @@
                     </a>
                     <a class="nav-link" th:href="@{/}">
                         <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
-                        동호회 소개
+                        드림FC 소개
                     </a>
                     <a class="nav-link" th:href="@{/introduction/member}">
                         <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
@@ -92,11 +92,14 @@
             </div>
             <div class="sb-sidenav-footer" style="border: 1px solid rgba(0, 128, 0, 0.2);">
                 <div class="small"></div>
-                Copyright 드림FC
+                Copyright © 드림FC
             </div>
         </nav>
     </div>
+
     <div id="layoutSidenav_content">
+        <th:block layout:fragment="layoutSidenav_content">
+        </th:block>
         <main>
             <div class="container-fluid px-4" style="max-width: 1080px; margin: 50px auto">
                 <!--MAIN-->
@@ -112,6 +115,7 @@
         </footer>
         <th:block layout:fragment="modal"></th:block>
     </div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>

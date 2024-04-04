@@ -5,54 +5,38 @@
     <title>드림FC</title>
 </th:block>
 
-<th:block layout:fragment="content" >
-<!--    <div class="container mt-5" style="background-image: url('/assets/img/football.jpg'); min-height: 80vh; background-size: cover; background-position: center;">-->
-
-<!--        <div class="row">-->
-<!--            &lt;!&ndash; 첫 번째 카드 아이템 &ndash;&gt;-->
-<!--            <div class="col-md-6 mb-4">-->
-<!--                <div class="card" style="opacity: 0.7;">-->
-<!--                    <div class="card-body">-->
-<!--                        <h1 class="card-title">자유게시판</h1>-->
-<!--                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
-<!--                        <a href="#" class="btn btn-primary">Go Go</a>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-
-<!--            &lt;!&ndash; 두 번째 카드 아이템 &ndash;&gt;-->
-<!--            <div class="col-md-6 mb-4">-->
-<!--                <div class="card" style="opacity: 0.7;">-->
-<!--                    <div class="card-body">-->
-<!--                        <h1 class="card-title">건의게시판</h1>-->
-<!--                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
-<!--                        <a href="#" class="btn btn-primary">Go Go</a>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-
-<!--            <div class="col-md-6 mb-4">-->
-<!--                <div class="card" style="opacity: 0.7;">-->
-<!--                    <div class="card-body">-->
-<!--                        <h1 class="card-title">금주의 참석인원</h1>-->
-<!--                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
-<!--                        <a href="#" class="btn btn-primary">Go Go</a>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-
-<!--            <div class="col-md-6 mb-4">-->
-<!--                <div class="card" style="opacity: 0.7;">-->
-<!--                    <div class="card-body">-->
-<!--                        <h1 class="card-title">지나간 경기 팀 구성</h1>-->
-<!--                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
-<!--                        <a href="#" class="btn btn-primary">Go Go</a>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
+<th:block layout:fragment="add-css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </th:block>
+
+<th:block layout:fragment="layoutSidenav_content">
+    <div class="backgroundMain">
+        <div class="slides">
+            <img src="/assets/img/memberShot/memberShot.jpg">
+            <img src="/assets/img/memberShot/memberShot2.jpg">
+            <img src="/assets/img/memberShot/memberShot3.jpg">
+        </div>
+        <div class="content">
+            <img src="/assets/img/메인용 로고.png" class="logo">
+            <div class="mt-4 mb-2 d-flex align-items-center">
+                <h2 class="mb-0">광명 드림FC에 오신 것을 환영합니다!</h2>
+            </div>
+        </div>
+        <div class="buttons">
+            <button onclick="goToSlide(0)"><i class="fas fa-circle"></i></button>
+            <button onclick="goToSlide(1)"><i class="fas fa-circle"></i></button>
+            <button onclick="goToSlide(2)"><i class="fas fa-circle"></i></button>
+        </div>
+    </div>
+</th:block>
+<th:block layout:fragment="content">
+    <!-- 제목 -->
+    <div class="mt-4 mb-2 d-flex flex-column align-items-center">
+        <strong class="text-danger mb-2">축구와 풋살이 좋은 사람들의 모임</strong>
+        <span class="fs-5 fw-bold">임원진 연락처 : 010-1234-5678</span>
+    </div>
+</th:block>
+
 
 <th:block layout:fragment="modal">
 
@@ -60,6 +44,37 @@
 
 <th:block layout:fragment="script">
     <script th:inline="javascript">
+        const slides = document.querySelector('.backgroundMain .slides');
+        const slideImages = document.querySelectorAll('.backgroundMain .slides img');
+        const buttons = document.querySelectorAll('.buttons button');
+
+        let currentIndex = 0;
+        const totalSlides = slideImages.length;
+        const slideWidth = slideImages[0].clientWidth;
+
+        function goToSlide(index) {
+            currentIndex = index;
+            slides.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
+            updateButtons();
+        }
+
+        function updateButtons() {
+            buttons.forEach((button, index) => {
+                if (index === currentIndex) {
+                    button.classList.add('active');
+                } else {
+                    button.classList.remove('active');
+                }
+            });
+        }
+
+        function nextSlide() {
+            currentIndex = (currentIndex + 1) % totalSlides;
+            slides.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
+            updateButtons();
+        }
+
+        setInterval(nextSlide, 3000); // 3초마다 이미지 변경
     </script>
 </th:block>
 </html>

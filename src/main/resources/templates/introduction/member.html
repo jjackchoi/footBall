@@ -1,42 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/basic">
 
-<th:block layout:fragment="add-css">
-    <style>
-        .member-list {
-            list-style-type: none;
-            padding: 0;
-            display: flex;
-            flex-wrap: wrap;
-            padding: 0;
-        }
-        .member-item {
-            flex-basis: calc(20% - 20px); /* 한 줄에 5개씩 표시하도록 설정 (여백 포함) */
-            margin: 10px;
-            padding: 10px;
-        }
-        .member-item img {
-            width: 100%;
-            height: 200px;
-            margin-bottom: 10px;
-        }
-        .img {
-            width: 100%;
-            height: 200px;
-            margin-bottom: 10px;
-        }
-        .member-details {
-            overflow: hidden;
-        }
-        .member-details p{
-            margin-bottom: 0;
-        }
-        .member-details span{
-            font-weight: bold;
-        }
-    </style>
-</th:block>
-
 <th:block layout:fragment="title">
     <title>멤버 소개</title>
 </th:block>
@@ -64,7 +28,7 @@
                         </div>
                         <!--프로필 사진 있을 때-->
                         <div th:unless="${#strings.isEmpty(member.fbUserImg)}" class="img">
-                            <img th:src="@{/myPage/profile/} + ${member.fbUserId}">
+                            <img th:src="@{/myPage/profileImg/} + ${member.fbUserId}">
                         </div>
                         <div class="member-details">
                             <label class="d-flex">

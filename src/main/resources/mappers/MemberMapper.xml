@@ -5,6 +5,52 @@
 
     <!--공지사항 테이블 전체 칼럼-->
     <sql id="memberColumns">
+         member_id
+        ,fb_user_id
+        ,member_name
+        ,member_dribble_ability
+        ,member_passing_ability
+        ,member_defending_ability
+        ,member_stamina
+        ,member_finishing_ability
     </sql>
+
+    <!--멤버 권한 Y로 업데이트-->
+    <update id="grantUpdate" parameterType="int">
+        UPDATE fb_user
+        SET FB_USER_MEMBER_YN='Y'
+        WHERE FB_USER_ID=#{fbUserId}
+    </update>
+
+    <!--멤버 권한 N으로 업데이트-->
+    <update id="grantDelete" parameterType="int">
+        UPDATE fb_user
+        SET FB_USER_MEMBER_YN='N'
+        WHERE FB_USER_ID=#{fbUserId}
+    </update>
+
+    <!--멤버 데이터 생성-->
+    <insert id="createMember" parameterType="int">
+        INSERT INTO member(
+            fb_user_id, member_name
+        )
+        VALUES(
+            #{parsedUserId},
+            (SELECT fb_user_name
+            FROM fb_user
+            WHERE fb_user_id = #{parsedUserId})
+        )
+    </insert>
+
+    <!--멤버 데이터 삭제-->
+    <delete id="deleteMember" parameterType="int">
+        DELETE FROM member
+        WHERE fb_user_id = #{parsedUserId}
+    </delete>
+
+    <select id="getMembers" resultType="footBall.domain.member.MemberDto">
+        SELECT <include refid="memberColumns"/>
+        FROM member
+    </select>
 
 </mapper>

@@ -44,10 +44,4 @@ public interface UserService {
 
     // 내 정보 수정
     void updateUserProfile(UserRequest params);
-
-    // 멤버 권한 Y로 업데이트
-    void grantAuthority(int parsedUserId);
-    
-    // 멤버 권한 N로 업데이트
-    void revokeAuthority(int parsedUserId);
 }

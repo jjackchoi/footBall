@@ -22,12 +22,14 @@
             <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
                aria-expanded="false" style="color: #fff;"><i class="fas fa-user fa-fw"></i></a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="#!" th:if = "${session.userId} != null" th:text = "${session.userNickname}"></a></li>
-                <li><a class="dropdown-item" th:href="@{'/myPage'}" th:if = "${session.userId} != null">내 정보</a></li>
-                <li><a class="dropdown-item" th:href="@{'/board/myWrite'}" th:if = "${session.userId} != null">내가 쓴 글 보기</a></li>
-                <li>
-                    <hr class="dropdown-divider"/>
+                <li th:if = "${session.userId} != null">
+                    <a class="dropdown-item" href="#!" th:if = "${session.userAuth} == 'Y'"
+                       th:text = "${session.userNickname} + '(관리자)'"></a>
+                    <a class="dropdown-item" href="#!" th:if = "${session.userAuth} == 'N'"
+                       th:text = "${session.userNickname}"></a>
                 </li>
+                <li><a class="dropdown-item" th:href="@{'/myPage'}" th:if = "${session.userId} != null">내 정보</a></li>
+                <li><hr class="dropdown-divider"/></li>
                 <li><a class="dropdown-item" th:if = "${session.userId} != null" th:href="@{'/logout'}">로그아웃</a></li>
                 <li><a class="dropdown-item" th:if = "${session.userId} == null" th:href="@{'/login'}">로그인</a></li>
             </ul>
@@ -38,31 +40,50 @@
     <div id="layoutSidenav_nav">
         <nav class="sb-sidenav accordion" id="sidenavAccordion" style="background-color: #fff;">
             <div class="sb-sidenav-menu" style="border-right: 1px solid rgba(0, 128, 0, 0.2); background-color: rgba(0, 0, 0, 0.03);" >
+                <div class="nav" th:if = "${session.userAuth} == 'Y'" >
+                    <div class="sb-sidenav-menu-heading">멤버 관리(관리자)</div>
+                    <a class="nav-link" th:href="@{/member/authority}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+                        멤버 승인
+                    </a>
+                    <a class="nav-link" th:href="@{/member/abilitySetup}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+                        멤버 어빌리티 설정
+                    </a>
+                </div>
                 <div class="nav">
                     <div class="sb-sidenav-menu-heading">소개</div>
-                    <a class="nav-link" th:if = "${session.userAuth} == 'Y'" th:href="@{/introduction/authority}">
-                        <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
-                        멤버권한부여(관리자용)
-                    </a>
                     <a class="nav-link" th:href="@{/}">
-                        <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+                        <div class="sb-nav-link-icon"><i class="fas fa-flag"></i></div>
                         드림FC 소개
                     </a>
-                    <a class="nav-link" th:href="@{/introduction/member}">
-                        <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+                    <a class="nav-link" th:href="@{/introduction/member}" th:if="${session.userAuth} == 'Y'">
+                        <div class="sb-nav-link-icon"><i class="fas fa-flag"></i></div>
+                        멤버 소개(관리자)
+                    </a>
+                    <a class="nav-link" th:href="@{/introduction/member}" th:unless="${session.userAuth} == 'Y'">
+                        <div class="sb-nav-link-icon"><i class="fas fa-flag"></i></div>
                         멤버 소개
                     </a>
                 </div>
                 <div class="nav">
                     <div class="sb-sidenav-menu-heading">공지사항</div>
-                    <a class="nav-link" th:href="@{/notice}">
+                    <a class="nav-link" th:href="@{/notice}" th:if="${session.userAuth == 'Y'}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-bullhorn"></i></div>
+                        공지사항(관리자)
+                    </a>
+                    <a class="nav-link" th:href="@{/notice}" th:unless="${session.userAuth == 'Y'}">
                         <div class="sb-nav-link-icon"><i class="fas fa-bullhorn"></i></div>
                         공지사항
                     </a>
                 </div>
                 <div class="nav">
                     <div class="sb-sidenav-menu-heading">팀 구성</div>
-                    <a class="nav-link" th:href="@{/weeklyAttendee}">
+                    <a class="nav-link" th:href="@{/weeklyAttendee}" th:if="${session.userAuth == 'Y'}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-futbol"></i></div>
+                        금주의 참석인원<br>(관리자)
+                    </a>
+                    <a class="nav-link" th:href="@{/weeklyAttendee}" th:unless="${session.userAuth == 'Y'}">
                         <div class="sb-nav-link-icon"><i class="fas fa-futbol"></i></div>
                         금주의 참석인원
                     </a>
@@ -73,7 +94,11 @@
                 </div>
                 <div class="nav">
                     <div class="sb-sidenav-menu-heading">회비</div>
-                    <a class="nav-link" th:href="@{/fee}">
+                    <a class="nav-link" th:href="@{/fee}" th:if="${session.userAuth == 'Y'}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-coins"></i></div>
+                        회비 납부 현황<br>(관리자)
+                    </a>
+                    <a class="nav-link" th:href="@{/fee}" th:unless="${session.userAuth == 'Y'}">
                         <div class="sb-nav-link-icon"><i class="fas fa-coins"></i></div>
                         회비 납부 현황
                     </a>
@@ -84,7 +109,11 @@
                         <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                         자유게시판
                     </a>
-                    <a class="nav-link" th:href="@{/suggestionBoard}">
+                    <a class="nav-link" th:href="@{/suggestionBoard}" th:if="${session.userAuth == 'Y'}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                        건의게시판(관리자)
+                    </a>
+                    <a class="nav-link" th:href="@{/suggestionBoard}" th:unless="${session.userAuth == 'Y'}">
                         <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                         건의게시판
                     </a>

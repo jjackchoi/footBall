@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/basic">
+
+<th:block layout:fragment="title">
+    <title>멤버 능력치 설정</title>
+</th:block>
+
+<th:block layout:fragment="add-css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</th:block>
+
+<th:block layout:fragment="content">
+    <div>
+        <div class="mt-4 mb-2 d-flex align-items-center">
+            <i class="fas fa-users fa-2x me-1"></i>
+            <h2 class="mb-0">멤버 능력치 설정</h2>
+        </div>
+    </div>
+    <div class="card mb-4 mt-4">
+        <div class="card-header">
+            <i class="fas fa-table me-1"></i>
+            멤버별 능력치를 입력하고 확인버튼을 눌러주세요.
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th style="width: 16%; text-align: center;">이름</th>
+                        <th style="width: 14%; text-align: center;">드리블</th>
+                        <th style="width: 14%; text-align: center;">패스</th>
+                        <th style="width: 14%; text-align: center;">수비</th>
+                        <th style="width: 14%; text-align: center;">체력</th>
+                        <th style="width: 14%; text-align: center;">골결정력</th>
+                        <th style="width: 14%; text-align: center;"></th>
+                    </tr>
+                </thead>
+                <tbody class="memberList">
+                    <tr th:if="${session.userAuth} == 'Y'" th:each="member, rowStat : ${members}">
+                        <td th:text="${member.memberName}" style="text-align: center;"></td>
+                        <td><input type="text" class="form-control" th:value="${member.memberDribbleAbility}"></td>
+                        <td><input type="text" class="form-control" th:value="${member.memberPassingAbility}"></td>
+                        <td><input type="text" class="form-control" th:value="${member.memberDefendingAbility}"></td>
+                        <td><input type="text" class="form-control" th:value="${member.memberStamina}"></td>
+                        <td><input type="text" class="form-control" th:value="${member.memberFinishingAbility}"></td>
+                        <td style="text-align: center;">
+                            <input type="button" style="text-align: center;" class="btn btn-primary" value="확인"
+                                   th:attr="data-userId=${member.fbUserId}"/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</th:block>
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+
+    </script>
+</th:block>
+
+</html>

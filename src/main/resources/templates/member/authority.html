@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/basic">
 
 <th:block layout:fragment="title">
-    <title>멤버 권한부여</title>
+    <title>멤버 승인</title>
 </th:block>
 
 <th:block layout:fragment="add-css">
@@ -14,17 +14,14 @@
 <th:block layout:fragment="content">
     <div>
         <div class="mt-4 mb-2 d-flex align-items-center">
-            <i class="fas fa-coins fa-2x me-1"></i>
-            <h2 class="mb-0">회원 멤버 확인 및 권한부여</h2>
-        </div>
-        <div class="mb-0">
-            멤버 권한을 주려면 체크박스를 체크해주세요.
+            <i class="fas fa-users fa-2x me-1"></i>
+            <h2 class="mb-0">멤버 승인</h2>
         </div>
     </div>
     <div class="card mb-4 mt-4">
         <div class="card-header">
             <i class="fas fa-table me-1"></i>
-            회원목록입니다.
+            멤버를 승인하실 경우 체크박스를 체크해 주세요.
         </div>
         <div class="card-body">
             <table class="table">
@@ -43,11 +40,6 @@
                         <input type="checkbox" class="userCheckbox" th:attr="data-userId=${post.getFbUserId()}"/>
                     </td>
                 </tr>
-                <tr th:if="${session.userAuth} == 'N'" th:each="post, rowStat : ${posts}">
-                    <td th:text="${post.fbUserName}"></td>
-                    <td th:text="${post.fbUserNickname}"></td>
-                    <td th:text="아직멤버아님"></td>
-                </tr>
                 </tbody>
             </table>
         </div>
@@ -59,7 +51,7 @@
         $(document).ready(function() {
             // 서버에서 받은 데이터를 사용하여 체크박스를 설정
             $.ajax({
-                url: '/introduction/authority/check',
+                url: '/member/authority/check',
                 type: 'GET',
                 dataType: 'json',
                 success: function(response) {
@@ -83,7 +75,7 @@
             // AJAX 요청
             $.ajax({
                 type: 'POST',
-                url: '/introduction/authority/grant',
+                url: '/member/authority/grant',
                 data: {
                     fbUserId: fbUserId,
                     isChecked: isChecked

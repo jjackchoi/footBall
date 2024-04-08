@@ -31,4 +31,21 @@ public class MemberServiceImpl implements MemberService{
     public List<MemberDto> getMembers() {
         return sqlSession.selectList("MemberMapper.getMembers");
     }
+
+    // 멤버 어빌리티 및 평균 티어 적용
+    @Override
+    public void applyAbility(MemberDto params) {
+        params.calculateAbilityAverage();
+        sqlSession.update("MemberMapper.applyAbility", params);
+    }
+
+    // userId로 멤버 조회
+    @Override
+    public MemberDto getMemberByUserId(MemberDto params) {
+        return sqlSession.selectOne("MemberMapper.getMemberByUserId", params);
+    }
+
+
+
+
 }

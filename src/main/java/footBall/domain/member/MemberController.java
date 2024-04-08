@@ -2,20 +2,18 @@ package footBall.domain.member;
 
 import footBall.domain.user.UserResponse;
 import footBall.domain.user.UserServiceImpl;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @Controller
+@Slf4j
 @RequiredArgsConstructor
 public class MemberController {
 
@@ -56,6 +54,14 @@ public class MemberController {
         List<MemberDto> members = memberService.getMembers();
         model.addAttribute("members", members);
         return "member/abilitySetup";
+    }
+
+    // 멤버 능력치 적용 및 평균 계산
+    @ResponseBody
+    @PostMapping("/member/abilitySetup")
+    public ResponseEntity<MemberDto> applyAbility(@RequestBody MemberDto params){
+        memberService.applyAbility(params);
+        return ResponseEntity.status(HttpStatus.OK).body(memberService.getMemberByUserId(params));
     }
 
 

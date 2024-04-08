@@ -1,0 +1,21 @@
+@charset "UTF-8";
+
+th {
+    text-align: center;
+}
+
+td {
+    text-align: center;
+}
+
+td input[type="text"] {
+    width: 38px;
+    display: block;
+    margin: 0 auto;
+}
+
+td > .select-ability {
+    width: 38px;
+    display: block;
+    margin: 0 auto;
+}

@@ -13,6 +13,7 @@
         ,member_defending_ability
         ,member_stamina
         ,member_finishing_ability
+        ,member_ability_avg
     </sql>
 
     <!--멤버 권한 Y로 업데이트-->
@@ -48,9 +49,29 @@
         WHERE fb_user_id = #{parsedUserId}
     </delete>
 
+    <!--멤버 전체 조회-->
     <select id="getMembers" resultType="footBall.domain.member.MemberDto">
         SELECT <include refid="memberColumns"/>
         FROM member
+        ORDER BY fb_user_id
     </select>
 
+    <!--멤버 어빌리티 및 평균 티어 적용-->
+    <update id="applyAbility" parameterType="footBall.domain.member.MemberDto">
+        UPDATE member
+        SET member_dribble_ability = #{memberDribbleAbility},
+            member_passing_ability = #{memberPassingAbility},
+            member_defending_ability = #{memberDefendingAbility},
+            member_stamina = #{memberStamina},
+            member_finishing_ability = #{memberFinishingAbility},
+            member_ability_avg = #{memberAbilityAvg}
+        WHERE fb_user_id = #{fbUserId};
+    </update>
+
+    <!--userId로 멤버 조회-->
+    <select id="getMemberByUserId" parameterType="footBall.domain.member.MemberDto" resultType="footBall.domain.member.MemberDto">
+        SELECT <include refid="memberColumns" />
+        FROM member
+        WHERE fb_user_id = #{fbUserId}
+    </select>
 </mapper>

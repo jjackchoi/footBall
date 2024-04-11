@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="TeamBuilderMapper">
+
+    <!--투표 테이블 전체 칼럼-->
+    <sql id="voteColumns">
+         vote_id
+        ,vote_date
+    </sql>
+
+    <!--참석 테이블 전체 칼럼-->
+    <sql id="attendColumns">
+         attend_id
+        ,vote_id
+        ,fb_user_id
+        ,attend_status
+    </sql>
+
+</mapper>

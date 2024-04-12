@@ -5,63 +5,68 @@
     <title>팀 구성</title>
 </th:block>
 
+<th:block layout:fragment="add-css">
+    <link rel="stylesheet" th:href="@{/css/teamBuilderStyles.css}">
+</th:block>
+
 <th:block layout:fragment="content">
     <!-- 제목 -->
     <div class="mt-4 mb-2 d-flex align-items-center">
-        <i class="fas fa-table me-1 fa-2x me-1"></i>
+        <i class="fas fa-futbol fa-2x me-1"></i>
         <h2 class="mb-0">팀 구성</h2>
     </div>
-    <!-- 버튼 -->
-    <div class="right" style="text-align: right">
-        <button type="button" class="btn btn-success" id="viewAllPostsBtn">
-            모든 글 조회
-        </button>
-        <button type="button" class="btn btn-primary" data-toggle="modal" onclick="openModal()">
-            글 작성
-        </button>
-    </div>
-    <!-- 검색 입력란과 버튼 -->
-    <form id="searchForm" action="/freeBoard/search" method="get">
-        <div class="input-group mb-3 mt-3" style="display: flex; justify-content: flex-end;">
-            <input type="text" class="form-control me-1" placeholder="검색어를 입력하세요" name="freeBoardTitle" style="max-width: 200px;">
-            <span class="input-group-btn">
-                <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-search"></i></button>
-            </span>
+    <!--팀 구성 카드-->
+    <div class="card mb-4 mt-4">
+        <div class="card-header">
+            <i class="fas fa-puzzle-piece me-1"></i>
+            팀 구성(구성하고 싶은 팀을 선택 후 팀 섞기 버튼을 눌러주세요.)
         </div>
-    </form>
+        <div class="card-body">
+            <ol class="list-group">
+                <div class="text-end mb-2">
+                    <input type="checkbox" class="btn-check" id="twoTeamCheck">
+                    <label for="twoTeamCheck" class="btn btn-outline-secondary ms-5">2팀 구성</label>
+                    <input type="checkbox" class="btn-check" id="threeTeamCheck">
+                    <label for="threeTeamCheck" class="btn btn-outline-secondary ms-5">3팀 구성</label>
+                    <input type="checkbox" class="btn-check" id="fourTeamCheck">
+                    <label for="fourTeamCheck" class="btn btn-outline-secondary ms-5">4팀 구성</label>
+                    <button type="button" class="btn btn-primary ms-5" id="assembleBtn">
+                        팀 섞기
+                    </button>
+                </div>
+                <div class="mt-4 mb-2 d-flex align-items-center">
+                    <div class="align-items-center centered-flex">
+                        <strong class="text-center">참석 인원</strong>
+                        <ul class="list-group no-markers">
+                            <li th:each="attendee: ${attendees}" class="list-group text-center" th:text="${attendee.memberName}"></li>
+                        </ul>
+                    </div>
+                    <div style="width: 25%; height: 450px; border: 1px solid black;">
+                        a팀
+                    </div>
+                    <div style="width: 25%; height: 450px; border: 1px solid black;">
+                        b팀
+                    </div>
+                    <div style="width: 25%; height: 450px; border: 1px solid black;">
+                        c팀
+                    </div>
+                </div>
+            </ol>
+        </div>
+    </div>
 
-    <!-- 테이블 -->
-    <div>
-        <div style="height: 450px;">
-            <table class="table">
-                <thead>
-                <tr>
-                    <th style="width: 15%;">글작성자</th>
-                    <th style="width: 15%;">글제목</th>
-                    <th style="width: 50%;">글내용</th>
-                    <th style="width: 20%;">작성일자</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="post : ${posts}">
-                    <td th:text="${post.getFreeBoardAuthor()}"></td>
-                    <td>
-                        <a th:href="@{'/freeBoard/details/' + ${post.freeBoardId}}">
-                            <span th:text="${post.freeBoardTitle}"></span>
-                        </a>
-                    </td>
-                    <td th:text="${post.getFreeBoardText()}"></td>
-                    <td th:if="${post.freeBoardRegDate != null}" th:text="${#temporals.format(post.freeBoardRegDate, 'yyyy-MM-dd HH시 mm분')}"></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+
+
 </th:block>
 
 <th:block layout:fragment="script">
     <script th:inline="javascript">
         let userId = /*[[${session.userId}]]*/ null; // 세션의 userId 값을 가져옴
+
+        // 팀 섞기 버튼 클릭 시
+        document.querySelector('#assembleBtn').addEventListener('click', function(){
+
+        })
 
     </script>
 </th:block>

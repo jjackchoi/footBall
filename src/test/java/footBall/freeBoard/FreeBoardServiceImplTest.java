@@ -12,6 +12,6 @@ class FreeBoardServiceImplTest {
     private FreeBoardServiceImpl freeBoardService;
     @Test
     void findAll() {
-        System.out.println(freeBoardService.findAll());
+//        System.out.println(freeBoardService.findAll());
     }
 }

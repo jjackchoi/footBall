@@ -17,4 +17,34 @@
         ,attend_status
     </sql>
 
+    <!--멤버 테이블 전체 칼럼-->
+    <sql id="memberColumns">
+         member_id
+        ,fb_user_id
+        ,member_name
+        ,member_dribble_ability
+        ,member_passing_ability
+        ,member_defending_ability
+        ,member_stamina
+        ,member_finishing_ability
+        ,member_ability_avg
+    </sql>
+
+    <!--투표에서 참석한 인원 불러오기-->
+    <select id="getAttendee" parameterType="java.time.LocalDateTime" resultType="footBall.domain.member.MemberDto">
+        SELECT *
+        FROM member
+        WHERE fb_user_id IN(
+            SELECT fb_user_id
+            FROM attend
+            WHERE 1=1
+            AND vote_id = (
+                SELECT vote_id
+                FROM vote
+                WHERE vote_date = #{sunday}
+            )
+            AND attend_status = 'Y'
+        );
+    </select>
+
 </mapper>

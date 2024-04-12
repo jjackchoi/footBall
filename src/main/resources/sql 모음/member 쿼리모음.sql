@@ -36,3 +36,18 @@ WHERE fb_user_id = 9;
 SELECT * 
 FROM member 
 WHERE fb_user_id = 9;
+
+/*참석으로 투표한 인원 불러오기*/
+SELECT *  
+FROM member
+WHERE fb_user_id IN(
+	SELECT fb_user_id  
+	FROM attend
+	WHERE 1=1 
+	AND vote_id = (
+		SELECT vote_id
+		FROM vote
+		WHERE vote_date = '2024-04-14 00:00:00.000'
+	)
+	AND attend_status = 'Y'
+);

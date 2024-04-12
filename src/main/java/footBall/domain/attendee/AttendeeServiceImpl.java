@@ -1,29 +1,28 @@
 package footBall.domain.attendee;
 
 import footBall.domain.user.UserResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.DayOfWeek;
 import java.time.LocalDateTime;
-import java.time.temporal.TemporalAdjusters;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class AttendeeServiceImpl implements AttendeeService{
-    @Autowired
-    SqlSession sqlSession;
+
+    private final SqlSession sqlSession;
 
     // 미참여 인원 가져오기
     @Override
     public List<UserResponse> findNonattendanceUser() {
         // 일요일 가져오기
-        LocalDateTime sunday = this.getSunday();
+        LocalDateTime sunday = new VoteDto().getSunday();
         return sqlSession.selectList("AttendeeMapper.findNonattendanceUser", sunday);
     }
 
@@ -31,7 +30,7 @@ public class AttendeeServiceImpl implements AttendeeService{
     @Override
     public List<UserResponse> findVotedUser() {
         // 일요일 가져오기
-        LocalDateTime sunday = this.getSunday();
+        LocalDateTime sunday = new VoteDto().getSunday();
         return sqlSession.selectList("AttendeeMapper.findVotedUser", sunday);
     }
 
@@ -63,7 +62,7 @@ public class AttendeeServiceImpl implements AttendeeService{
     @Override
     public int findDate() {
         // 일요일 가져오기
-        LocalDateTime sunday = this.getSunday();
+        LocalDateTime sunday = new VoteDto().getSunday();
 
         // dto에 넣기
         VoteDto dto = new VoteDto();
@@ -91,41 +90,17 @@ public class AttendeeServiceImpl implements AttendeeService{
     public String getAttendStatus(Long fbUserId) {
         Map<String, Object> objectMap = new HashMap<>();
         objectMap.put("fbUserId", fbUserId);
-        objectMap.put("sunday", getSunday());
+        objectMap.put("sunday", new VoteDto().getSunday());
         return sqlSession.selectOne("AttendeeMapper.getAttendStatus",objectMap);
     }
 
     // 가져온 파라미터값들과 투표대상날짜 매핑
     public Map<String, Object> mappingParams(AttendDto params){
-        LocalDateTime sunday = getSunday();
+        LocalDateTime sunday = new VoteDto().getSunday();
         Map<String, Object> objectMap = new HashMap<>();
         objectMap.put("attendStatus", params.getAttendStatus());
         objectMap.put("fbUserId", params.getFbUserId());
         objectMap.put("sunday", sunday);
         return objectMap;
-    }
-
-    // 일요일 가져오기
-    public LocalDateTime getSunday(){
-        // 현재 날짜 가져오기
-        LocalDateTime today = LocalDateTime.now();
-
-        // 날짜의 요일 가져오기
-        DayOfWeek todayOfWeek = today.getDayOfWeek();
-
-        // 요일 숫자 출력(월요일:1, 화요일:2,..., 일요일:7)
-        int todayOfWeekValue = todayOfWeek.getValue();
-
-        // 투표 대상 일요일 날짜 가져오기
-        LocalDateTime sunday = null;
-        if (todayOfWeekValue == 7){
-            sunday = today;
-        } else {
-            sunday = LocalDateTime.now();
-            sunday = sunday.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY)); // 다음 일요일 가져오기
-        }
-        sunday = sunday.withHour(0).withMinute(0).withSecond(0).withNano(0);
-        log.info("돌아오는주 일요일의 정보는 : " + sunday);
-        return sunday;
     }
 }

@@ -87,6 +87,14 @@
                         <div class="sb-nav-link-icon"><i class="fas fa-futbol"></i></div>
                         금주의 참석인원
                     </a>
+                    <a class="nav-link" th:href="@{/teamBuilder}" th:if="${session.userAuth == 'Y'}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-futbol"></i></div>
+                        팀 구성(관리자)
+                    </a>
+                    <a class="nav-link" th:href="@{/teamBuilder}" th:unless="${session.userAuth == 'Y'}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-futbol"></i></div>
+                        팀 구성
+                    </a>
                     <a class="nav-link" th:href="@{/previousAttendee}">
                         <div class="sb-nav-link-icon"><i class="fas fa-futbol"></i></div>
                         지나간 참석자 명단

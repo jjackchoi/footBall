@@ -21,7 +21,7 @@ public class PreviousAttendeeServiceImpl implements PreviousAttendeeService {
     // 모든 투표 가져오기
     @Override
     public List<VoteDto> getAllVote() {
-        LocalDateTime sunday = attendeeService.getSunday();
+        LocalDateTime sunday = new VoteDto().getSunday();
         return sqlSession.selectList("PreviousAttendeeMapper.getAllVote", sunday);
     }
 

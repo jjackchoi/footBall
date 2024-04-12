@@ -10,8 +10,4 @@ class FreeBoardServiceImplTest {
 
     @Autowired
     private FreeBoardServiceImpl freeBoardService;
-    @Test
-    void findAll() {
-//        System.out.println(freeBoardService.findAll());
-    }
 }

@@ -26,7 +26,7 @@
                 <thead>
                     <tr>
                         <th>회원</th>
-                        <th class="text-center">일괄납부</th>
+                        <th class="text-center" th:if="${session.userAuth == 'Y'}">일괄납부</th>
                         <th th:each="i : ${#numbers.sequence(1, 12)}" th:text="|${i}월|"></th>
                     </tr>
                 </thead>

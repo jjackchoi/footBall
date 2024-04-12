@@ -1,5 +1,6 @@
 package footBall.domain.freeBoard;
 
+import footBall.common.co.Criteria;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,11 +12,6 @@ import java.util.Map;
 public class FreeBoardServiceImpl implements FreeBoardService{
     @Autowired
     SqlSession sqlSession;
-
-    @Override
-    public List<FreeBoardResponse> findAll() {
-        return sqlSession.selectList("FreeBoardMapper.findAll");
-    }
     @Override
     public int boardCreate(FreeBoardRequest dto) {
         return sqlSession.insert("FreeBoardMapper.boardCreate",dto);
@@ -42,11 +38,6 @@ public class FreeBoardServiceImpl implements FreeBoardService{
         return sqlSession.selectList("FreeBoardMapper.findByUserId",userId);
     }
 
-    // 검색한리스트
-    @Override
-    public List<FreeBoardResponse> searchFreeBoardPosts(String freeBoardTitle) {
-        return sqlSession.selectList("FreeBoardMapper.findKeyword",freeBoardTitle);
-    }
     //데이터 전체개수
     @Override
     public int allCount() {
@@ -54,10 +45,19 @@ public class FreeBoardServiceImpl implements FreeBoardService{
 
     }
 
-    //페이징 후 리스트
     @Override
-    public List<FreeBoardResponse> findPaginatedData(Map<String, Integer> params) {
-        return sqlSession.selectList("FreeBoardMapper.findPaginatedData",params);
+    public List<FreeBoardResponse> findAll(Criteria cri) {
+        return sqlSession.selectList("FreeBoardMapper.findAll",cri);
+    }
+
+    @Override
+    public List<FreeBoardResponse> searchBoard(Criteria criteria) {
+        return sqlSession.selectList("FreeBoardMapper.searchBoard",criteria);
+    }
+
+    @Override
+    public int allSeachCount(String cri) {
+        return sqlSession.selectOne("FreeBoardMapper.allSearchCount",cri);
     }
 
 

@@ -1,22 +1,23 @@
 package footBall.domain.freeBoard;
 
+import footBall.common.co.Criteria;
+import footBall.common.co.PageDto;
 import footBall.domain.freeBoardComment.FbcResponse;
 import footBall.domain.freeBoardComment.FbcService;
 import footBall.domain.user.UserResponse;
 import footBall.domain.user.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.List;
 
 @Controller
 public class FreeBoardController {
     @Autowired
-    private FreeBoardServiceImpl freeBoardService;
+    private FreeBoardService freeBoardService;
 
     @Autowired
     private UserService userService;
@@ -26,67 +27,24 @@ public class FreeBoardController {
 
     // 자유게시판 페이지
     @GetMapping("/freeBoard")
-    public String index(@RequestParam(name = "page", defaultValue = "1") int page,
-                        Model model,
-                        HttpSession session) {
-        if (session.getAttribute("userId") != null) {
-            int pageSize = 10; // 페이지당 데이터 수
-            int totalDataCount = freeBoardService.allCount(); // 총 데이터 수
-            int totalPages = (int) Math.ceil((double) totalDataCount / pageSize); // 전체 페이지 수
-
-            // 현재 페이지에 따른 OFFSET 계산
-            int offset = (page - 1) * pageSize;
-
-            List<FreeBoardResponse> posts;
-
-            if (totalDataCount == 0) {
-                // 데이터가 없는 경우
-                posts = Collections.emptyList();
-            } else if (page == totalPages) {
-                // 마지막 페이지의 경우 나머지 데이터 수만큼만 가져오도록 설정
-                int remainingDataCount = totalDataCount % pageSize;
-                if (remainingDataCount == 0) {
-                    remainingDataCount = pageSize;
-                }
-
-                Map<String, Integer> params = new HashMap<>();
-                params.put("offset", offset);
-                params.put("pageSize", remainingDataCount);
-
-                posts = freeBoardService.findPaginatedData(params);
-            } else {
-                // 그 외 페이지는 pageSize만큼 데이터를 가져옴
-                Map<String, Integer> params = new HashMap<>();
-                params.put("offset", offset);
-                params.put("pageSize", pageSize);
-
-                posts = freeBoardService.findPaginatedData(params);
+    public String index(@ModelAttribute Criteria cri,
+                        Model model) {
+            if(cri.getKeyword() != null){
+                Criteria criteria = new Criteria(cri.getPageNum(),cri.getAmount(),cri.getKeyword());
+                List<FreeBoardResponse> list = freeBoardService.searchBoard(criteria);
+                model.addAttribute("posts",list);
+                model.addAttribute("maker", new PageDto(criteria, freeBoardService.allSeachCount(cri.getKeyword())));
+                model.addAttribute("keyword", cri.getKeyword());
+            }else {
+                Criteria criteria = new Criteria(cri.getPageNum(),cri.getAmount());
+                List<FreeBoardResponse> list = freeBoardService.findAll(criteria);
+                model.addAttribute("posts",list);
+                model.addAttribute("maker", new PageDto(criteria, freeBoardService.allCount()));
             }
 
-            model.addAttribute("posts", posts);
-            model.addAttribute("currentPage", page);
-            model.addAttribute("totalPages", totalPages);
-        }
         return "freeBoard/freeBoard";
     }
 
-    // 게시글 전체 조회
-    @GetMapping("/freeBoard/allSearch")
-    public ResponseEntity<List<FreeBoardResponse>> searchFreeBoardPosts() {
-        List<FreeBoardResponse> searchResult = freeBoardService.findAll();
-        return ResponseEntity.ok().body(searchResult);
-    }
-
-    // 검색 결과 조회
-    @GetMapping("/freeBoard/search")
-    public ResponseEntity<List<FreeBoardResponse>> searchFreeBoardPosts(@RequestParam(name = "freeBoardTitle") String freeBoardTitle,HttpSession session) {
-        List<FreeBoardResponse> searchResult = new ArrayList<FreeBoardResponse>();
-        if(session.getAttribute("userId") != null){
-            searchResult = freeBoardService.searchFreeBoardPosts(freeBoardTitle);
-        }
-        return ResponseEntity.ok().body(searchResult);
-    }
-    
     // 글 작성 및 수정
     @ResponseBody
     @PostMapping("/freeBoard/save")

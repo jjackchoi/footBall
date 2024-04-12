@@ -26,6 +26,7 @@
         AND free_board_del_yn = 'N'
         ORDER BY
             free_board_id DESC
+        limit #{startOffset},#{amount}
     </select>
 
     <!--아이디로 게시판 조회-->
@@ -102,6 +103,7 @@
     <select id="allCount" resultType="int">
         select count(*)
         from free_board
+        where free_board_del_yn = 'N'
     </select>
 
     <select id="findPaginatedData" resultType="footBall.domain.freeBoard.FreeBoardResponse" parameterType="map">
@@ -110,6 +112,28 @@
         WHERE free_board_del_yn = 'N'
         ORDER BY free_board_id DESC
         LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="searchBoard" resultType="footBall.domain.freeBoard.FreeBoardResponse">
+        SELECT * FROM free_board
+        WHERE (
+        free_board_title LIKE CONCAT('%', #{keyword}, '%')
+        OR free_board_text LIKE CONCAT('%', #{keyword}, '%')
+        OR FREE_BOARD_AUTHOR LIKE CONCAT('%', #{keyword}, '%')
+        )
+        AND free_board_del_yn = 'N'
+        ORDER BY free_board_id DESC
+        limit #{startOffset},#{amount}
+    </select>
+
+    <select id="allSearchCount" resultType="int">
+        SELECT count(*) FROM free_board
+        WHERE (
+        free_board_title LIKE CONCAT('%', #{keyword}, '%')
+        OR free_board_text LIKE CONCAT('%', #{keyword}, '%')
+        OR FREE_BOARD_AUTHOR LIKE CONCAT('%', #{keyword}, '%')
+        )
+        AND free_board_del_yn = 'N'
     </select>
 
 </mapper>

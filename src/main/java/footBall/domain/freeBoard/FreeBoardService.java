@@ -1,11 +1,13 @@
 package footBall.domain.freeBoard;
 
+import footBall.common.co.Criteria;
+
 import java.util.List;
 import java.util.Map;
 
 public interface FreeBoardService {
     // 글 조회
-    List<FreeBoardResponse> findAll();
+//    List<FreeBoardResponse> findAll();
 
     //글 작성
     int boardCreate(FreeBoardRequest dto);
@@ -22,12 +24,13 @@ public interface FreeBoardService {
     // 내가쓴글조회
     List<FreeBoardResponse> findByUserId(Integer userId);
 
-    // 검색한리스트
-    List<FreeBoardResponse> searchFreeBoardPosts(String keyword);
-
     //전체글 카운트
     int allCount();
 
-    //페이징에 맞는 리스트
-    List<FreeBoardResponse> findPaginatedData(Map<String, Integer> params);
+    List<FreeBoardResponse> findAll(Criteria cri);
+
+    List<FreeBoardResponse> searchBoard(Criteria criteria);
+
+    //검색결과 카운트
+    int allSeachCount(String cri);
 }

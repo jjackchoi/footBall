@@ -1,5 +1,7 @@
 package footBall.domain.notice;
 
+import footBall.common.co.Criteria;
+import footBall.common.co.PageDto;
 import footBall.domain.user.UserResponse;
 import footBall.domain.user.UserServiceImpl;
 import groovy.util.logging.Slf4j;
@@ -11,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -26,9 +29,19 @@ public class NoticeController {
 
     // 공지사항 페이지
     @GetMapping("/notice")
-    public String noticeIndex(HttpServletRequest request, Model model){
-        List<NoticeResponse> notices = noticeService.getNotices();
-        model.addAttribute("notices", notices);
+    public String noticeIndex( HttpServletRequest request, Model model, @ModelAttribute Criteria cri){
+        if(cri.getKeyword() == null){
+            Criteria criteria = new Criteria(cri.getPageNum(),cri.getAmount());
+            List<NoticeResponse> notices = noticeService.getNotices(criteria);
+            model.addAttribute("notices", notices);
+            model.addAttribute("maker", new PageDto(cri,noticeService.allCount()));
+        }else {
+            Criteria criteria = new Criteria(cri.getPageNum(),cri.getAmount(),cri.getKeyword());
+            List<NoticeResponse> notices = noticeService.getSearchNotices(criteria);
+            model.addAttribute("notices", notices);
+            model.addAttribute("maker", new PageDto(cri,noticeService.searchAllCount(cri.getKeyword())));
+        }
+
         return "notice/notice";
     }
 

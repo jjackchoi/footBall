@@ -21,7 +21,8 @@
         SELECT <include refid="boardColumns"/>
         FROM notice
         WHERE notice_del_yn = 'N'
-        ORDER BY notice_id DESC;
+        ORDER BY notice_id DESC
+        limit #{startOffset},#{amount}
     </select>
 
     <!--공지사항 생성-->
@@ -41,4 +42,32 @@
         )
     </insert>
 
+    <select id="allCount" resultType="int">
+        select count(*)
+        from notice
+        where notice_del_yn = 'N'
+    </select>
+
+    <select id="searchAllCount" resultType="int">
+        select count(*)
+        from notice
+        where notice_del_yn = 'N'
+        AND (
+        notice_author LIKE CONCAT('%', #{keyword}, '%')
+        OR notice_title LIKE CONCAT('%', #{keyword}, '%')
+        OR notice_text LIKE CONCAT('%', #{keyword}, '%')
+        )
+    </select>
+
+    <select id="searchAllList" resultType="footBall.domain.notice.NoticeResponse">
+        SELECT <include refid="boardColumns"/>
+        FROM notice
+        where notice_del_yn = 'N'
+        AND (
+        notice_author LIKE CONCAT('%', #{keyword}, '%')
+        OR notice_title LIKE CONCAT('%', #{keyword}, '%')
+        OR notice_text LIKE CONCAT('%', #{keyword}, '%')
+        )
+        Limit #{startOffset},#{amount}
+    </select>
 </mapper>

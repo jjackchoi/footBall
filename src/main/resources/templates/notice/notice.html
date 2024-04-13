@@ -18,9 +18,9 @@
         </button>
     </div>
     <!-- 검색 입력란과 버튼 -->
-    <form id="searchForm" action="/freeBoard/search" method="get">
+    <form id="searchForm" action="/notice" method="get">
         <div class="input-group mb-3 mt-3" style="display: flex; justify-content: flex-end;">
-            <input type="text" class="form-control me-1" placeholder="검색어를 입력하세요" name="freeBoardTitle" style="max-width: 200px;">
+            <input type="text" class="form-control me-1" placeholder="검색어를 입력하세요" name="keyword" style="max-width: 200px;">
             <span class="input-group-btn">
                 <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-search"></i></button>
             </span>
@@ -53,9 +53,24 @@
                 </tbody>
             </table>
         </div>
-        <!-- 페이징 표시 -->
-        <div id="pagination" style="display: flex; justify-content: center; margin-top: 20px;">
-            <!-- 페이지 번호가 동적으로 생성될 위치 -->
+        <!-- 페이지 번호 출력 -->
+        <div class="pagination justify-content-center mt-3">
+            <ul class="pagination">
+                <!-- 이전 페이지 -->
+                <li class="page-item" th:if="${maker.prev}">
+                    <a class="page-link" th:href="@{'/notice?pageNum=' + ${maker.cri.pageNum - 1}}">&laquo;</a>
+                </li>
+                <!-- 페이지 번호 -->
+                <li class="page-item" th:each="pageNum : ${#numbers.sequence(maker.startPage, maker.endPage)}">
+                    <!-- 조건에 따라 클래스를 추가하여 스타일 변경 -->
+                    <a th:class="${pageNum == maker.cri.pageNum} ? 'page-link active' : 'page-link disabled'" th:if="${keyword}" th:href="@{'/notice?keyword=' + ${keyword} +  '&pageNum=' + ${pageNum}}" th:text="${pageNum}"></a>
+                    <a th:class="${pageNum == maker.cri.pageNum} ? 'page-link active' : 'page-link disabled'" th:unless="${keyword}" th:href="@{'/notice?pageNum=' + ${pageNum}}" th:text="${pageNum}"></a>
+                </li>
+                <!-- 다음 페이지 -->
+                <li class="page-item" th:if="${maker.next}">
+                    <a class="page-link" th:href="@{'/notice?pageNum=' + ${maker.cri.pageNum + 1}}">&raquo;</a>
+                </li>
+            </ul>
         </div>
     </div>
 </th:block>
@@ -92,46 +107,6 @@
 <th:block layout:fragment="script">
     <script th:inline="javascript">
         const userId = /*[[${session.userId}]]*/ null; // 세션의 userId 값을 가져옴
-
-        $(document).ready(function() {
-            $('#searchForm').submit(function(event) {
-                // 폼 제출 기본 동작 방지
-                event.preventDefault();
-
-                // 폼 데이터 직렬화
-                var formData = $(this).serialize();
-
-                // AJAX 요청 보내기
-                $.ajax({
-                    type: 'GET',
-                    url: $(this).attr('action'),
-                    data: formData,
-                    success: function(response) {
-                        // 성공적으로 검색 결과를 받았을 때 실행할 코드 작성
-                        console.log('검색 결과:', response);
-
-                        // 테이블 초기화
-                        $('.table tbody').empty();
-
-                        // 검색 결과를 테이블에 추가
-                        $.each(response, function(index, post) {
-                            var date = new Date(post.freeBoardRegDate);
-                            var formattedDate = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2) + ' ' + ('0' + date.getHours()).slice(-2) + '시 ' + ('0' + date.getMinutes()).slice(-2) + '분';
-                            var newRow = $('<tr>');
-                            newRow.append('<td>' + post.freeBoardAuthor + '</td>');
-                            newRow.append('<td><a href="/freeBoard/details/' + post.freeBoardId + '">' + post.freeBoardTitle + '</a></td>');
-                            newRow.append('<td>' + post.freeBoardText + '</td>');
-                            newRow.append('<td>' + formattedDate + '</td>');
-                            $('.table tbody').append(newRow);
-                        });
-                    },
-                    error: function(xhr, status, error) {
-                        // 오류가 발생했을 때 실행할 코드 작성
-                        console.error('검색 오류:', error);
-                    }
-                });
-            });
-        });
 
         function openModal() {
             // 세션의 userId 값이 null이면 알림 창 띄우기, 그렇지 않으면 모달 열기
@@ -178,58 +153,21 @@
             });
         }
 
-        // 클라이언트 측에서 페이지 번호를 생성하는 함수
-        function generatePagination(currentPage, totalPages) {
-            var pagination = document.getElementById('pagination');
-            pagination.innerHTML = ''; // 기존의 페이지 번호를 비움
+        //원래 간단한게 active클래스를 이용해서 끝낼수있었는데 먹히지않는이슈로 임시방편으로 넣어둠...
+        document.addEventListener('DOMContentLoaded', function() {
+            // 페이지 링크 요소를 찾습니다.
+            var pageLinks = document.querySelectorAll('.pagination .page-link');
 
-            // 현재 페이지가 속한 그룹의 시작 페이지 계산
-            var startPage = Math.floor((currentPage - 1) / 5) * 5 + 1;
-            // 그룹의 마지막 페이지 계산
-            var endPage = Math.min(startPage + 4, totalPages);
-
-            // 이전 버튼 추가
-            if (currentPage > 1) {
-                var prevButton = document.createElement('button');
-                prevButton.textContent = '이전';
-                prevButton.classList.add('btn', 'btn-outline-secondary', 'mx-1', 'rounded-circle');
-                prevButton.onclick = function() {
-                    window.location.href = '/freeBoard?page=' + (currentPage - 1);
-                };
-                pagination.appendChild(prevButton);
-            }
-
-            // 페이지 번호 버튼 추가
-            for (var i = startPage; i <= endPage; i++) {
-                var button = document.createElement('button');
-                button.textContent = i;
-                button.classList.add('btn', 'btn-outline-secondary', 'mx-1', 'rounded-circle');
-                if (i === currentPage) {
-                    button.classList.add('active');
+            // 각 페이지 링크에 대해 반복합니다.
+            pageLinks.forEach(function(link) {
+                // "active" 클래스가 추가된 경우에만 스타일을 변경하고 클릭을 비활성화합니다.
+                if (link.classList.contains('active')) {
+                    link.style.color = 'red'; // 빨간색
+                    link.style.pointerEvents = 'none'; // 클릭 비활성화
                 }
-                button.onclick = function() {
-                    window.location.href = '/freeBoard?page=' + this.textContent;
-                };
-                pagination.appendChild(button);
-            }
+            });
+        });
 
-            // 다음 버튼 추가
-            if (currentPage < totalPages) {
-                var nextButton = document.createElement('button');
-                nextButton.textContent = '다음';
-                nextButton.classList.add('btn', 'btn-outline-secondary', 'mx-1', 'rounded-circle');
-                nextButton.onclick = function() {
-                    window.location.href = '/freeBoard?page=' + (currentPage + 1);
-                };
-                pagination.appendChild(nextButton);
-            }
-        }
-
-
-        // 페이지 로드 시 페이지 번호를 생성
-        window.onload = function() {
-
-        };
     </script>
 </th:block>
 

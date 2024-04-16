@@ -34,7 +34,8 @@
     <select id="getAttendee" parameterType="java.time.LocalDateTime" resultType="footBall.domain.member.MemberDto">
         SELECT *
         FROM member
-        WHERE fb_user_id IN(
+        WHERE 1=1
+        AND fb_user_id IN(
             SELECT fb_user_id
             FROM attend
             WHERE 1=1
@@ -44,7 +45,8 @@
                 WHERE vote_date = #{sunday}
             )
             AND attend_status = 'Y'
-        );
+        )
+        AND member_ability_avg IS NOT NULL  ;
     </select>
 
 </mapper>

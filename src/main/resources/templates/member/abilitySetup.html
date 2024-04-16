@@ -24,8 +24,9 @@
             해당 능력이 높은 순서대로 1~3을 선택 후 적용을 눌러주시면 평균 티어가 계산됩니다. (ex: 잘하면 1, 못하면 3)
         </div>
         <div class="card-body">
-            <table class="table">
-                <thead>
+            <div class="table-wrapper">
+                <table class="table">
+                    <thead>
                     <tr>
                         <th style="width: 12.5%;">이름</th>
                         <th style="width: 12.5%;">드리블</th>
@@ -36,8 +37,8 @@
                         <th style="width: 12.5%;"></th>
                         <th style="width: 12.5%;">평균티어</th>
                     </tr>
-                </thead>
-                <tbody class="memberList">
+                    </thead>
+                    <tbody class="memberList">
                     <tr th:if="${session.userAuth} == 'Y'" th:each="member, rowStat : ${members}">
                         <td th:text="${member.memberName}"></td>
                         <td>
@@ -85,8 +86,9 @@
                         </td>
                         <td th:text="${member.memberAbilityAvg}"></td>
                     </tr>
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </th:block>

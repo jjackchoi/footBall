@@ -19,3 +19,15 @@ td > .select-ability {
     display: block;
     margin: 0 auto;
 }
+
+.table-wrapper {
+    overflow-y: auto;
+    max-height: 500px;
+}
+
+.table thead th {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 10;
+}

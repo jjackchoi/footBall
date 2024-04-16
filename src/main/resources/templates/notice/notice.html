@@ -52,25 +52,25 @@
                 </tr>
                 </tbody>
             </table>
-        </div>
-        <!-- 페이지 번호 출력 -->
-        <div class="pagination justify-content-center mt-3">
-            <ul class="pagination">
-                <!-- 이전 페이지 -->
-                <li class="page-item" th:if="${maker.prev}">
-                    <a class="page-link" th:href="@{'/notice?pageNum=' + ${maker.cri.pageNum - 1}}">&laquo;</a>
-                </li>
-                <!-- 페이지 번호 -->
-                <li class="page-item" th:each="pageNum : ${#numbers.sequence(maker.startPage, maker.endPage)}">
-                    <!-- 조건에 따라 클래스를 추가하여 스타일 변경 -->
-                    <a th:class="${pageNum == maker.cri.pageNum} ? 'page-link active' : 'page-link disabled'" th:if="${keyword}" th:href="@{'/notice?keyword=' + ${keyword} +  '&pageNum=' + ${pageNum}}" th:text="${pageNum}"></a>
-                    <a th:class="${pageNum == maker.cri.pageNum} ? 'page-link active' : 'page-link disabled'" th:unless="${keyword}" th:href="@{'/notice?pageNum=' + ${pageNum}}" th:text="${pageNum}"></a>
-                </li>
-                <!-- 다음 페이지 -->
-                <li class="page-item" th:if="${maker.next}">
-                    <a class="page-link" th:href="@{'/notice?pageNum=' + ${maker.cri.pageNum + 1}}">&raquo;</a>
-                </li>
-            </ul>
+            <!-- 페이지 번호 출력 -->
+            <div class="pagination justify-content-center mt-3">
+                <ul class="pagination">
+                    <!-- 이전 페이지 -->
+                    <li class="page-item" th:if="${maker.prev}">
+                        <a class="page-link" th:href="@{'/notice?pageNum=' + ${maker.cri.pageNum - 1}}">&laquo;</a>
+                    </li>
+                    <!-- 페이지 번호 -->
+                    <li class="page-item" th:each="pageNum : ${#numbers.sequence(maker.startPage, maker.endPage)}">
+                        <!-- 조건에 따라 클래스를 추가하여 스타일 변경 -->
+                        <a th:class="${pageNum == maker.cri.pageNum} ? 'page-link active' : 'page-link disabled'" th:if="${keyword}" th:href="@{'/notice?keyword=' + ${keyword} +  '&pageNum=' + ${pageNum}}" th:text="${pageNum}"></a>
+                        <a th:class="${pageNum == maker.cri.pageNum} ? 'page-link active' : 'page-link disabled'" th:unless="${keyword}" th:href="@{'/notice?pageNum=' + ${pageNum}}" th:text="${pageNum}"></a>
+                    </li>
+                    <!-- 다음 페이지 -->
+                    <li class="page-item" th:if="${maker.next}">
+                        <a class="page-link" th:href="@{'/notice?pageNum=' + ${maker.cri.pageNum + 1}}">&raquo;</a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 </th:block>

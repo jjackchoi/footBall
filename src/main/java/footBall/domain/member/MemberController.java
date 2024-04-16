@@ -22,9 +22,14 @@ public class MemberController {
 
     // 멤버 승인 페이지
     @GetMapping("/member/authority")
-    public String authority(Model model){
-        List<UserResponse> allUser = userService.getAllUser();
-        model.addAttribute("posts",allUser);
+    public String authority(Model model, @RequestParam(required = false) String keyword) {
+        List<UserResponse> allUser;
+        if (keyword != null) {
+            allUser = userService.getSearchUser(keyword);
+        } else {
+            allUser = userService.getAllUser();
+        }
+        model.addAttribute("posts", allUser);
         return "member/authority";
     }
 

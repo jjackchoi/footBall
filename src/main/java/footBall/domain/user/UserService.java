@@ -44,4 +44,6 @@ public interface UserService {
 
     // 내 정보 수정
     void updateUserProfile(UserRequest params);
+
+    List<UserResponse> getSearchUser(String keyword);
 }

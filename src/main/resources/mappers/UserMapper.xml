@@ -82,6 +82,20 @@
             fb_user_id desc
     </select>
 
+    <select id="getSearchUser" resultType="footBall.domain.user.UserResponse">
+
+        select
+            <include refid="userColumns"/>
+        from
+             fb_user
+        where
+             fb_user_del_yn = 'N'
+        and
+             FB_USER_NAME like concat('%',#{keyword},'%')
+        order by
+             fb_user_id desc
+    </select>
+
     <!--유저 멤버만 조회-->
     <select id="getAllMember" resultType="footBall.domain.user.UserResponse">
         SELECT

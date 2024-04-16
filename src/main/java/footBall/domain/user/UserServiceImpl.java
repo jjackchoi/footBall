@@ -157,6 +157,10 @@ public class UserServiceImpl implements UserService{
         }
     }
 
+    @Override
+    public List<UserResponse> getSearchUser(String keyword) {
+        return sqlSession.selectList("UserMapper.getSearchUser",keyword);
+    }
 
 
     // 파일명 변경 메소드

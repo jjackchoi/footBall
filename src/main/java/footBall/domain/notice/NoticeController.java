@@ -29,17 +29,18 @@ public class NoticeController {
 
     // 공지사항 페이지
     @GetMapping("/notice")
-    public String noticeIndex( HttpServletRequest request, Model model, @ModelAttribute Criteria cri){
-        if(cri.getKeyword() == null){
-            Criteria criteria = new Criteria(cri.getPageNum(),cri.getAmount());
-            List<NoticeResponse> notices = noticeService.getNotices(criteria);
-            model.addAttribute("notices", notices);
-            model.addAttribute("maker", new PageDto(cri,noticeService.allCount()));
-        }else {
+    public String noticeIndex(Model model, @ModelAttribute Criteria cri){
+        if(cri.getKeyword() != null){
             Criteria criteria = new Criteria(cri.getPageNum(),cri.getAmount(),cri.getKeyword());
             List<NoticeResponse> notices = noticeService.getSearchNotices(criteria);
             model.addAttribute("notices", notices);
             model.addAttribute("maker", new PageDto(cri,noticeService.searchAllCount(cri.getKeyword())));
+            model.addAttribute("keyword", cri.getKeyword());
+        }else {
+            Criteria criteria = new Criteria(cri.getPageNum(),cri.getAmount());
+            List<NoticeResponse> notices = noticeService.getNotices(criteria);
+            model.addAttribute("notices", notices);
+            model.addAttribute("maker", new PageDto(cri,noticeService.allCount()));
         }
 
         return "notice/notice";

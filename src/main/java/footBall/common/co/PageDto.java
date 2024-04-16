@@ -17,6 +17,15 @@ public class PageDto {
         this.cri = cri;
         this.total = total;
 
+        // total 값이 0인 경우 페이징을 생성하지 않음
+        if (total == 0) {
+            this.startPage = 1;
+            this.endPage = 1;
+            this.prev = false;
+            this.next = false;
+            return;
+        }
+
         int realEnd = (int) Math.ceil((double) total / cri.getAmount());
         int pageNum = cri.getPageNum();
 
@@ -31,9 +40,6 @@ public class PageDto {
         // 이전 페이지와 다음 페이지 설정
         this.prev = this.startPage > 1;
         this.next = this.endPage < realEnd;
-
-        if (realEnd == 0) {
-            this.endPage = 0;
-        }
     }
+
 }

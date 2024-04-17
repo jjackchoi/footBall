@@ -19,6 +19,17 @@
             <h2 class="mb-0">멤버 승인</h2>
         </div>
     </div>
+    <div class="right" style="text-align: right">
+        <a th:href="@{/member/authority}" class="btn btn-primary">
+            전체회원 보기
+        </a>
+        <button type="button" class="btn btn-primary" onclick="showMembersOnly()">
+            멤버만 보기
+        </button>
+        <button type="button" class="btn btn-primary" onclick="showGest()">
+            승인대기 인원
+        </button>
+    </div>
     <!-- 검색 입력란과 버튼 -->
     <form id="searchForm" action="/member/authority" method="get">
         <div class="input-group mb-3 mt-3" style="display: flex; justify-content: flex-end;">
@@ -101,6 +112,19 @@
                 }
             });
         });
+        function showMembersOnly() {
+            // URL에 파라미터 추가
+            var newUrl = '/member/authority?membersOnly=true';
+            // 새로운 URL로 이동
+            window.location.href = newUrl;
+        }
+
+        function showGest() {
+            // URL에 파라미터 추가
+            var newUrl = '/member/authority?membersOnly=false';
+            // 새로운 URL로 이동
+            window.location.href = newUrl;
+        }
     </script>
 </th:block>
 

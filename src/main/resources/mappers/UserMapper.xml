@@ -78,8 +78,8 @@
             fb_user
         where
             fb_user_del_yn = 'N'
-        order by
-            fb_user_id desc
+        ORDER BY
+            fb_user_birth;
     </select>
 
     <select id="getSearchUser" resultType="footBall.domain.user.UserResponse">
@@ -93,7 +93,20 @@
         and
              FB_USER_NAME like concat('%',#{keyword},'%')
         order by
-             fb_user_id desc
+            fb_user_birth;
+    </select>
+
+    <select id="getGest" resultType="footBall.domain.user.UserResponse">
+        select
+            <include refid="userColumns"/>
+        from
+            fb_user
+        where
+            fb_user_del_yn = 'N'
+        and
+            FB_USER_MEMBER_YN = 'N'
+        order by
+            fb_user_birth;
     </select>
 
     <!--유저 멤버만 조회-->

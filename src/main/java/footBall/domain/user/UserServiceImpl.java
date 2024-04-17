@@ -162,6 +162,11 @@ public class UserServiceImpl implements UserService{
         return sqlSession.selectList("UserMapper.getSearchUser",keyword);
     }
 
+    @Override
+    public List<UserResponse> getGest() {
+        return sqlSession.selectList("UserMapper.getGest");
+    }
+
 
     // 파일명 변경 메소드
     public static String fileRename(String originFileName) {

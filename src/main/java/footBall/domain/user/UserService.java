@@ -46,4 +46,6 @@ public interface UserService {
     void updateUserProfile(UserRequest params);
 
     List<UserResponse> getSearchUser(String keyword);
+
+    List<UserResponse> getGest();
 }

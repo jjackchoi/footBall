@@ -22,14 +22,20 @@ public class MemberController {
 
     // 멤버 승인 페이지
     @GetMapping("/member/authority")
-    public String authority(Model model, @RequestParam(required = false) String keyword) {
-        List<UserResponse> allUser;
+    public String authority(Model model, @RequestParam(required = false) String keyword , @RequestParam(required = false) String membersOnly) {
+        List<UserResponse> user;
         if (keyword != null) {
-            allUser = userService.getSearchUser(keyword);
-        } else {
-            allUser = userService.getAllUser();
+            user = userService.getSearchUser(keyword);
+        } else if(membersOnly != null) {
+            if(membersOnly.equals("true")){
+                user = userService.getAllMember();
+            }else{
+                user = userService.getGest();
+            }
+        }else {
+            user = userService.getAllUser();
         }
-        model.addAttribute("posts", allUser);
+        model.addAttribute("posts", user);
         return "member/authority";
     }
 

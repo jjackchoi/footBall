@@ -89,11 +89,11 @@
                                     document.querySelector(`input[type='checkbox'][data-userId='${fee.fbUserId}'][name="bulkPayment"]`).checked = false;
                                     document.querySelector(`input[type='checkbox'][data-userId='${fee.fbUserId}'][data-feeMonth='${fee.feeMonth}']`).disabled = false;
                                 }
-
                             }else if(sessionAuth == 'N'){ // 사용자일 경우
                                 document.querySelector(`#monthPaymentSpan[data-userId='${fee.fbUserId}'][data-feeMonth='${fee.feeMonth}']`).classList.remove("d-none");
-                                document.querySelector(`#bulkPaymentSpan[data-userId='${fee.fbUserId}']`).classList.remove("d-none");
-
+                                if(fee.feeAnnualPaymentYn == 'Y'){
+                                    document.querySelector(`#bulkPaymentSpan[data-userId='${fee.fbUserId}']`).classList.remove("d-none");
+                                }
                             }
                         })
                     },

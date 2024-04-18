@@ -25,28 +25,33 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>회원</th>
-                        <th class="text-center" th:if="${session.userAuth == 'Y'}">일괄납부</th>
-                        <th th:each="i : ${#numbers.sequence(1, 12)}" th:text="|${i}월|"></th>
+                        <th class="text-center">회원</th>
+                        <th class="text-center">일괄납부</th>
+                        <th class="text-center" th:each="i : ${#numbers.sequence(1, 12)}" th:text="|${i}월|"></th>
                     </tr>
                 </thead>
                 <tbody class="postList">
+                    <!--관리자-->
                     <tr th:if="${session.userAuth} == 'Y'" th:each="post, rowStat : ${posts}">
-                        <td th:text="${post.getFbUserName()}"></td>
+                        <td class="text-center" th:text="${post.getFbUserName()}"></td>
                         <td class="text-center">
                             <input type="checkbox" onclick="handleBulkPayment(this)"
                                    th:attr="data-userId=${post.fbUserId}" name="bulkPayment">
                         </td>
-                        <td th:each="i, colStat : ${#numbers.sequence(1, 12)}">
+                        <td class="text-center" th:each="i, colStat : ${#numbers.sequence(1, 12)}">
                             <input type="checkbox" th:attr="data-userId=${post.getFbUserId()},
                             data-feeMonth=${0 * 12 + colStat.index + 1}" onchange="handleCheckboxChange(this)" />
                         </td>
                     </tr>
+                    <!--사용자-->
                     <tr th:if="${session.userAuth} == 'N'" th:each="post, rowStat : ${posts}">
-                        <td th:text="${post.getFbUserName()}"></td>
-                        <td th:each="i, colStat : ${#numbers.sequence(1, 12)}">
-                            <!-- 출력 상자를 표시하는 경우 -->
-                            <span id="feeSpan" class="d-none" th:if="${session.userAuth} == 'N'"
+                        <td class="text-center" th:text="${post.getFbUserName()}"></td>
+                        <td class="text-center">
+                            <span id="bulkPaymentSpan" class="d-none"
+                                  th:attr="data-userId=${post.getFbUserId()}" th:text="${'O'}"></span>
+                        </td>
+                        <td class="text-center" th:each="i, colStat : ${#numbers.sequence(1, 12)}">
+                            <span id="monthPaymentSpan" class="d-none"
                                   th:attr="data-userId=${post.getFbUserId()}, data-feeMonth=${0 * 12 + colStat.index + 1}" th:text="${'O'}"></span>
                         </td>
                     </tr>
@@ -75,7 +80,7 @@
                     success: function(response){
                         console.log(response);
                         response.forEach(fee => {
-                            if(sessionAuth == 'Y'){
+                            if(sessionAuth == 'Y'){ // 관리자일 경우
                                 document.querySelector(`input[type='checkbox'][data-userId='${fee.fbUserId}'][data-feeMonth='${fee.feeMonth}']`).checked = true;
                                 if(fee.feeAnnualPaymentYn == 'Y'){
                                     document.querySelector(`input[type='checkbox'][data-userId='${fee.fbUserId}'][name="bulkPayment"]`).checked = true;
@@ -85,8 +90,10 @@
                                     document.querySelector(`input[type='checkbox'][data-userId='${fee.fbUserId}'][data-feeMonth='${fee.feeMonth}']`).disabled = false;
                                 }
 
-                            }else if(sessionAuth == 'N'){
-                                document.querySelector(`#feeSpan[data-userId='${fee.fbUserId}'][data-feeMonth='${fee.feeMonth}']`).classList.remove("d-none");
+                            }else if(sessionAuth == 'N'){ // 사용자일 경우
+                                document.querySelector(`#monthPaymentSpan[data-userId='${fee.fbUserId}'][data-feeMonth='${fee.feeMonth}']`).classList.remove("d-none");
+                                document.querySelector(`#bulkPaymentSpan[data-userId='${fee.fbUserId}']`).classList.remove("d-none");
+
                             }
                         })
                     },

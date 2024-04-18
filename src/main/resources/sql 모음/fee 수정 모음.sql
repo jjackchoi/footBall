@@ -1,0 +1,3 @@
+/*fee_annual_payment_yn 칼럼 생성*/
+ALTER TABLE FEE
+ADD COLUMN FEE_ANNUAL_PAYMENT_YN VARCHAR(2) NOT NULL COMMENT '회비 일괄납부 여부';

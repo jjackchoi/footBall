@@ -8,12 +8,13 @@
          fee_id
         ,fb_user_id
         ,fee_month
+        ,fee_annual_payment_yn
     </sql>
 
     <!--회비 납부 o-->
     <insert id="createFee" parameterType="footBall.domain.fee.FeeDto">
-        INSERT INTO fee (FB_USER_ID,FEE_MONTH)
-        VALUES (#{fbUserId},#{feeMonth});
+        INSERT INTO fee (fb_user_id,fee_month, fee_annual_payment_yn)
+        VALUES (#{fbUserId},#{feeMonth}, #{feeAnnualPaymentYn});
     </insert>
 
     <!--회비 납부 x-->

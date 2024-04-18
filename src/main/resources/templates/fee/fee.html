@@ -34,7 +34,8 @@
                     <tr th:if="${session.userAuth} == 'Y'" th:each="post, rowStat : ${posts}">
                         <td th:text="${post.getFbUserName()}"></td>
                         <td class="text-center">
-                            <input type="checkbox" onclick="handleBulkPayment(this)">
+                            <input type="checkbox" onclick="handleBulkPayment(this)"
+                                   th:attr="data-userId=${post.fbUserId}" name="bulkPayment">
                         </td>
                         <td th:each="i, colStat : ${#numbers.sequence(1, 12)}">
                             <input type="checkbox" th:attr="data-userId=${post.getFbUserId()},
@@ -66,7 +67,6 @@
             let sessionId = /*[[ ${session.userId} ]]*/ null;
             let sessionAuth = /*[[ ${session.userAuth} ]]*/ null;
             if(sessionId !== null){
-                console.log(`sessionId는 ${sessionId}입니다`);
                 $.ajax({
                     url: `/fee/check`,
                     type: 'GET',
@@ -77,6 +77,14 @@
                         response.forEach(fee => {
                             if(sessionAuth == 'Y'){
                                 document.querySelector(`input[type='checkbox'][data-userId='${fee.fbUserId}'][data-feeMonth='${fee.feeMonth}']`).checked = true;
+                                if(fee.feeAnnualPaymentYn == 'Y'){
+                                    document.querySelector(`input[type='checkbox'][data-userId='${fee.fbUserId}'][name="bulkPayment"]`).checked = true;
+                                    document.querySelector(`input[type='checkbox'][data-userId='${fee.fbUserId}'][data-feeMonth='${fee.feeMonth}']`).disabled = true;
+                                }else {
+                                    document.querySelector(`input[type='checkbox'][data-userId='${fee.fbUserId}'][name="bulkPayment"]`).checked = false;
+                                    document.querySelector(`input[type='checkbox'][data-userId='${fee.fbUserId}'][data-feeMonth='${fee.feeMonth}']`).disabled = false;
+                                }
+
                             }else if(sessionAuth == 'N'){
                                 document.querySelector(`#feeSpan[data-userId='${fee.fbUserId}'][data-feeMonth='${fee.feeMonth}']`).classList.remove("d-none");
                             }
@@ -94,6 +102,12 @@
             var fbUserId = checkbox.getAttribute('data-userId');
             var feeMonth = checkbox.getAttribute('data-feeMonth');
             var isChecked = checkbox.checked;
+            // 일괄 납부 체크 여부 확인
+            var row = checkbox.parentNode.parentNode; // 일괄납부 체크박스가 포함된 행
+            var bulkPaymentCheckbox = row.querySelector('input[name="bulkPayment"]');
+            // 일괄 납부 체크 여부에 따른 값 넣기
+            var feeAnnualPaymentYn = (bulkPaymentCheckbox.checked) ? 'Y' : 'N' ;
+
 
             // Ajax를 사용하여 서버로 데이터 전송
             $.ajax({
@@ -103,6 +117,7 @@
                 data: JSON.stringify({
                     fbUserId: fbUserId,
                     feeMonth: feeMonth,
+                    feeAnnualPaymentYn: feeAnnualPaymentYn,
                     isChecked: isChecked
                 }),
                 success: function(response) {
@@ -123,6 +138,13 @@
             // 월별 체크박스 전체 선택 또는 해제
             monthCheckboxes.forEach(function(monthCheckbox) {
                 monthCheckbox.checked = isChecked;
+                // 일괄 납부가 체크되어 있으면 월별 체크박스 disabled
+                if(isChecked){
+                    monthCheckbox.disabled = true;
+                }else {
+                    monthCheckbox.disabled = false;
+                }
+                console.log(monthCheckbox.readOnly);
                 handleCheckboxChange(monthCheckbox); // 변경된 상태를 서버로 전송
             });
         }

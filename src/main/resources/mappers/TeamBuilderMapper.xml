@@ -46,7 +46,83 @@
             )
             AND attend_status = 'Y'
         )
-        AND member_ability_avg IS NOT NULL  ;
+        AND member_ability_avg IS NOT NULL
+    </select>
+
+    <!--팀 생성-->
+    <insert id="createTeam" parameterType="java.util.HashMap">
+        INSERT INTO TEAM(vote_id, team_name)
+        VALUES(
+            (
+                SELECT vote_id
+                FROM VOTE
+                WHERE vote_date = #{voteDate}
+            ), #{teamName}
+        )
+    </insert>
+
+    <!--팀 삭제-->
+    <delete id="deleteTeam" parameterType="java.time.LocalDateTime">
+        DELETE FROM TEAM
+        WHERE VOTE_ID = (
+            SELECT VOTE_ID
+            FROM VOTE
+            WHERE VOTE_DATE = #{sunday}
+        )
+    </delete>
+
+    <!--팀 멤버 생성-->
+    <insert id="createTeamMember" parameterType="java.util.HashMap">
+        INSERT INTO TEAM_MEMBER(TEAM_ID, MEMBER_ID)
+        VALUES(
+            (
+                SELECT TEAM_ID
+                FROM TEAM
+                WHERE 1=1
+                AND VOTE_ID = (
+                    SELECT VOTE_ID
+                    FROM VOTE
+                    WHERE VOTE_DATE = #{voteDate}
+                )
+                AND TEAM_NAME = #{teamName}
+            ), #{memberId}
+        )
+    </insert>
+
+    <!--팀 멤버 삭제-->
+    <delete id="deleteTeamMember" parameterType="java.time.LocalDateTime">
+        DELETE FROM TEAM_MEMBER
+        WHERE TEAM_ID IN (
+            SELECT TEAM_ID
+            FROM TEAM
+            WHERE VOTE_ID = (
+                SELECT VOTE_ID
+                FROM VOTE
+                WHERE VOTE_DATE = #{sunday}
+            )
+        )
+    </delete>
+
+    <!--팀 멤버 날짜와 팀으로 조회-->
+    <select id="showTeam" parameterType="java.util.HashMap" resultType="footBall.domain.member.MemberDto">
+        SELECT *
+        FROM MEMBER
+        WHERE MEMBER_ID IN(
+            SELECT MEMBER_ID
+            FROM TEAM_MEMBER
+            WHERE 1=1
+            AND TEAM_ID = (
+                SELECT TEAM_ID
+                FROM TEAM
+                WHERE 1=1
+                AND TEAM_NAME = #{teamName}
+                AND VOTE_ID = (
+                    SELECT VOTE_ID
+                    FROM VOTE
+                    WHERE VOTE_DATE = #{voteDate}
+                )
+            )
+        )
     </select>
 
 </mapper>

@@ -1,7 +1,6 @@
 package footBall;
 
 import footBall.domain.attendee.AttendeeServiceImpl;
-import footBall.domain.member.MemberDto;
 import groovy.util.logging.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,20 +21,23 @@ class FootBallApplicationTests {
 
 	@Test
 	void applyAbilityTest(){
-		Long memberDribbleAbility = 3l;
-		Long memberPassingAbility = 2l;
-		Long memberDefendingAbility = 2l;
-		Long memberStamina = 2l;
-		Long memberFinishingAbility = 1l;
+		Double sm = 1.8;
+		Double jm = 1.6;
+		Double hw = 1.8;
+		Double ib = 1.6;
+		Double ch = 2.4;
+		Double js = 1.8;
+		Double kt = 1.8;
+		Double bk = 1.6;
+		Double sr = 1.4;
+		Double kh = 2.2;
+		Double gt = 2.4;
+		Double ds = 2.8;
+		Double os = 1.8;
+		Double ggt = 1.4;
+		Double jy = 1.6;
+		Double jjs = 1.6;
 
-		MemberDto params = new MemberDto();
-		params.setMemberDribbleAbility(3l);
-		params.setMemberPassingAbility(2l);
-		params.setMemberDefendingAbility(1l);
-		params.setMemberStamina(4l);
-		params.setMemberFinishingAbility(1l);
-		params.calculateAbilityAverage();
-		System.out.println(params.getMemberAbilityAvg());
 
 	}
 

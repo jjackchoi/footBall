@@ -12,6 +12,9 @@ public interface TeamBuilderService {
     // 팀 섞기
     void shuffleTeams(Long numberOfTeams, List<MemberDto> attendees);
 
-    // 팀 조회
+    // 팀 멤버 조회
     List<MemberDto> showTeam(String teamName);
+
+    // 팀 내용 조회
+    List<TeamDto> getTeams();
 }

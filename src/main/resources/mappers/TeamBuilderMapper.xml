@@ -125,4 +125,15 @@
         )
     </select>
 
+    <!--팀 내용 날짜로 조회-->
+    <select id="getTeams" parameterType="java.time.LocalDateTime" resultType="footBall.domain.teamBuilder.TeamDto">
+        SELECT *
+        FROM TEAM
+        WHERE VOTE_ID = (
+            SELECT VOTE_ID
+            FROM VOTE
+            WHERE VOTE_DATE = #{sunday}
+        )
+    </select>
+
 </mapper>

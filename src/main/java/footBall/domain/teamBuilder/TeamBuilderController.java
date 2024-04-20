@@ -42,12 +42,19 @@ public class TeamBuilderController {
         return ResponseEntity.status(HttpStatus.OK).body("success");
     }
 
-    // 팀 조회
+    // 팀 멤버 조회
     @ResponseBody
     @GetMapping("/teamBuilder/shuffleTeams")
     public ResponseEntity<List<MemberDto>> showTeam(@RequestParam String teamName){
         List<MemberDto> members = teamBuilderService.showTeam(teamName);
         return ResponseEntity.status(HttpStatus.OK).body(members);
+    }
+
+    // 팀 내용 조회
+    @ResponseBody
+    @GetMapping("/teamBuilder/teams")
+    public ResponseEntity<List<TeamDto>> getTeams(){
+        return ResponseEntity.status(HttpStatus.OK).body(teamBuilderService.getTeams());
     }
 
 }

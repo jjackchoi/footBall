@@ -91,7 +91,7 @@ public class TeamBuilderServiceImpl implements TeamBuilderService {
         } while (!allEqual); // 배열의 모든 값이 같지 않으면 로직 반복
     }
 
-    // 팀 조회
+    // 팀 멤버 조회
     @Override
     public List<MemberDto> showTeam(String teamName) {
         LocalDateTime sunday = new VoteDto().getSunday();
@@ -99,7 +99,14 @@ public class TeamBuilderServiceImpl implements TeamBuilderService {
         teamMap.put("teamName", teamName);
         teamMap.put("voteDate", sunday);
         return sqlSession.selectList("TeamBuilderMapper.showTeam", teamMap);
-    }   
+    }
+
+    // 팀 내용 조회
+    @Override
+    public List<TeamDto> getTeams() {
+        LocalDateTime sunday = new VoteDto().getSunday();
+        return sqlSession.selectList("TeamBuilderMapper.getTeams", sunday);
+    }
 
 
 }

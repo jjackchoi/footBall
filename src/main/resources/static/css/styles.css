@@ -11814,3 +11814,43 @@ body {
 .member-details span{
     font-weight: bold;
 }
+
+/* 추가 */
+.backgroundMain {
+  @media (max-width: 990px) {
+    position: fixed;
+    left: -10%;
+
+    .content {
+      width: 100%;
+      position: fixed;
+      top: 300px;
+    }
+
+    .content-title {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .content-title .d-flex.align-items-center {
+      word-break: keep-all;
+    }
+
+    .content-title .d-flex.align-items-center h2.mb-0 {
+      width: auto;
+      word-break: keep-all;
+    }
+  }
+}
+
+.container-fluid {
+  @media (max-width: 990px) {
+    position: fixed;
+    z-index: 10;
+    background-color: white;
+    bottom: 0;
+    margin: 0 !important;
+  }
+}

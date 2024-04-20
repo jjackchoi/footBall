@@ -69,3 +69,12 @@ WHERE TEAM_ID IN (
 		WHERE VOTE_DATE = '2024-04-21 00:00:00.000'
 	)
 );
+
+/*팀 이름을 조회해서 배열에 담음, 배열 갯수로 라디오버튼 체크 설정, div보이게 하고 팀원 렌더링*/
+SELECT *
+FROM TEAM
+WHERE VOTE_ID = (
+	SELECT VOTE_ID 
+	FROM VOTE
+	WHERE VOTE_DATE = '2024-04-21 00:00:00.000'
+);

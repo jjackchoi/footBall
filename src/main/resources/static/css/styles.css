@@ -11816,7 +11816,7 @@ body {
 }
 
 /* 추가 */
-.backgroundMain {
+.backgroundMain.dream-main  {
   @media (max-width: 990px) {
     position: fixed;
     left: -10%;
@@ -11844,6 +11844,7 @@ body {
     }
   }
 }
+/*
 
 .container-fluid {
   @media (max-width: 990px) {
@@ -11853,4 +11854,4 @@ body {
     bottom: 0;
     margin: 0 !important;
   }
-}
+}*/

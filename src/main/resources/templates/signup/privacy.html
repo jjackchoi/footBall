@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <link rel="preload" href="/assets/img/footBallLoginBackground.jpg" as="image">
+    <title>드림FC : 회원가입</title>
+    <link th:href="@{/css/styles.css}" rel="stylesheet" />
+    <!-- Bootstrap-datepicker CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap JS (Popper.js 포함) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap-datepicker JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+</head>
+<body class="backgroundBody">
+<div id="layoutAuthentication">
+    <div id="layoutAuthentication_content">
+        <main>
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-5 mb-5">
+                        <div style="text-align: center;">
+                            <a th:href="@{'/'}">
+                                <img src="/assets/img/logo.jpg" style="width: 250px; height: 180px;">
+                            </a>
+                        </div>
+                        <div class="card shadow-lg border-0 rounded-lg mt-3">
+                            <div class="card-header">
+                                <h2 class="text-center my-4">개인정보처리 동의</h2>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="agreeCheckbox" required>
+                                    <label class="form-check-label" for="agreeCheckbox">
+                                        <span class="text-danger">[필수] </span> 개인정보 수집 및 이용에 동의합니다.
+                                    </label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <div class="form-control px-1 py-1" style="height: 500px; overflow: auto;">
+                                        <div class="mt-0">
+                                            <h5>1. 개인정보의 수집 및 이용 목적</h5>
+                                            <p>기관은 수집한 개인정보를 다음의 목적을 위해 활용합니다.</p>
+                                            <p>1) 홈페이지 회원 가입 및 관리</p>
+                                            <p>2) 후원자 서비스 제공</p>
+                                            <h5>2. 개인정보의 보유 및 이용기간</h5>
+                                            <p>1) 계약 또는 청약철회 등에 관한 기록</p>
+                                            <p>- 보존 이유: 전자상거래 등에서의 소비자보호에 관한 법룔 제6조 및 시행령 제6조- 보존 기간: 5년</p>
+                                            <p>2) 대금결제 및 재화 등의 공급에 관한 기록</p>
+                                            <p>- 보존 이유: 전자상거래 등에서의 소비자보호에 관한 법룔 제6조 및 시행령 제6조- 보존 기간: 5년</p>
+                                            <p>3) 소비자의 불만 또는 분쟁처리에 관한 기록</p>
+                                            <p>- 보존 이유: 전자상거래 등에서의 소비자보호에 관한 법룔 제6조 및 시행령 제6조- 보존 기간: 3년</p>
+                                            <p>4) 본인확인에 관한 기록</p>
+                                            <p>- 보존 이유: 정보통신망 이용촉진 및 정보보호에 관한 법률 제 44조의5 및 시행령 제 29조- 보존 기간: 6개월</p>
+                                            <p>5) 접속에 관한 기록</p>
+                                            <p>- 보존 이유: 통신비밀보호법 제15조의2 및 시행령 제41조- 보존 기간: 3개월</p>
+                                            <h5>3. 수집하는 개인정보의 항목</h5>
+                                            <p>기관은 회원가입, 상담, 서비스 신청 등을 위해 아래와 같은 개인정보를 수집하고 있습니다.</p>
+                                            <p>1) 수집항목</p>
+                                            <p>필수 입력 : 로그인 email, 비밀번호, 닉네임, 이름</p>
+                                            <p>선택 입력 : 휴대전화번호, 자택 주소, 생년월일</p>
+                                            <p>자동 수집항목 :  IP 정보, MAC정보, 이용 기록, 접속 로그, 쿠키, 접속 기록 등</p>
+                                            <p>2) 개인정보 수집방법: 홈페이지(회원 가입), 서면 양식, 전화/팩스를 통한 회원 가입</p>
+                                            <h5>4. 개인정보의 파기절차 및 방법</h5>
+                                            <p>기관은 원칙적으로 개인정보 수집 및 이용목적이 달성된 후에는 해당 정보를 지체 없이 파기합니다.</p>
+                                            <p>파기절차 및 방법은 다음과 같습니다.</p>
+                                            <p>1) 파기절차</p>
+                                            <p>2) 파기방법</p>
+                                            <h5>5. 개인정보 제공</h5>
+                                            <p>기관은 이용자의 개인정보를 원칙적으로 외부에 제공하지 않습니다. 다만, 아래의 경우에는 예외로 합니다.-</p>
+                                            <p>이용자들이 사전에 동의한 경우- 법령의 규정에 의거하거나, 수사 목적으로 사기관의 요구가 있는 경우</p>
+                                            <h5>6. 이용자 및 법정대리인의 권리와 그 행사방법</h5>
+                                            <p>이용자 및 법정 대리인은 언제든지 등록되어 있는 본인 혹은 당해
+                                                만 14세 미만 아동의 개인정보를 조회하거나 수정할 수 있으며 가입 해지를 요청할 수도 있습니다.</p>
+                                            <h5>7. 개인정보 자동수집 장치의 설치, 운영 및 그 거부에 관한 사항</h5>
+                                            <p>쿠키 이용여부 및 쿠키 허용 방법 설명</p>
+                                            <h5>8. 개인정보의 안정성 확보조치에 관한 사항</h5>
+                                            <p>1) 개인정보 암호화</p>
+                                            <p>2) 해킹 등에 대비한 대책</p>
+                                            <p>3) 취급 직원의 최소화 및 교육</p>
+                                            <h5>9. 개인정보 관리 책임자 및 담당자</h5>
+                                            <p>조직내 정보처리 및 정보보안 담당부서와 연락처 기재</p>
+                                            <p>기타 개인정보침해에 대한 신고나 상담이 필요한 경우에는 아래 기관에 문의하시기 바랍니다.</p>
+                                            <p>- 개인정보침해신고센터 (www.118.or.kr / 118)</p>
+                                            <h5>10. 개인정보 취급방침 변경에 관한 사항</h5>
+                                            <p>이 개인정보 취급방침은 20__년 __월 __일부터 적용됩니다.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-grid">
+                                    <button type="button" id="nextBtn" class="btn btn-primary" disabled>다음</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script th:src="@{/js/scripts.js}"></script>
+<script th:inline="javascript">
+
+    // 체크박스가 체크되면 다음버튼 사용가능하게
+    document.querySelector('#agreeCheckbox').addEventListener('change', function(e) {
+        document.querySelector('#nextBtn').disabled = !e.target.checked;
+    })
+
+    // 다음버튼 클릭 시 회원가입 양식 페이지로 이동
+    document.querySelector('#nextBtn').addEventListener('click', function(e) {
+        console.log('click');
+        const agreeCheckbox = document.querySelector('#agreeCheckbox');
+
+        if(!agreeCheckbox.checked){ // 필수 체크 안되어 있을 시
+            e.target.disabled = true;
+        }else {
+            const token = /*[[ ${session.token} ]]*/ null; // 난수 가져오기
+            agreeCheckbox.checked = false;
+            e.target.disabled = true;
+            window.location.href = `/signup?token=${token}`;
+        }
+    });
+</script>
+</body>
+</html>

@@ -19,11 +19,29 @@ public class UserRequest {
     private String fbUserMainPosition;    // 유저 주포지션
     private String fbUserImg;        // 유저 이미지
 
+    // 비밀번호 인코딩
     public void encodingPassword(PasswordEncoder passwordEncoder){
         if(StringUtils.isEmpty(fbUserPswd)){
             return;
         }
         fbUserPswd = passwordEncoder.encode(fbUserPswd);
+    }
+
+    // 10자리 난수 생성
+    public String generateRandomToken() {
+        // 랜덤한 문자열 생성을 위한 문자열
+        String candidateChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        // 랜덤한 토큰 길이
+        int length = 10;
+
+        // 랜덤한 토큰 생성
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            int index = (int) (Math.random() * candidateChars.length());
+            sb.append(candidateChars.charAt(index));
+        }
+        return sb.toString();
     }
 
 }

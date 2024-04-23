@@ -32,8 +32,21 @@ public class UserController {
 
     // 회원가입 페이지
     @GetMapping("/signup")
-    public String signupPage(){
-        return "signup";
+    public String signupPage(@RequestParam(name = "token", required = false) String token, HttpSession session){
+        String sessionToken = (String) session.getAttribute("token");
+        if (token == null || !token.equals(sessionToken)) { // token값이 없거나 동의 페이지 토큰과 틀릴 경우
+            return "redirect:/";
+        }
+        session.invalidate();
+        return "signup/signup";
+    }
+
+    // 회원가입 시 개인정보 동의 페이지
+    @GetMapping("/signup/privacy")
+    public String privacyPage(HttpSession session){
+        String token = new UserRequest().generateRandomToken();
+        session.setAttribute("token", token);
+        return "signup/privacy";
     }
 
     // 회원가입 이메일 중복검사

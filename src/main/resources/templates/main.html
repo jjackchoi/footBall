@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/basic">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/basic}">
 
 <th:block layout:fragment="title">
     <title>드림FC</title>
@@ -10,7 +10,7 @@
 </th:block>
 
 <th:block layout:fragment="layoutSidenav_content">
-    <div class="backgroundMain">
+    <div class="backgroundMain dream-main">
         <div class="slides">
             <img src="/assets/img/memberShot/memberShot.jpg">
             <img src="/assets/img/memberShot/memberShot2.jpg">
@@ -46,6 +46,8 @@
 
 <th:block layout:fragment="script">
     <script th:inline="javascript">
+
+        //슬라이드 관련 변수 생성
         const slides = document.querySelector('.backgroundMain .slides');
         const slideImages = document.querySelectorAll('.backgroundMain .slides img');
         const buttons = document.querySelectorAll('.buttons button');
@@ -77,6 +79,8 @@
         }
 
         setInterval(nextSlide, 3000); // 3초마다 이미지 변경
+
+
     </script>
 </th:block>
 </html>

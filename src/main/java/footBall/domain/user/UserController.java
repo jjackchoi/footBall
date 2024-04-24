@@ -7,12 +7,14 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.IOUtils;
+import org.bouncycastle.math.raw.Mod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -27,7 +29,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserServiceImpl userService;
+    private final UserService userService;
     private final MailService mailService;
 
     // 회원가입 페이지
@@ -105,17 +107,17 @@ public class UserController {
 
     // 로그인 버튼 클릭 시
     @PostMapping("/login")
-    public String loginDo(UserRequest dto, HttpServletRequest request){
+    public String loginDo(UserRequest dto, HttpSession session, RedirectAttributes redirectAttributes){
         // 1. 로그인 입력 값으로 회원 id 조회
         log.info(dto.toString());
         int id = userService.login(dto);
         if(id == 0){ // 로그인 실패 시
+            redirectAttributes.addAttribute("errorMsg", "이메일 혹은 비밀번호를 확인해주세요.");
             return "redirect:/login";
         }
 
         // 2. 세션에 회원 정보 저장 & 세션 유지 시간 설정
         UserResponse userInfo = userService.findOne(id);
-        HttpSession session = request.getSession();
         session.setAttribute("userId", id);
         session.setAttribute("userEmail", userInfo.getFbUserEmail());
         session.setAttribute("userNickname", userInfo.getFbUserNickname());

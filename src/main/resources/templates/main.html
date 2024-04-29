@@ -39,10 +39,15 @@
     </div>
 </th:block>
 
+
+<th:block layout:fragment="modal">
+
+</th:block>
+
 <th:block layout:fragment="script">
     <script th:inline="javascript">
 
-        // 슬라이드 관련 변수 생성
+        //슬라이드 관련 변수 생성
         const slides = document.querySelector('.backgroundMain .slides');
         const slideImages = document.querySelectorAll('.backgroundMain .slides img');
         const buttons = document.querySelectorAll('.buttons button');
@@ -51,44 +56,12 @@
         const totalSlides = slideImages.length;
         const slideWidth = slideImages[0].clientWidth;
 
-        // setInterval의 반환 값 저장을 위한 변수
-        let slideInterval;
-
-        // 클릭 중인지 여부를 나타내는 변수
-        let isClicking = false;
-
-        // 이미지 클릭했을 때 슬라이드 멈추도록 처리
-        function stopSlide(){
-            clearInterval(slideInterval);
-        }
-
-        // 클릭 중일 때 슬라이드 멈추도록 처리
-        slideImages.forEach((slide,index) => {
-            slide.addEventListener('mousedown', () => {
-                isClicking = true; // 클릭 중
-                stopSlide();
-            });
-            slide.addEventListener('mouseup', () => {
-                isClicking = false; // 클릭 해제
-                startSlide(); // 슬라이드 재시작
-            });
-        });
-
-       // 슬라이드 재시작
-        function startSlide() {
-            if (!isClicking) { // 클릭 중이 아니고 슬라이드가 멈춘 상태일 때만 재시작
-                slideInterval = setInterval(nextSlide, 3000);
-            }
-        }
-
-        // 버튼 눌렀을 때 해당 이미지로 이동
         function goToSlide(index) {
             currentIndex = index;
             slides.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
             updateButtons();
         }
 
-        // 이미지에 따른 버튼 업데이트
         function updateButtons() {
             buttons.forEach((button, index) => {
                 if (index === currentIndex) {
@@ -99,17 +72,14 @@
             });
         }
 
-        // 다음 슬라이드로 이동
         function nextSlide() {
-            if(!isClicking) { // 클릭 중이 아닐 때만 슬라이드 이동
-                currentIndex = (currentIndex + 1) % totalSlides;
-                slides.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
-                updateButtons();
-            }
+            currentIndex = (currentIndex + 1) % totalSlides;
+            slides.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
+            updateButtons();
         }
 
-        // nextSlide 함수로 3초마다 슬라이드 이동
-        slideInterval = setInterval(nextSlide, 3000);
+        setInterval(nextSlide, 3000); // 3초마다 이미지 변경
+
 
     </script>
 </th:block>

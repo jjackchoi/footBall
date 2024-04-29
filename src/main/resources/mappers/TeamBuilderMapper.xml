@@ -17,36 +17,26 @@
         ,attend_status
     </sql>
 
-    <!--멤버 테이블 전체 칼럼-->
-    <sql id="memberColumns">
-         member_id
-        ,fb_user_id
-        ,member_name
-        ,member_dribble_ability
-        ,member_passing_ability
-        ,member_defending_ability
-        ,member_stamina
-        ,member_finishing_ability
-        ,member_ability_avg
-    </sql>
-
     <!--투표에서 참석한 인원 불러오기-->
-    <select id="getAttendee" parameterType="java.time.LocalDateTime" resultType="footBall.domain.member.MemberDto">
-        SELECT *
-        FROM member
+    <select id="getAttendee" parameterType="java.time.LocalDateTime" resultType="footBall.domain.user.UserResponse">
+        SELECT FU.FB_USER_ID, FU.FB_USER_NAME, M.MEMBER_ABILITY_AVG
+        FROM FB_USER FU
+        LEFT OUTER JOIN MEMBER M
+        ON FU.FB_USER_ID = M.FB_USER_ID
         WHERE 1=1
-        AND fb_user_id IN(
-            SELECT fb_user_id
-            FROM attend
+        AND M.MEMBER_ABILITY_AVG IS NOT NULL
+        AND FU.FB_USER_ID IN(
+            SELECT FB_USER_ID
+            FROM ATTEND
             WHERE 1=1
-            AND vote_id = (
-                SELECT vote_id
-                FROM vote
-                WHERE vote_date = #{sunday}
+            AND VOTE_ID = (
+                SELECT VOTE_ID
+                FROM VOTE
+                WHERE VOTE_DATE = #{sunday}
             )
-            AND attend_status = 'Y'
+            AND ATTEND_STATUS = 'Y'
         )
-        AND member_ability_avg IS NOT NULL
+        ORDER BY FU.FB_USER_BIRTH;
     </select>
 
     <!--팀 생성-->
@@ -73,7 +63,7 @@
 
     <!--팀 멤버 생성-->
     <insert id="createTeamMember" parameterType="java.util.HashMap">
-        INSERT INTO TEAM_MEMBER(TEAM_ID, MEMBER_ID)
+        INSERT INTO TEAM_MEMBER(TEAM_ID, FB_USER_ID)
         VALUES(
             (
                 SELECT TEAM_ID
@@ -85,7 +75,7 @@
                     WHERE VOTE_DATE = #{voteDate}
                 )
                 AND TEAM_NAME = #{teamName}
-            ), #{memberId}
+            ), #{fbUserId}
         )
     </insert>
 
@@ -104,25 +94,27 @@
     </delete>
 
     <!--팀 멤버 날짜와 팀으로 조회-->
-    <select id="showTeam" parameterType="java.util.HashMap" resultType="footBall.domain.member.MemberDto">
-        SELECT *
-        FROM MEMBER
-        WHERE MEMBER_ID IN(
-            SELECT MEMBER_ID
+    <select id="showTeam" parameterType="java.util.HashMap" resultType="footBall.domain.user.UserResponse">
+        SELECT fu.fb_user_id, fu.fb_user_name, m.member_ability_avg
+        FROM FB_USER fu
+        LEFT OUTER JOIN MEMBER m
+        ON fu.fb_user_id = m.fb_user_id
+        WHERE fu.fb_user_id IN(
+            SELECT fb_user_id
             FROM TEAM_MEMBER
-            WHERE 1=1
-            AND TEAM_ID = (
-                SELECT TEAM_ID
+            WHERE team_id = (
+                SELECT team_id
                 FROM TEAM
                 WHERE 1=1
-                AND TEAM_NAME = #{teamName}
-                AND VOTE_ID = (
-                    SELECT VOTE_ID
+                AND team_name = #{teamName}
+                AND vote_id = (
+                    SELECT vote_id
                     FROM VOTE
-                    WHERE VOTE_DATE = #{voteDate}
+                    WHERE vote_date = #{voteDate}
                 )
             )
         )
+        ORDER BY fu.fb_user_birth;
     </select>
 
     <!--팀 내용 날짜로 조회-->

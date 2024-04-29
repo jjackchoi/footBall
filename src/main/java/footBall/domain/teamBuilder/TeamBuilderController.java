@@ -1,7 +1,7 @@
 package footBall.domain.teamBuilder;
 
 import footBall.domain.attendee.AttendeeService;
-import footBall.domain.member.MemberDto;
+import footBall.domain.user.UserResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -26,7 +26,7 @@ public class TeamBuilderController {
     // 팀 구성 페이지
     @GetMapping("/teamBuilder")
     public String index(Model model){
-        List<MemberDto> attendees = teamBuilderService.getAttendee(); // 투표에서 참석한 인원 불러오기
+        List<UserResponse> attendees = teamBuilderService.getAttendee(); // 투표에서 참석한 인원 불러오기
         model.addAttribute("attendees", attendees);
         return "teamBuilder/teamBuilder";
     }
@@ -36,7 +36,7 @@ public class TeamBuilderController {
     @PostMapping("/teamBuilder/shuffleTeams")
     public ResponseEntity<String> shuffleTeams(@RequestParam Long numberOfTeams){
         // 투표에서 참석한 인원 불러오기
-        List<MemberDto> attendees = teamBuilderService.getAttendee();
+        List<UserResponse> attendees = teamBuilderService.getAttendee();
         // 팀 섞기
         teamBuilderService.shuffleTeams(numberOfTeams, attendees);
         return ResponseEntity.status(HttpStatus.OK).body("success");
@@ -45,8 +45,8 @@ public class TeamBuilderController {
     // 팀 멤버 조회
     @ResponseBody
     @GetMapping("/teamBuilder/shuffleTeams")
-    public ResponseEntity<List<MemberDto>> showTeam(@RequestParam String teamName){
-        List<MemberDto> members = teamBuilderService.showTeam(teamName);
+    public ResponseEntity<List<UserResponse>> showTeam(@RequestParam String teamName){
+        List<UserResponse> members = teamBuilderService.showTeam(teamName);
         return ResponseEntity.status(HttpStatus.OK).body(members);
     }
 

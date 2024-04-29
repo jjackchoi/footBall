@@ -1,7 +1,7 @@
 package footBall.domain.teamBuilder;
 
 import footBall.domain.attendee.VoteDto;
-import footBall.domain.member.MemberDto;
+import footBall.domain.user.UserResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
@@ -22,7 +22,7 @@ public class TeamBuilderServiceImpl implements TeamBuilderService {
 
     // 투표에서 참석한 인원 불러오기
     @Override
-    public List<MemberDto> getAttendee(){
+    public List<UserResponse> getAttendee(){
         LocalDateTime sunday = new VoteDto().getSunday();
         return sqlSession.selectList("TeamBuilderMapper.getAttendee", sunday);
     }
@@ -30,16 +30,22 @@ public class TeamBuilderServiceImpl implements TeamBuilderService {
     // 팀 섞기
     @Override
     @Transactional
-    public void shuffleTeams(Long numberOfTeams, List<MemberDto> attendees) {
-        Boolean allEqual;
-        List<Double> averages;
+    public void shuffleTeams(Long numberOfTeams, List<UserResponse> attendees) {
+        Boolean allEqual; // 팀마다 평균이 전부 같은지
+        List<Double> averages; // 각 팀마다의 평균 모음
+        int maxAttempts = 1000; // 최대 시도 횟수
 
         do {
+            // 시도 횟수 초과 체크
+            if (maxAttempts -- <= 0){
+                log.error("최대 시도 횟수를 초과하여 무한 루프 탈출");
+                break;
+            }
             // 참석자 셔플
             Collections.shuffle(attendees);
 
             // 팀을 나눔
-            List<List<MemberDto>> teams = new ArrayList<>();
+            List<List<UserResponse>> teams = new ArrayList<>();
             for (int i = 0; i < numberOfTeams; i++) {
                 teams.add(new ArrayList<>());
             }
@@ -51,13 +57,14 @@ public class TeamBuilderServiceImpl implements TeamBuilderService {
 
             // 팀의 능력치 평균 계산
             averages = new ArrayList<>();
-            for (List<MemberDto> team : teams) {
-                Double average = team.stream().mapToDouble(MemberDto::getMemberAbilityAvg).average().orElse(0);
+            for (List<UserResponse> team : teams) {
+                Double average = team.stream().mapToDouble(UserResponse::getMemberAbilityAvg).average().orElse(0);
                 BigDecimal bd = new BigDecimal(average);
                 bd = bd.setScale(1, RoundingMode.HALF_UP);
                 Double roundedAverage = bd.doubleValue();
                 averages.add(roundedAverage);
             }
+            log.info(averages.toString());
 
             // 모든 평균이 같은지 확인(HashSet은 집합을 구현한 자료구조로 중복을 허용하지 않음)
             // 즉, 값이 전부 같으면 중복이 제거되어 한개만 남음으로 size()는 1이 됨
@@ -79,11 +86,11 @@ public class TeamBuilderServiceImpl implements TeamBuilderService {
                     teamMap.put("teamName", teamName[i]);
                     sqlSession.insert("TeamBuilderMapper.createTeam", teamMap);
                     for (int j = 0; j < teams.get(i).size(); j++){ // 해당 팀의 팀 멤버 생성
-                        Long memberId = teams.get(i).get(j).getMemberId();
+                        int fbUserId = teams.get(i).get(j).getFbUserId();
                         HashMap<String, Object> teamMemberMap = new HashMap<>();
                         teamMemberMap.put("voteDate", sunday);
                         teamMemberMap.put("teamName", teamName[i]);
-                        teamMemberMap.put("memberId", memberId);
+                        teamMemberMap.put("fbUserId", fbUserId);
                         sqlSession.insert("TeamBuilderMapper.createTeamMember", teamMemberMap);
                     }
                 }
@@ -93,7 +100,7 @@ public class TeamBuilderServiceImpl implements TeamBuilderService {
 
     // 팀 멤버 조회
     @Override
-    public List<MemberDto> showTeam(String teamName) {
+    public List<UserResponse> showTeam(String teamName) {
         LocalDateTime sunday = new VoteDto().getSunday();
         HashMap<String, Object> teamMap = new HashMap<>();
         teamMap.put("teamName", teamName);

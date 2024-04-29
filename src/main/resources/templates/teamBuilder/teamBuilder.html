@@ -41,7 +41,8 @@
                     <div class="align-items-center centered-flex">
                         <strong class="text-center" th:text="'참석인원(' + ${#lists.size(attendees)} + '명)'">참석 인원</strong>
                         <ul class="list-group no-markers">
-                            <li th:each="attendee: ${attendees}" class="list-group text-center" th:text="${attendee.memberName}"></li>
+                            <li th:each="attendee: ${attendees}" class="list-group text-center"
+                                th:text="${attendee.fbUserName}+'('+${attendee.memberAbilityAvg}+')'"></li>
                         </ul>
                     </div>
                     <div class="align-items-center centered-flex d-none" id="teamA" data-value="A팀">
@@ -173,8 +174,10 @@
 
         // 팀 조회
         function showTeam(e){
-            let teamName = e.getAttribute('data-value');
-            let teamList = e.querySelector('ul');
+            const teamName = e.getAttribute('data-value');
+            const teamStrong = e.querySelector('strong');
+            const teamList = e.querySelector('ul');
+            teamStrong.innerHTML = '';
             teamList.innerHTML = '';
             $.ajax({
                 type: 'GET',
@@ -183,11 +186,11 @@
                 dataType: 'json',
                 data: {teamName: teamName},
                 success: function(response){
-                    console.log(response);
+                    teamStrong.innerHTML = `${teamName}(${response.length}명)`;
                     response.forEach(member => {
                         const li = document.createElement('li'); // li 속성 하나씩 추가
                         li.className = 'list-group text-center';
-                        li.textContent = member.memberName;
+                        li.textContent = `${member.fbUserName}(${member.memberAbilityAvg.toFixed(1)})`;
                         teamList.appendChild(li);
                     })
                 },

@@ -1,6 +1,5 @@
-package footBall.domain.introduce;
+package footBall.domain.introduction;
 
-import footBall.domain.fee.FeeDto;
 import footBall.domain.user.UserRequest;
 import footBall.domain.user.UserResponse;
 import footBall.domain.user.UserServiceImpl;
@@ -21,7 +20,7 @@ public class IntroductionController {
 
     // 멤버 소개 페이지
     @GetMapping("/introduction/member")
-    public String introduceMember(Model model){
+    public String introducingMembers(Model model){
         List<UserResponse> members = userService.getAllMember();
         model.addAttribute("members", members);
         return "introduction/member";
@@ -33,6 +32,12 @@ public class IntroductionController {
     public ResponseEntity<String> insertMemInfo(@RequestBody UserRequest params){
         userService.insertMemInfo(params);
         return ResponseEntity.status(HttpStatus.OK).body("success");
+    }
+
+    // 드림FC 소개
+    @GetMapping("/introduction/club")
+    public String introducingClub (){
+        return "introduction/club";
     }
 
 }

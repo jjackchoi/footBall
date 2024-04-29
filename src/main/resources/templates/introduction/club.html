@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/basic">
+
+<th:block layout:fragment="title">
+    <title>드림FC 소개</title>
+</th:block>
+
+<th:block layout:fragment="content">
+    <!-- 제목 -->
+    <div class="mt-4 mb-2 d-flex align-items-center">
+        <i class="fas fa-users me-1 fa-2x me-1"></i>
+        <h2 class="mb-0">드림FC 소개</h2>
+    </div>
+    <div class="card mb-4 mt-4" style="border: none;">
+        <ol class="list-group">
+            <!--멤버 정보 기입 버튼-->
+            <div class="ms-2 align-items-center mb-2" th:if="${session.userAuth == 'Y'}" id="insertMemInfo">
+                <input type="button" class="btn btn-primary" style="float: right;" value="멤버 정보 기입"
+                       data-toggle="modal" onclick="openModal()"/>
+            </div>
+            <!--멤버 리스트-->
+            <dvi>
+                <ul class="member-list">
+                    <li th:each="member, iterStat : ${members}" class="member-item">
+                        <!--프로필 사진 없을 때-->
+                        <div th:if="${#strings.isEmpty(member.fbUserImg)}" class="img">
+                            <img th:src="'/assets/img/userImg/user_icon.jpg'">
+                        </div>
+                        <!--프로필 사진 있을 때-->
+                        <div th:unless="${#strings.isEmpty(member.fbUserImg)}" class="img">
+                            <img th:src="@{/myPage/profileImg/} + ${member.fbUserId}">
+                        </div>
+                        <div class="member-details">
+                            <label class="d-flex">
+                                <input type="checkbox" th:if="${session.userAuth == 'Y'}" th:value="${member.fbUserId}"
+                                       onclick="handleCheckboxClick(this);" class="memCheckbox me-1"/>
+                                <span><h2 th:text="${member.fbUserName}"></h2></span>
+                            </label>
+                            <p>주포지션 : <span th:text="${member.fbUserMainPosition}"></span></p>
+                            <p>특기 : <span th:text="${member.fbUserSpecialty}"></span></p>
+                        </div>
+                    </li>
+                </ul>
+            </dvi>
+        </ol>
+    </div>
+</th:block>
+<th:block layout:fragment="modal">
+    <!-- 글 작성 팝업 모달 -->
+    <div class="modal fade" id="writeMemInfoModal" tabindex="-1" role="dialog" aria-labelledby="writeMemInfoModalLabel" aria-hidden="true" th:fragment="modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="writeMemInfoModalLabel">멤버 정보 수정</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModal()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- 멤버 정보 작성 폼 -->
+                    <form id="memInfoForm">
+                        <label for="fbUserMainPosition">주포지션</label>
+                        <input id="fbUserMainPosition" name="fbUserMainPosition" class="form-control">
+                        <label for="fbUserSpecialty">특기</label>
+                        <input id="fbUserSpecialty" name="fbUserSpecialty" class="form-control">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModal()">닫기</button>
+                    <button type="button" class="btn btn-primary" onclick="submitMemInfoForm()">작성 완료</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        var userId = /*[[${session.userId}]]*/ null; // 세션의 userId 값을 가져옴
+
+        // 체크박스 한개만 선택할 수 있게 설정
+        function handleCheckboxClick(checkbox) {
+            // 모든 체크박스 요소를 가져옴
+            var checkboxes = document.querySelectorAll('.memCheckbox');
+
+            // 클릭된 체크박스가 선택되었는지 확인
+            var isChecked = checkbox.checked;
+
+            // 다른 모든 체크박스를 해제
+            checkboxes.forEach(function(item) {
+                if (item !== checkbox) {
+                    item.checked = false;
+                }
+            });
+
+        }
+
+        // 모달창 열기
+        function openModal() {
+            // 세션의 userId 값이 null이면 알림 창 띄우기, 그렇지 않으면 모달 열기
+            if (userId === null) {
+                alert('로그인이 필요합니다!');
+                return;
+            }
+
+            // 체크박스가 하나라도 체크되어 있는지 확인
+            let checked = false;
+            document.querySelectorAll('.memCheckbox').forEach(function(checkbox) {
+                if(checkbox.checked){
+                    checked = true;
+                }
+            });
+
+            // 체크박스가 하나도 체크되어 있지 않으면 알림창 띄움
+            if(!checked) {
+                alert("멤버를 선택해 주세요!");
+                return;
+            }else {
+                $('#writeMemInfoModal').modal('show');
+            }
+        }
+
+        // 모달창 닫기
+        function closeModal() {
+            $('#writeMemInfoModal').modal('hide');
+        }
+
+        // 글 작성 완료 시 실행되는 스크립트
+        function submitMemInfoForm() {
+            // 변수 담기
+            let fbUserMainPosition = document.querySelector('#fbUserMainPosition').value;
+            let fbUserSpecialty = document.querySelector('#fbUserSpecialty').value;
+            let fbUserId = 0;
+            document.querySelectorAll('.memCheckbox').forEach(function(checkbox){
+                if(checkbox.checked){
+                    fbUserId = checkbox.value;
+                }
+            })
+
+            if (fbUserMainPosition == "" || fbUserMainPosition == null) {
+                alert("주포지션을 입력해주세요");
+                return;
+            }
+            if (fbUserSpecialty == "" || fbUserSpecialty == null) {
+                alert("특기를 입력해주세요");
+                return;
+            }
+
+            // 멤버 정보 작성 완료 후 서버로 데이터 전송
+            $.ajax({
+                url: '/introduction/member',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    fbUserMainPosition: fbUserMainPosition,
+                    fbUserSpecialty: fbUserSpecialty,
+                    fbUserId: fbUserId
+                }),
+                success: function(result) {
+                    // 작성 완료 후 팝업 닫기
+                    if(result == 'success'){
+                        $('#writeMemInfoModal').modal('hide');
+                        // 메인 화면 새로고침
+                        location.reload();
+                    }
+                },
+                error: function() {
+                    alert('글 작성 실패');
+                }
+            });
+        }
+    </script>
+</th:block>
+
+</html>

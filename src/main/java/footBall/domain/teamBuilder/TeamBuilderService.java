@@ -1,19 +1,19 @@
 package footBall.domain.teamBuilder;
 
-import footBall.domain.member.MemberDto;
+import footBall.domain.user.UserResponse;
 
 import java.util.List;
 
 public interface TeamBuilderService {
 
     // 투표에서 참석한 인원 불러오기
-    List<MemberDto> getAttendee();
+    List<UserResponse> getAttendee();
 
     // 팀 섞기
-    void shuffleTeams(Long numberOfTeams, List<MemberDto> attendees);
+    void shuffleTeams(Long numberOfTeams, List<UserResponse> attendees);
 
     // 팀 멤버 조회
-    List<MemberDto> showTeam(String teamName);
+    List<UserResponse> showTeam(String teamName);
 
     // 팀 내용 조회
     List<TeamDto> getTeams();

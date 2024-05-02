@@ -19,33 +19,33 @@
 
     <!--투표에서 참석한 인원 불러오기-->
     <select id="getAttendee" parameterType="java.time.LocalDateTime" resultType="footBall.domain.user.UserResponse">
-        SELECT FU.FB_USER_ID, FU.FB_USER_NAME, M.MEMBER_ABILITY_AVG
-        FROM FB_USER FU
-        LEFT OUTER JOIN MEMBER M
-        ON FU.FB_USER_ID = M.FB_USER_ID
+        SELECT fu.fb_user_id, fu.fb_user_name, m.member_ability_avg
+        FROM fb_user fu
+        LEFT OUTER JOIN member m
+        ON fu.fb_user_id = m.fb_user_id
         WHERE 1=1
-        AND M.MEMBER_ABILITY_AVG IS NOT NULL
-        AND FU.FB_USER_ID IN(
-            SELECT FB_USER_ID
-            FROM ATTEND
+        AND m.member_ability_avg IS NOT NULL
+        AND fu.fb_user_id IN(
+            SELECT fb_user_id
+            FROM attend
             WHERE 1=1
-            AND VOTE_ID = (
-                SELECT VOTE_ID
-                FROM VOTE
-                WHERE VOTE_DATE = #{sunday}
+            AND vote_id = (
+                SELECT vote_id
+                FROM vote
+                WHERE vote_date = #{sunday}
             )
-            AND ATTEND_STATUS = 'Y'
+            AND attend_status = 'Y'
         )
-        ORDER BY FU.FB_USER_BIRTH;
+        ORDER BY fu.fb_user_birth;
     </select>
 
     <!--팀 생성-->
     <insert id="createTeam" parameterType="java.util.HashMap">
-        INSERT INTO TEAM(vote_id, team_name)
+        INSERT INTO team(vote_id, team_name)
         VALUES(
             (
                 SELECT vote_id
-                FROM VOTE
+                FROM vote
                 WHERE vote_date = #{voteDate}
             ), #{teamName}
         )
@@ -53,42 +53,42 @@
 
     <!--팀 삭제-->
     <delete id="deleteTeam" parameterType="java.time.LocalDateTime">
-        DELETE FROM TEAM
+        DELETE FROM team
         WHERE VOTE_ID = (
-            SELECT VOTE_ID
-            FROM VOTE
-            WHERE VOTE_DATE = #{sunday}
+            SELECT vote_id
+            FROM vote
+            WHERE vote_date = #{sunday}
         )
     </delete>
 
     <!--팀 멤버 생성-->
     <insert id="createTeamMember" parameterType="java.util.HashMap">
-        INSERT INTO TEAM_MEMBER(TEAM_ID, FB_USER_ID)
+        INSERT INTO team_member(team_id, fb_user_id)
         VALUES(
             (
-                SELECT TEAM_ID
-                FROM TEAM
+                SELECT team_id
+                FROM team
                 WHERE 1=1
-                AND VOTE_ID = (
-                    SELECT VOTE_ID
-                    FROM VOTE
-                    WHERE VOTE_DATE = #{voteDate}
+                AND vote_id = (
+                    SELECT vote_id
+                    FROM vote
+                    WHERE vote_date = #{voteDate}
                 )
-                AND TEAM_NAME = #{teamName}
+                AND team_name = #{teamName}
             ), #{fbUserId}
         )
     </insert>
 
     <!--팀 멤버 삭제-->
     <delete id="deleteTeamMember" parameterType="java.time.LocalDateTime">
-        DELETE FROM TEAM_MEMBER
-        WHERE TEAM_ID IN (
-            SELECT TEAM_ID
-            FROM TEAM
-            WHERE VOTE_ID = (
-                SELECT VOTE_ID
-                FROM VOTE
-                WHERE VOTE_DATE = #{sunday}
+        DELETE FROM team_member
+        WHERE team_id IN (
+            SELECT team_id
+            FROM team
+            WHERE vote_id = (
+                SELECT vote_id
+                FROM vote
+                WHERE vote_date = #{sunday}
             )
         )
     </delete>
@@ -96,20 +96,20 @@
     <!--팀 멤버 날짜와 팀으로 조회-->
     <select id="showTeam" parameterType="java.util.HashMap" resultType="footBall.domain.user.UserResponse">
         SELECT fu.fb_user_id, fu.fb_user_name, m.member_ability_avg
-        FROM FB_USER fu
-        LEFT OUTER JOIN MEMBER m
+        FROM fb_user fu
+        LEFT OUTER JOIN member m
         ON fu.fb_user_id = m.fb_user_id
         WHERE fu.fb_user_id IN(
             SELECT fb_user_id
-            FROM TEAM_MEMBER
+            FROM team_member
             WHERE team_id = (
                 SELECT team_id
-                FROM TEAM
+                FROM team
                 WHERE 1=1
                 AND team_name = #{teamName}
                 AND vote_id = (
                     SELECT vote_id
-                    FROM VOTE
+                    FROM vote
                     WHERE vote_date = #{voteDate}
                 )
             )
@@ -120,11 +120,11 @@
     <!--팀 내용 날짜로 조회-->
     <select id="getTeams" parameterType="java.time.LocalDateTime" resultType="footBall.domain.teamBuilder.TeamDto">
         SELECT *
-        FROM TEAM
-        WHERE VOTE_ID = (
-            SELECT VOTE_ID
-            FROM VOTE
-            WHERE VOTE_DATE = #{sunday}
+        FROM team
+        WHERE vote_id = (
+            SELECT vote_id
+            FROM vote
+            WHERE vote_date = #{sunday}
         )
     </select>
 

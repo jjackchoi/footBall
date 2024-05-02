@@ -15,7 +15,7 @@
     </sql>
 
     <insert id="createSbc" parameterType="footBall.domain.suggestionBoard.SbcRequest">
-        INSERT INTO SUGGESTION_BOARD_COMMENT (
+        INSERT INTO suggestion_board_comment (
             suggestion_board_id, sbc_author, sbc_text, sbc_reg_date, sbc_del_yn
         )
         VALUES(

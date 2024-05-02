@@ -33,7 +33,7 @@
                     FROM vote
                     WHERE vote_date = #{sunday}
                 )
-            ) A
+            ) a
             ON fu.fb_user_id = a.fb_user_id
             WHERE a.fb_user_id IS NULL
             OR fu.fb_user_id IS NULL

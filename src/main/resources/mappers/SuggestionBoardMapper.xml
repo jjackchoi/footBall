@@ -20,34 +20,34 @@
 
     <!--건의게시판 전체 조회-->
     <select id="findAll" resultType="footBall.domain.suggestionBoard.SuggestionBoardResponse">
-        select
+        SELECT
             <include refid="boardColumns" />
-        from
+        FROM
             suggestion_board
-        where 1=1
-        and suggestion_board_del_yn = 'N'
-        order by
-            suggestion_board_id desc
+        WHERE 1=1
+        AND suggestion_board_del_yn = 'N'
+        ORDER BY
+            suggestion_board_id DESC
     </select>
 
     <!--건의게시판 비밀글제외 조회-->
     <select id="findExcludeSecret" resultType="footBall.domain.suggestionBoard.SuggestionBoardResponse">
-        select
+        SELECT
             <include refid="boardColumns" />
-        from
+        FROM
             suggestion_board
-        where 1=1
-        and suggestion_board_del_yn = 'N'
-        and suggestion_board_sec_yn = 'N'
-        order by
-            suggestion_board_id desc
+        WHERE 1=1
+        AND suggestion_board_del_yn = 'N'
+        AND suggestion_board_sec_yn = 'N'
+        ORDER BY
+            suggestion_board_id DESC
     </select>
 
     <!--게시판 생성-->
     <insert id="create" parameterType="footBall.domain.suggestionBoard.SuggestionBoardRequest">
         <![CDATA[
-        insert into suggestion_board(
-            fb_user_id
+        INSERT INTO suggestion_board(
+             fb_user_id
             ,suggestion_board_author
             ,suggestion_board_title
             ,suggestion_board_text
@@ -58,7 +58,7 @@
             ,suggestion_board_sol_yn
             ,suggestion_board_sec_yn
         )
-        values(
+        VALUES(
             #{fbUserId}
             ,#{suggestionBoardAuthor}
             ,#{suggestionBoardTitle}
@@ -75,23 +75,23 @@
 
     <!--게시글 상세 조회-->
     <select id="findById" parameterType="int" resultType="footBall.domain.suggestionBoard.SuggestionBoardResponse">
-        select
+        SELECT
             <include refid="boardColumns" />
-        from
+        FROM
             suggestion_board
-        where 1=1
-        and suggestion_board_del_yn = 'N'
-        and suggestion_board_id = #{id}
+        WHERE 1=1
+        AND suggestion_board_del_yn = 'N'
+        AND suggestion_board_id = #{id}
     </select>
 
     <!--내가 쓴글 조회-->
     <select id="findByUserId" parameterType="int" resultType="footBall.domain.suggestionBoard.SuggestionBoardResponse">
-        select
+        SELECT
             <include refid="boardColumns" />
-        from suggestion_board
-        where 1=1
-        and suggestion_board_del_yn = 'N'
-        and FB_USER_ID = #{fbUserId}
+        FROM suggestion_board
+        WHERE 1=1
+        AND suggestion_board_del_yn = 'N'
+        AND fb_user_id = #{fbUserId}
     </select>
 
 </mapper>

@@ -124,17 +124,17 @@
 
     <!--닉네임 조회-->
     <select id="findNickname" parameterType="int" resultType="string">
-        select FB_USER_NICKNAME
-        from fb_user
-        where FB_USER_ID = #{fbUserId}
+        SELECT fb_user_nickname
+        FROM fb_user
+        WHERE fb_user_id = #{fbUserId}
     </select>
 
     <!--정보 조회<리스트>-->
     <select id="findOne" parameterType="Integer" resultType="footBall.domain.user.UserResponse">
-        select
+        SELECT
             <include refid="userColumns"/>
-        from fb_user
-        where FB_USER_ID = #{fbUserId}
+        FROM fb_user
+        WHERE fb_user_id = #{fbUserId}
     </select>
 
     <!--이름과 이메일로 존재여부 판별-->

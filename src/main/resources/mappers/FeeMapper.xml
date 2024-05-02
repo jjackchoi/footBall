@@ -19,7 +19,7 @@
 
     <!--회비 납부 x-->
     <delete id="deleteFee" parameterType="footBall.domain.fee.FeeDto">
-        DELETE FROM FEE
+        DELETE FROM fee
         WHERE FB_USER_ID = #{fbUserId}
         AND FEE_MONTH = #{feeMonth}
     </delete>
@@ -27,7 +27,7 @@
     <!--모든 회비정보 불러오기-->
     <select id="getAllUserFee" resultType="footBall.domain.fee.FeeDto">
         SELECT <include refid="feeColumns" />
-        FROM FEE
+        FROM fee
     </select>
 
 </mapper>

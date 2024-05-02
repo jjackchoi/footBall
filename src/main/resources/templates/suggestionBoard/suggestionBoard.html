@@ -21,6 +21,9 @@
         .suggestionText{
             display: none;
         }
+        .answerDisplay-none{
+            display: none;
+        }
         .input-wrapper {
             display: flex;
             align-items: center;
@@ -110,7 +113,7 @@
     <script th:inline="javascript">
 
         window.onload = () => {
-            lenderPost();
+            renderPost();
         }
 
         <!--세션의 userId 값을 가져옴-->
@@ -118,7 +121,7 @@
         let userAuth = /*[[${session.userAuth}]]*/ null;
 
         // 게시글 렌더링
-        function lenderPost() {
+        function renderPost() {
             // 로그인이 안되어있으면 return false
             if (userId == '' || userId == null){
                 return false;
@@ -127,9 +130,9 @@
             let exSecYn = document.getElementById("excludeSecret").value; // 비밀글제외 클릭 값
             let methodName = ''; // ajax에 들어갈 함수명
             if(exSecYn == 'N'){ // 비밀글제외 미클릭
-                methodName = 'findAll';
+                methodName = 'posts';
             }else if(exSecYn == 'Y'){
-                methodName = 'findExcludeSec';
+                methodName = 'publicPosts';
             }
 
             $.ajax({
@@ -193,7 +196,11 @@
                             </tr>
                             <tr class="suggestionText">
                                 <td colspan="3">${post.suggestionBoardText}</td>
-                                <td><button class="btn btn-primary">답변하기</button></td>
+                                <td><button class="btn btn-primary" onclick="toggleAnswerForm(this)">답변하기</button></td>
+                            </tr>
+                            <tr class="answerForm answerDisplay-none">
+                                <td colspan="3"><textarea class="form-control" name="" cols="30" rows="4"></textarea></td>
+                                <td><button class="btn btn-primary" onclick="answer()">답변작성</button></td>
                             </tr>
                         `;
                     })
@@ -219,9 +226,8 @@
                 } else {
                     this.value = 'N'; // 체크 해제된 경우 'N'으로 설정
                 }
-                console.log(this.value);
                 let checkboxValue = this.value;
-                lenderPost();
+                renderPost();
             });
         });
 
@@ -270,7 +276,7 @@
             // 글 작성 완료 후 서버로 데이터 전송 (Ajax를 사용하여 비동기 처리)
             $.ajax({
                 type: 'POST',
-                url: '/suggestionBoard/create', // 실제로 데이터를 저장하는 엔드포인트로 변경해야 합니다.
+                url: '/suggestionBoard/posts', // 실제로 데이터를 저장하는 엔드포인트로 변경해야 합니다.
                 data: {suggestionBoardTitle: suggestionBoardTitle
                       ,suggestionBoardText: suggestionBoardText
                       ,suggestionBoardSecYn: suggestionBoardSecYn},
@@ -302,7 +308,18 @@
                     row.classList.remove('suggestionText');
                 } else {
                     row.classList.add('suggestionText');
+                    row.nextElementSibling.classList.add('answerDisplay-none');
                 }
+            }
+        }
+
+        <!--답변하기 클릭 시 답변 폼 노출-->
+        function toggleAnswerForm(button) {
+            let row = button.parentNode.parentNode.nextElementSibling;
+            if (row.classList.contains('answerDisplay-none')) {
+                row.classList.remove('answerDisplay-none');
+            } else {
+                row.classList.add('answerDisplay-none');
             }
         }
 

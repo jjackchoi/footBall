@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SbcMapper">
+
+    <!--유저 테이블 전체 칼럼-->
+    <sql id="commentColumns">
+         sbc_id
+        ,suggestion_board_id
+        ,sbc_author
+        ,sbc_text
+        ,sbc_reg_date
+        ,sbc_mod_date
+        ,sbc_del_yn
+    </sql>
+
+    <insert id="createSbc" parameterType="footBall.domain.suggestionBoard.SbcRequest">
+        INSERT INTO SUGGESTION_BOARD_COMMENT (
+            suggestion_board_id, sbc_author, sbc_text, sbc_reg_date, sbc_del_yn
+        )
+        VALUES(
+            #{suggestionBoardId}, #{sbcAuthor}, #{sbcText}, now(), 'N'
+        );
+    </insert>
+
+</mapper>

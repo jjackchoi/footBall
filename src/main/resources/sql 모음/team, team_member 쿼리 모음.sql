@@ -42,25 +42,27 @@ WHERE VOTE_ID = (
 /*팀 멤버 전체 조회*/
 SELECT * FROM TEAM_MEMBER;
 
-/*특정 날짜 특정 팀에 멤버 조회*/
-SELECT *
-FROM MEMBER
-WHERE MEMBER_ID IN(
-	SELECT MEMBER_ID
-	FROM TEAM_MEMBER 
-	WHERE 1=1
-	AND TEAM_ID = (
-		SELECT TEAM_ID
+/*날짜, 팀명으로 팀원 조회*/
+SELECT fu.fb_user_id, fu.fb_user_name, m.member_ability_avg
+FROM FB_USER fu
+LEFT OUTER JOIN MEMBER m
+ON fu.fb_user_id = m.fb_user_id
+WHERE fu.fb_user_id IN(
+	SELECT fb_user_id 
+	FROM TEAM_MEMBER
+	WHERE team_id = (
+		SELECT team_id
 		FROM TEAM
 		WHERE 1=1
-		AND TEAM_NAME = 'C팀'
-		AND VOTE_ID = (
-			SELECT VOTE_ID 
+		AND team_name = 'C팀'
+		AND vote_id = (
+			SELECT vote_id 
 			FROM VOTE
-			WHERE VOTE_DATE = '2024-04-21 00:00:00.000'
+			WHERE vote_date = '2024-05-05 00:00:00.000'
 		)
 	)
-);
+)
+ORDER BY fu.fb_user_birth;
 
 /*팀 멤버 생성*/
 INSERT INTO TEAM_MEMBER(TEAM_ID, MEMBER_ID)

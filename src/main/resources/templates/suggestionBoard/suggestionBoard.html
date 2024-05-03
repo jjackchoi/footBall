@@ -21,7 +21,10 @@
         .suggestionText{
             display: none;
         }
-        .answerDisplay-none{
+        .answerForm-none{
+            display: none;
+        }
+        .answer-none{
             display: none;
         }
         .input-wrapper {
@@ -116,9 +119,10 @@
             renderPost();
         }
 
-        <!--세션의 userId 값을 가져옴-->
-        let userId = /*[[${session.userId}]]*/ null;
-        let userAuth = /*[[${session.userAuth}]]*/ null;
+        <!--세션의 정보를 값을 가져옴-->
+        const userId = /*[[${session.userId}]]*/ null;
+        const userAuth = /*[[${session.userAuth}]]*/ null;
+        const userNickname = /*[[${session.userNickname}]]*/ null;
 
         // 게시글 렌더링
         function renderPost() {
@@ -182,6 +186,48 @@
                         }
                         let regDate = post.suggestionBoardRegDate != null ? dayjs(post.suggestionBoardRegDate).format('YYYY-MM-DD HH:mm') : "";
 
+                        // 답변여부에 따라 내용 다르게
+                        let solYnText = '';
+                        if(solYn === '답변예정'){
+                            solYnText = `
+                                <tr class="suggestionText">
+                                    <td colspan="3">${post.suggestionBoardText}</td>
+                                    <td><button class="btn btn-primary" onclick="toggleAnswerForm(this)">답변하기</button></td>
+                                </tr>
+                                <tr class="answerForm answerForm-none">
+                                    <input type="hidden" value="${post.suggestionBoardId}">
+                                    <td colspan="3">
+                                        <textarea placeholder="200자 이내로 입력해 주세요."
+                                        class="form-control" name="sbcText" cols="30" rows="4"></textarea>
+                                    </td>
+                                    <td><button class="btn btn-primary" onclick="answer(this)">답변 작성</button></td>
+                                </tr>
+                            `;
+                        }else if(solYn === '답변완료'){
+                            // 해당 게시글의 답변 가져오기
+                            $.ajax({
+                                url : `/suggestionBoard/comments/${post.suggestionBoardId}`,
+                                type : 'get',
+                                dataType : 'json',
+                                async : false,
+                                success : function(response){
+                                    solYnText = `
+                                        <tr class="suggestionText">
+                                            <td colspan="4">${post.suggestionBoardText}</td>
+                                        </tr>
+                                        <tr class="suggestionText table-light">
+                                            <td><strong>${response.sbcAuthor}</strong></td>
+                                            <td colspan="2">${response.sbcText}</td>
+                                            <td>${dayjs(response.sbcRegDate).format('YYYY-MM-DD HH:mm')}</td>
+                                        </tr>
+                                    `;
+                                },
+                                error : function(request, status, error){
+                                    console.log(error);
+                                }
+                            })
+                        }
+
                         // 값을 html에 집어넣기
                         postHtml += `
                             <tr>
@@ -194,14 +240,7 @@
                                 <!--등록일자-->
                                 <td>${regDate}</td>
                             </tr>
-                            <tr class="suggestionText">
-                                <td colspan="3">${post.suggestionBoardText}</td>
-                                <td><button class="btn btn-primary" onclick="toggleAnswerForm(this)">답변하기</button></td>
-                            </tr>
-                            <tr class="answerForm answerDisplay-none">
-                                <td colspan="3"><textarea class="form-control" name="" cols="30" rows="4"></textarea></td>
-                                <td><button class="btn btn-primary" onclick="answer()">답변작성</button></td>
-                            </tr>
+                            ${solYnText}
                         `;
                     })
 
@@ -304,11 +343,17 @@
             }else{
                 // 비밀글이 아닌 경우 해당 행의 내용 토글
                 let row = button.parentNode.parentNode.nextElementSibling;
+                let nextRow= row.nextElementSibling;
                 if (row.classList.contains('suggestionText')) {
                     row.classList.remove('suggestionText');
-                } else {
+                    nextRow.classList.remove('suggestionText');
+                } else { // 답변여부에 따른 클래스리스트 추가
                     row.classList.add('suggestionText');
-                    row.nextElementSibling.classList.add('answerDisplay-none');
+                    if(nextRow.classList.contains('answerForm')){
+                        nextRow.classList.add('answerForm-none');
+                    }else {
+                        nextRow.classList.add('suggestionText');
+                    }
                 }
             }
         }
@@ -316,11 +361,54 @@
         <!--답변하기 클릭 시 답변 폼 노출-->
         function toggleAnswerForm(button) {
             let row = button.parentNode.parentNode.nextElementSibling;
-            if (row.classList.contains('answerDisplay-none')) {
-                row.classList.remove('answerDisplay-none');
+            if (row.classList.contains('answerForm-none')) {
+                row.classList.remove('answerForm-none');
             } else {
-                row.classList.add('answerDisplay-none');
+                row.classList.add('answerForm-none');
             }
+        }
+
+        <!--답변 작성 클릭 시 답변 등록-->
+        function answer(button) {
+            // 해당 함수 매개변수 button과 연관되어있는 input의 value 가져오기
+            let suggestionBoardId = button.parentNode.parentNode.querySelector('input[type="hidden"]').value;
+
+            // text 내용 가져오기
+            let sbcText = button.parentNode.parentNode.querySelector('textarea[name="sbcText"]').value;
+
+            // text 내용 10자에서 200자이하 정규식검사
+            const regex = /^.{10,200}$/;
+            if(!regex.test(sbcText)){
+                alert("10자 이상, 200자 이하로 입력해주세요.");
+                return;
+            }
+
+            // 작성자 가져오기
+            let sbcAuthor = userNickname;
+            console.log(suggestionBoardId + ',' + sbcText + ',' + sbcAuthor);
+
+            // 답변 작성 확인
+            if (confirm("답변을 작성하시겠습니까?")){
+                $.ajax({
+                    type: 'POST',
+                    url: '/suggestionBoard/comments',
+                    data: {suggestionBoardId: suggestionBoardId
+                          ,sbcText: sbcText
+                          ,sbcAuthor: sbcAuthor},
+                    async: false,
+                    success: function () {
+                        // 메인 화면 새로고침
+                        alert('답변을 성공적으로 작성하였습니다.')
+                        location.reload();
+                    },
+                    error: function () {
+                        alert('답변 작성에 실패하였습니다.');
+                    }
+                });
+            }else {
+                alert("취소되었습니다.")
+            }
+
         }
 
     </script>

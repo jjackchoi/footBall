@@ -14,6 +14,14 @@
         ,sbc_del_yn
     </sql>
 
+    <!--게시글 답변 완료 상태로 변경-->
+    <update id="updatePostSolYn" parameterType="footBall.domain.suggestionBoard.SbcRequest">
+        UPDATE suggestion_board
+        SET suggestion_board_sol_yn = 'Y'
+        WHERE suggestion_board_id = #{suggestionBoardId}
+    </update>
+
+    <!--답변 등록-->
     <insert id="createSbc" parameterType="footBall.domain.suggestionBoard.SbcRequest">
         INSERT INTO suggestion_board_comment (
             suggestion_board_id, sbc_author, sbc_text, sbc_reg_date, sbc_del_yn
@@ -23,4 +31,10 @@
         );
     </insert>
 
+    <!--특정 답변 조회-->
+    <select id="getComment" parameterType="int" resultType="footBall.domain.suggestionBoard.SbcResponse">
+        SELECT sbc_author, sbc_text, sbc_reg_date
+        FROM suggestion_board_comment
+        WHERE suggestion_board_id = #{id}
+    </select>
 </mapper>

@@ -14,29 +14,35 @@
 <th:block layout:fragment="content">
     <div class="mt-4 mb-2 d-flex align-items-center">
         <i class="fas fa-futbol fa-2x me-1"></i>
-        <h2 class="mb-0">지나간 참석자 명단</h2>
+        <h2 class="mb-0">지나간 참석자 명단 및 팀 보기</h2>
     </div>
     <div class="card mb-4 mt-4" style="width: 700px;">
         <div class="card-header">
             <i class="fas fa-table me-1"></i>
-            참석자 명단 보기(날짜를 클릭해 주세요.)
+            지나간 참석자 명단과 팀을 보려면 해당 날짜의 링크를 클릭해주세요!
         </div>
         <div class="card-body">
             <table class="table">
                 <thead>
                     <tr>
-                        <th>경기 당일 날짜</th>
+                        <th>날짜</th>
+                        <th>지나간 참석자 명단 보기</th>
                         <th>팀 보기</th>
                     </tr>
                 </thead>
                 <tbody class="postList">
                     <tr th:each="vote : ${votes}">
+                        <td><strong th:text="${#temporals.format(vote.voteDate,'yyyy-MM-dd')}"></strong></td>
                         <td>
                             <a th:href="@{'/previousAttendee/'+${vote.voteId}}">
-                                <span th:text="${#temporals.format(vote.voteDate, 'yyyy-MM-dd')}"></span>
+                                <span>참석자 명단</span>
                             </a>
                         </td>
-                        <td th:text="구상중"></td>
+                        <td>
+                            <a th:href="@{'/previousAttendee/'+${vote.voteId}+'/teams'}">
+                                <span>팀 구성</span>
+                            </a>
+                        </td>
                     </tr>
                 </tbody>
             </table>

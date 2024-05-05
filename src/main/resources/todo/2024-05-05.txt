@@ -1,0 +1,10 @@
+2024-05-05
+지나간 참석자 명단 지나간 팀 보이게
+	1. 지나간 참석자 명단의 팀보기를 누르면 해당 페이지로 이동 完
+		- 엔드포인트: 
+		@GetMapping("/previousAttendee/{voteId}/team")
+	2. 페이지로 이동하면 팀 구성 된 것을 렌더링 完
+		- 팀 내용 조회 엔드포인트:
+		@GetMapping("/previousAttendee/{voteId}/team")
+		- 팀 멤버 조회 엔드포인트:
+		@GetMapping("/previousAttendee/{voteId}/team")

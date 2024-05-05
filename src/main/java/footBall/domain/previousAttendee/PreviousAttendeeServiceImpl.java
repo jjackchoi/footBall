@@ -2,12 +2,14 @@ package footBall.domain.previousAttendee;
 
 import footBall.domain.attendee.AttendeeServiceImpl;
 import footBall.domain.attendee.VoteDto;
+import footBall.domain.teamBuilder.TeamDto;
 import footBall.domain.user.UserResponse;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -37,5 +39,24 @@ public class PreviousAttendeeServiceImpl implements PreviousAttendeeService {
         return sqlSession.selectOne("PreviousAttendeeMapper.getVoteDate", voteId);
     }
 
+    // 투표id로 참석한 인원 가져오기
+    @Override
+    public List<UserResponse> getAttendee(Long voteId) {
+        return sqlSession.selectList("PreviousAttendeeMapper.getAttendee", voteId);
+    }
 
+    // 날짜별 팀 멤버 조회
+    @Override
+    public List<UserResponse> getMemberByTeamName(String teamName, Long voteId) {
+        HashMap<String, Object> teamMap = new HashMap<>();
+        teamMap.put("teamName", teamName);
+        teamMap.put("voteId", voteId);
+        return sqlSession.selectList("PreviousAttendeeMapper.getMemberByTeamName", teamMap);
+    }
+
+    // 날짜별 팀 내용 조회
+    @Override
+    public List<TeamDto> getTeams(Long voteId) {
+        return sqlSession.selectList("PreviousAttendeeMapper.getTeams", voteId);
+    }
 }

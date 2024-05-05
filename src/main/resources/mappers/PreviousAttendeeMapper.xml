@@ -51,4 +51,49 @@
         FROM vote
         WHERE vote_id = #{voteId};
     </select>
+
+    <!--투표id로 참석한 인원 가져오기-->
+    <select id="getAttendee" parameterType="long" resultType="footBall.domain.user.UserResponse">
+        SELECT fu.fb_user_id, fu.fb_user_name, m.member_ability_avg
+        FROM fb_user fu
+        LEFT OUTER JOIN member m
+        ON fu.fb_user_id = m.fb_user_id
+        WHERE 1=1
+        AND m.member_ability_avg IS NOT NULL
+        AND fu.fb_user_id IN(
+            SELECT fb_user_id
+            FROM attend
+            WHERE 1=1
+            AND vote_id = #{voteId}
+            AND attend_status = 'Y'
+        )
+        ORDER BY fu.fb_user_birth;
+    </select>
+
+    <!--팀 멤버 날짜와 팀으로 조회-->
+    <select id="getMemberByTeamName" parameterType="java.util.HashMap" resultType="footBall.domain.user.UserResponse">
+        SELECT fu.fb_user_id, fu.fb_user_name, m.member_ability_avg
+        FROM fb_user fu
+        LEFT OUTER JOIN member m
+        ON fu.fb_user_id = m.fb_user_id
+        WHERE fu.fb_user_id IN(
+            SELECT fb_user_id
+            FROM team_member
+            WHERE team_id = (
+                SELECT team_id
+                FROM team
+                WHERE 1=1
+                AND team_name = #{teamName}
+                AND vote_id = #{voteId}
+            )
+        )
+        ORDER BY fu.fb_user_birth;
+    </select>
+
+    <!--팀 내용 날짜로 조회-->
+    <select id="getTeams" parameterType="long" resultType="footBall.domain.teamBuilder.TeamDto">
+        SELECT team_name
+        FROM team
+        WHERE vote_id = #{voteId}
+    </select>
 </mapper>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/basic">
+
+<th:block layout:fragment="title">
+    <title>팀 구성</title>
+</th:block>
+
+<th:block layout:fragment="add-css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/teamBuilderStyles.css}">
+</th:block>
+
+<th:block layout:fragment="content">
+    <!-- 제목 -->
+    <div class="mt-4 mb-2 d-flex align-items-center">
+        <i class="fas fa-futbol fa-2x me-1"></i>
+        <h2 class="mb-0">팀 구성</h2>
+    </div>
+    <!--팀 구성 카드-->
+    <div class="card mb-4 mt-4">
+        <div class="card-header">
+            <i class="fas fa-table me-1"></i>
+            <span class="fw-bold" th:text="${#temporals.format(voteDate, 'yyyy-MM-dd')}"></span>
+            팀 구성
+        </div>
+        <div class="card-body">
+            <ol class="list-group">
+                <div class="text-end mb-2 d-none">
+                    <input type="radio" class="btn-check" id="twoTeamCheck" name="teamSetup" value="2" checked>
+                    <label for="twoTeamCheck" class="btn btn-outline-secondary ms-5">2팀 구성</label>
+                    <input type="radio" class="btn-check" id="threeTeamCheck" name="teamSetup" value="3">
+                    <label for="threeTeamCheck" class="btn btn-outline-secondary ms-5">3팀 구성</label>
+                    <input type="radio" class="btn-check" id="fourTeamCheck" name="teamSetup" value="4">
+                    <label for="fourTeamCheck" class="btn btn-outline-secondary ms-5">4팀 구성</label>
+                    <button type="button" class="btn btn-primary ms-5" id="assembleBtn"
+                            onclick="assembleTeam(this);">팀 섞기</button>
+                    <button type="button" class="btn btn-primary ms-5 d-none" id="reassembleBtn"
+                            onclick="assembleTeam(this);">팀 다시 섞기</button>
+                    <button type="button" class="btn btn-danger ms-5 d-none" id="deleteBtn"
+                            onclick="assembleTeam(this);">팀 삭제</button>
+                </div>
+                <div class="mt-4 mb-2 d-flex align-items-center">
+                    <div class="align-items-center centered-flex">
+                        <strong class="text-center" th:text="'참석인원(' + ${#lists.size(attendees)} + '명)'">참석 인원</strong>
+                        <ul class="list-group no-markers">
+                            <li th:each="attendee: ${attendees}" class="list-group text-center"
+                                th:text="${attendee.fbUserName}+'('+${attendee.memberAbilityAvg}+')'"></li>
+                        </ul>
+                    </div>
+                    <div class="align-items-center centered-flex d-none" id="teamA" data-value="A팀">
+                        <strong class="text-center">A팀</strong>
+                        <ul class="list-group no-markers">
+                            <li class="list-group text-center"></li>
+                        </ul>
+                    </div>
+                    <div class="align-items-center centered-flex d-none" id="teamB" data-value="B팀">
+                        <strong class="text-center">B팀</strong>
+                        <ul class="list-group no-markers">
+                            <li></li>
+                        </ul>
+                    </div>
+                    <div class="align-items-center centered-flex d-none" id="teamC" data-value="C팀">
+                        <strong class="text-center">C팀</strong>
+                        <ul class="list-group no-markers">
+                            <li></li>
+                        </ul>
+                    </div>
+                    <div class="align-items-center centered-flex d-none" id="teamD" data-value="D팀">
+                        <strong class="text-center">D팀</strong>
+                        <ul class="list-group no-markers">
+                            <li></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="fw-bold ms-2 me-auto my-2 d-flex align-items-center">
+                    <a class="btn btn-primary" th:href="@{'/previousAttendee'}">목록</a>
+                </div>
+            </ol>
+        </div>
+    </div>
+</th:block>
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        let userId = /*[[${session.userId}]]*/ null; // 세션의 userId 값을 가져옴
+        let voteId = /*[[${voteId}]]*/ '';
+        window.onload = () => {
+            lenderTeam();
+        }
+
+        // 팀 구성 관련 버튼 클릭 시
+        function assembleTeam(e){
+
+            // 버튼 변수 선언
+            const assembleBtn = document.querySelector('#assembleBtn');
+            const reassembleBtn = document.querySelector('#reassembleBtn');
+            const deleteBtn = document.querySelector('#deleteBtn');
+            const twoTeamCheck = document.querySelector('#twoTeamCheck');
+            const threeTeamCheck = document.querySelector('#threeTeamCheck');
+            const fourTeamCheck = document.querySelector('#fourTeamCheck');
+            const teamRadioArray = [twoTeamCheck, threeTeamCheck, fourTeamCheck];
+
+            // div 요소 변수 선언
+            const teamA = document.querySelector('#teamA');
+            const teamB = document.querySelector('#teamB');
+            const teamC = document.querySelector('#teamC');
+            const teamD = document.querySelector('#teamD');
+            const teamDivArray = [teamA, teamB, teamC, teamD];
+
+            // 체크된 팀 갯수에 따라 div요소 추가
+            let teamArray = [];
+            for(let i = 0; i < teamRadioArray.length; i++){
+                if(teamRadioArray[i].checked){
+                    for(let j = 0; j < i+2; j++){
+                        teamArray.push(teamDivArray[j]);
+                    }
+                    break;
+                }
+            }
+
+            // 팀 div 안보이게 초기화
+            for(let i = 0; i < teamDivArray.length; i++){
+                if(!teamDivArray[i].classList.contains('d-none')){ // d-none 클래스가 없을 때만 추가
+                    teamDivArray[i].classList.add('d-none');
+                }
+            }
+
+            // 버튼마다 다른 동작
+            if(assembleBtn == e || reassembleBtn == e){ // 팀 구성 및 팀 다시 섞기 버튼 클릭 시
+
+                // 팀 섞기 안보이게, 팀 다시 섞기와 팀 삭제 보이게
+                e.classList.add('d-none');
+                reassembleBtn.classList.remove('d-none');
+
+                // n팀 구성만큼 팀 섞기
+                for(let i = 0; i < teamRadioArray.length; i++){
+                    if(teamRadioArray[i].checked){
+                        shuffleTeams(teamRadioArray[i]);
+                    }
+                }
+
+                // 선택된 n구성 만큼 div n개 보이게 하고, 팀 렌더링
+                for(let i = 0; i < teamArray.length; i++){
+                    teamArray[i].classList.remove('d-none');
+                    showTeam(teamArray[i]);
+                }
+
+
+            }else if(deleteBtn == e){ // 팀 삭제 버튼 클릭 시
+
+                // 팀 삭제와 팀 다시 섞기 안보이게, 팀 섞기 보이게
+                e.classList.add('d-none');
+                reassembleBtn.classList.add('d-none');
+                assembleBtn.classList.remove('d-none');
+
+                // div 안보이게
+                for(let i = 0; i < teamArray.length; i++){
+                    teamArray[i].classList.add('d-none');
+                }
+            }
+        }
+
+        // 팀 조회
+        function showTeam(e){
+            const teamName = e.getAttribute('data-value');
+            const teamStrong = e.querySelector('strong');
+            const teamList = e.querySelector('ul');
+            teamStrong.innerHTML = '';
+            teamList.innerHTML = '';
+            $.ajax({
+                type: 'GET',
+                url: `/previousAttendee/${voteId}/teams/${teamName}`,
+                async: false,
+                dataType: 'json',
+                success: function(response){
+                    teamStrong.innerHTML = `${teamName}(${response.length}명)`;
+                    response.forEach(member => {
+                        const li = document.createElement('li'); // li 속성 하나씩 추가
+                        li.className = 'list-group text-center';
+                        li.textContent = `${member.fbUserName}(${member.memberAbilityAvg.toFixed(1)})`;
+                        teamList.appendChild(li);
+                    })
+                },
+                error : function(request, status, error){
+                    console.log(error);
+                }
+            })
+        }
+
+        // 페이지 들어갔을 시 db 정보로 팀 및 팀원 렌더링
+        function lenderTeam(){
+            const existingTeams = [];
+            $.ajax({
+                type: 'GET',
+                url: `/previousAttendee/${voteId}/teams/body`,
+                dataType: 'json',
+                async: false,
+                success: function(response){
+                    response.forEach(team => {
+                        existingTeams.push(team.teamName);
+                    });
+                    console.log(existingTeams);
+                },
+                error : function(request, status, error){
+                    console.log(error);
+                }
+            })
+
+            // 팀이 존재하지 않으면 div 안보이게
+            if(existingTeams.length == 0){
+                return;
+            }
+
+            // 팀이 하나라도 존재하면 팀 다시 섞기로 보이게
+            const assembleBtn = document.querySelector('#assembleBtn');
+            const reassembleBtn = document.querySelector('#reassembleBtn');
+            if(existingTeams.length !== 0){
+                assembleBtn.classList.add('d-none');
+                reassembleBtn.classList.remove('d-none');
+            }
+
+            // 팀 갯수에 따라서 라디오버튼 체크
+            const twoTeamCheck = document.querySelector('#twoTeamCheck');
+            const threeTeamCheck = document.querySelector('#threeTeamCheck');
+            const fourTeamCheck = document.querySelector('#fourTeamCheck');
+            const teamRadioArray = [twoTeamCheck, threeTeamCheck, fourTeamCheck];
+
+            for(let i = 0; i < teamRadioArray.length; i++){
+                if(existingTeams.length === i+2){
+                    teamRadioArray[i].checked = true;
+                }
+            }
+
+            // div 요소 변수 선언
+            const teamA = document.querySelector('#teamA');
+            const teamB = document.querySelector('#teamB');
+            const teamC = document.querySelector('#teamC');
+            const teamD = document.querySelector('#teamD');
+            const teamDivArray = [teamA, teamB, teamC, teamD];
+
+            // 체크된 팀 갯수에 따라 div요소 추가
+            let teamArray = [];
+            for(let i = 0; i < teamRadioArray.length; i++){
+                if(teamRadioArray[i].checked){
+                    for(let j = 0; j < i+2; j++){
+                        teamArray.push(teamDivArray[j]);
+                    }
+                    break;
+                }
+            }
+
+            // 선택된 n구성 만큼 div n개 보이게 하고, 팀 렌더링
+            for(let i = 0; i < teamArray.length; i++){
+                teamArray[i].classList.remove('d-none');
+                showTeam(teamArray[i]);
+            }
+        }
+
+    </script>
+</th:block>
+
+</html>

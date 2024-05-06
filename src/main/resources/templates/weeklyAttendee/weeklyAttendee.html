@@ -78,9 +78,9 @@
         window.onload = () => {
             let sessionAuth = [[ ${session.userAuth} ]];
             let sunday = getSunday();
-            lenderVoted();
-            lenderNonpart();
-            lenderVoteButton(sunday, sessionAuth);
+            renderVoted();
+            renderNonpart();
+            renderVoteButton(sunday, sessionAuth);
             fixRadioBtn();
         }
 
@@ -90,7 +90,7 @@
             if(sessionId !== null){
                 console.log(`sessionId는 ${sessionId}입니다`);
                 $.ajax({
-                    url: `/weeklyAttendee/getAttendStatus/${sessionId}`,
+                    url: `/weeklyAttendee/attendees/attendStatus/${sessionId}`,
                     type: 'GET',
                     async: false,
                     success: function(response){
@@ -111,9 +111,9 @@
         }
 
         // 투표한 인원 렌더링
-        function lenderVoted(){
+        function renderVoted(){
             $.ajax({
-                url: '/weeklyAttendee/findVotedUser',
+                url: '/weeklyAttendee/votedUsers',
                 type: 'GET',
                 dataType: 'json',
                 async: false,
@@ -148,9 +148,9 @@
         }
 
         // 미참여인원 렌더링
-        function lenderNonpart(){
+        function renderNonpart(){
             $.ajax({
-                url: '/weeklyAttendee/findNonattendanceUser',
+                url: '/weeklyAttendee/nonVotedUsers',
                 type: 'GET',
                 dataType: 'json',
                 async: false,
@@ -171,7 +171,7 @@
         }
 
         // 화면 로드 시 투표 대상 데이터여부에 따른 시작,삭제버튼 렌더링
-        function lenderVoteButton(sunday, sessionAuth){
+        function renderVoteButton(sunday, sessionAuth){
             $.ajax({
                 url : `/weeklyAttendee/voteDate`,
                 type : 'GET',
@@ -179,7 +179,7 @@
                 success : function(response){
                     console.log(`성공적으로 투표대상날짜 존재 판별 - 서버 응답: ${response}`);
                     if(response == 'existent'){
-                        lenderVoteDate(sunday);
+                        renderVoteDate(sunday);
                         if(sessionAuth == 'Y'){
                             // 시작버튼 안보이게 - 삭제버튼 보이게
                             document.querySelector('#vStart').classList.add('d-none');
@@ -221,7 +221,7 @@
         }
 
         // 정기모임 날짜 투표생성/삭제버튼 밑에 렌더링
-        function lenderVoteDate(sunday){
+        function renderVoteDate(sunday){
             let sundayMonth = sunday.getMonth() + 1; // 월요일은 1 더해줘야 해당월로 지정됨
             let sundayDate = sunday.getDate();
             let voteDate = document.querySelector('#vDate');
@@ -240,7 +240,7 @@
             let sunday = getSunday();
 
             // 투표생성/삭제버튼 밑에 정기모임 날짜 렌더링
-            lenderVoteDate(sunday);
+            renderVoteDate(sunday);
 
             // 투표박스 보이게
             document.querySelector('#voteBox').classList.remove('d-none');
@@ -249,8 +249,8 @@
             createVoteDate(sunday);
 
             // 투표 인원 렌더링 및 체크박스 초기화
-            lenderVoted();
-            lenderNonpart();
+            renderVoted();
+            renderNonpart();
             document.querySelector('input[name="attendance"]').checked = false;
         }
 
@@ -332,7 +332,7 @@
                 // 투표자의 fbUserId 가져오기
                 let votedUserIdList = [];
                 $.ajax({
-                    url: '/weeklyAttendee/findVotedUser',
+                    url: '/weeklyAttendee/votedUsers',
                     type: 'GET',
                     dataType: 'json',
                     async: false,
@@ -363,9 +363,9 @@
                 // votedUserExVal에 따라서 insert update 구분
                 let urlString = ''; // url 초기화
                 if(votedUserExVal > 0){ // 값 변경
-                    urlString = 'updateVote';
+                    urlString = 'votes';
                 }else { // 값 넣기
-                    urlString = 'createVote';
+                    urlString = 'attendees';
                 }
 
                 // 참석 여부에 따른 방식으로 비동기통신
@@ -380,9 +380,9 @@
                     async : false,
                     success: function(response) {
                         console.log(response);
-                        lenderVoted();
-                        lenderNonpart();
-                        if(urlString == 'createVote'){
+                        renderVoted();
+                        renderNonpart();
+                        if(urlString == 'attendees'){
                             votedUserIdList.push(sessionId);
                         }
                     },

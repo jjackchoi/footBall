@@ -1,7 +1,9 @@
 package footBall.domain.attendee;
 
 import footBall.domain.user.UserResponse;
+import footBall.domain.user.UserService;
 import footBall.domain.user.UserServiceImpl;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,13 +16,11 @@ import java.util.List;
 
 @Controller
 @Slf4j
+@RequiredArgsConstructor
 public class AttendeeController {
 
-    @Autowired
-    private UserServiceImpl userService;
-
-    @Autowired
-    private AttendeeServiceImpl attendeeService;
+    private final UserService userService;
+    private final AttendeeService attendeeService;
 
     // 금주의 참석인원 페이지
     @GetMapping("/weeklyAttendee")
@@ -37,14 +37,14 @@ public class AttendeeController {
 
     // 미참여(미투표) 인원 조회
     @ResponseBody
-    @GetMapping("/weeklyAttendee/findNonattendanceUser")
+    @GetMapping("/weeklyAttendee/nonVotedUsers")
     public List<UserResponse> findNonattendanceUser(){
         return attendeeService.findNonattendanceUser();
     }
 
     // 투표한 유저 찾기
     @ResponseBody
-    @GetMapping("/weeklyAttendee/findVotedUser")
+    @GetMapping("/weeklyAttendee/votedUsers")
     public List<UserResponse> findVotedUser(){
         return attendeeService.findVotedUser();
     }
@@ -90,7 +90,7 @@ public class AttendeeController {
 
     // 투표 값 업데이트
     @ResponseBody
-    @PostMapping("/weeklyAttendee/updateVote")
+    @PostMapping("/weeklyAttendee/votes")
     public String updateVote(@RequestBody AttendDto params){
         int updated = attendeeService.updateVote(params);
         if (updated > 0){
@@ -100,9 +100,9 @@ public class AttendeeController {
         }
     }
 
-    // 미참여인원 투표
+    // 미참여(미투표)인원 투표
     @ResponseBody
-    @PostMapping("/weeklyAttendee/createVote")
+    @PostMapping("/weeklyAttendee/attendees")
     public String createVote(@RequestBody AttendDto params){
         int created = attendeeService.createVote(params);
         if (created > 0){
@@ -114,7 +114,7 @@ public class AttendeeController {
 
     // 투표한 해당 유저의 참석여부 값 가져오기
     @ResponseBody
-    @GetMapping("/weeklyAttendee/getAttendStatus/{fbUserId}")
+    @GetMapping("/weeklyAttendee/attendees/attendStatus/{fbUserId}")
     public ResponseEntity<String> getAttendStatus(@PathVariable Long fbUserId){
         log.info(String.valueOf(fbUserId));
         return ResponseEntity.status(HttpStatus.OK).body(attendeeService.getAttendStatus(fbUserId));

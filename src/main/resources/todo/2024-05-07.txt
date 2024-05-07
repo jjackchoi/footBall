@@ -1,11 +1,11 @@
 2024-05-07
 금주의 참석인원 수정
 	- 자바스크립트 함수명 수정 renderNonpart() -> renderNonVoted() 完
-	- 렌더링 인원 오직 멤버만
+	- 투표 시 제한조건 설정 完
 	1) fb_user의 fb_user_member_yn이 'Y'일 때
-	2) member의 member_ability_avg가 null이 아닐 때
+	2) member의 member_ability_avg가 null이나 빈 값이 아닐 때
 	3) 만약 두개의 조건에 해당하지 않으면 금주의 참석인원 페이지 alert창 띄우기
 		3.1) fb_user_member_yn이 'Y'가 아닐 때 '멤버만 투표를 진행하실 수 있습니다.'
-		3.2) member_ability_avg가 null일 때 '어빌리티가 설정되어야 합니다. 관리자에게 문의해주세요!'
+		3.2) member_ability_avg가 null이거나 빈 값일 때 '어빌리티가 설정되어야 합니다. 관리자에게 문의해주세요!'
 	- attend 테이블에 attend_mod_date 칼럼 추가 完
 	- 투표한 인원 빠른순으로 렌더링되도록 쿼리, 함수 수정 完

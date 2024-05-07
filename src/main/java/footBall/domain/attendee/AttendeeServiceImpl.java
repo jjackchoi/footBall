@@ -94,6 +94,18 @@ public class AttendeeServiceImpl implements AttendeeService{
         return sqlSession.selectOne("AttendeeMapper.getAttendStatus",objectMap);
     }
 
+    // 로그인된 유저의 멤버여부 가져오기
+    @Override
+    public String getMemberYn(Long fbUserId) {
+        return sqlSession.selectOne("AttendeeMapper.getMemberYn", fbUserId);
+    }
+
+    // 로그인된 유저의 어빌리티 가져오기
+    @Override
+    public Double getAbilityAvg(Long fbUserId) {
+        return sqlSession.selectOne("AttendeeMapper.getAbilityAvg", fbUserId);
+    }
+
     // 가져온 파라미터값들과 투표대상날짜 매핑
     public Map<String, Object> mappingParams(AttendDto params){
         LocalDateTime sunday = new VoteDto().getSunday();

@@ -88,13 +88,11 @@
         function fixRadioBtn(){
             let sessionId = /*[[ ${session.userId} ]]*/ null;
             if(sessionId !== null){
-                console.log(`sessionId는 ${sessionId}입니다`);
                 $.ajax({
                     url: `/weeklyAttendee/attendees/attendStatus/${sessionId}`,
                     type: 'GET',
                     async: false,
                     success: function(response){
-                        console.log(response);
                         if(response == 'Y'){
                             document.querySelector('#attendBtn').checked = true;
                         }else if(response == 'N'){
@@ -171,7 +169,6 @@
                 type : 'GET',
                 async : false,
                 success : function(response){
-                    console.log(`성공적으로 투표대상날짜 존재 판별 - 서버 응답: ${response}`);
                     if(response == 'existent'){
                         renderVoteDate(sunday);
                         if(sessionAuth == 'Y'){
@@ -250,7 +247,6 @@
 
         // 투표 대상 날짜 데이터 생성
         function createVoteDate(sunday){
-            console.log(sunday);
             sunday = sunday.toISOString();
 
             $.ajax({
@@ -260,8 +256,7 @@
                 data: JSON.stringify({ voteDate: sunday }),
                 async : false,
                 success : function(response){
-                    console.log('성공적으로 투표대상날짜 생성');
-                    console.log(`서버 응답: ${response}`);
+
                 },
                 error : function(request, status, error){
                     console.log(error);
@@ -291,7 +286,6 @@
 
         // 투표 대상 날짜 데이터 삭제
         function deleteVoteDate(sunday){
-            console.log(sunday);
             sunday = sunday.toISOString();
 
             $.ajax({
@@ -301,12 +295,46 @@
                 data: JSON.stringify({ voteDate: sunday }),
                 async : false,
                 success : function(response){
-                    console.log(`서버 응답: ${response}`);
+
                 },
                 error : function(request, status, error){
                     console.log(error);
                 }
             })
+        }
+
+        // 멤버 여부 확인
+        function getMemberYn(sessionId){
+            let memberYn = '';
+            $.ajax({
+                url: `/weeklyAttendee/fbUsers/memberYn/${sessionId}`,
+                type: 'GET',
+                async: false,
+                success : function (response) {
+                    memberYn = response;
+                },
+                error : function (request, status, error) {
+                    console.log(error)
+                }
+            })
+            return memberYn;
+        }
+
+        // 멤버의 어빌리티 유무 확인
+        function getAbilityAvg(sessionId){
+            let abilityAvg = 0.0;
+            $.ajax({
+                url: `/weeklyAttendee/members/abilityAvg/${sessionId}`,
+                type: 'GET',
+                async: false,
+                success : function (response) {
+                    abilityAvg = response;
+                },
+                error : function (request, status, error) {
+                    console.log(error)
+                }
+            })
+            return abilityAvg;
         }
 
         // 라디오버튼 클릭 시 이벤트
@@ -319,6 +347,19 @@
                 // 로그인을 미수행 시 멈춤
                 if(sessionId == null || sessionId == ''){
                     alert('로그인을 해주세요!');
+                    this.checked = false;
+                    return;
+                }
+
+                // 세션의 id로 해당 유저의 멤버여부 판별 및 어빌리티 유무 확인
+                let memberYn = getMemberYn(sessionId);
+                let abilityAvg = getAbilityAvg(sessionId);
+                if(memberYn == 'N'){ // 멤버가 아니면 리턴
+                    alert('멤버만 투표를 진행하실 수 있습니다.');
+                    this.checked = false;
+                    return;
+                }else if(abilityAvg == '' || abilityAvg == null){ // 어빌리티가 null이거나 빈값이면 리턴
+                    alert('어빌리티가 설정되어야 투표를 진행하실 수 있습니다. 관리자에게 문의 바랍니다.');
                     this.checked = false;
                     return;
                 }
@@ -340,7 +381,6 @@
                         console.log(error)
                     }
                 })
-                console.log(votedUserIdList);
 
                 // 로그인된 세션의 id가 투표한 인원의 id에 포함되어 있는지 확인(1이면 포함)
                 let votedUserExVal = 0;
@@ -352,7 +392,6 @@
 
                 // 라디오버튼 선택된 값
                 let selectedValue = this.value;
-                console.log("선택된 체크박스 값은 : " + selectedValue);
 
                 // votedUserExVal에 따라서 insert update 구분
                 let urlString = ''; // url 초기화
@@ -373,7 +412,6 @@
                     }),
                     async : false,
                     success: function(response) {
-                        console.log(response);
                         renderVoted();
                         renderNonVoted();
                         if(urlString == 'attendees'){
@@ -389,7 +427,6 @@
                 if(selectedValue != previousValue){
                     previousValue = selectedValue;
                 }
-                console.log("previousValue의 값은 : " + previousValue);
             });
         });
     </script>

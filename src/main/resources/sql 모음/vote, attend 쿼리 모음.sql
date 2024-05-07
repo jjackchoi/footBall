@@ -199,6 +199,16 @@ SELECT vote_date
 FROM vote
 WHERE vote_id = 9;
 
+/*fb_user_id로 fb_user_member_yn 가져오기*/
+SELECT fb_user_member_yn
+FROM fb_user
+WHERE fb_user_id = 9;
+
+/*fb_user_id로 member_ability_avg 가져오기*/
+SELECT member_ability_avg
+FROM member
+WHERE fb_user_id = 10;
+
 /*투표한 인원 가져오기*/
 SELECT fu.fb_user_id , fu.fb_user_name, a.attend_status
 FROM fb_user fu

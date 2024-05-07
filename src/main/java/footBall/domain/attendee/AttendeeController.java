@@ -2,10 +2,8 @@ package footBall.domain.attendee;
 
 import footBall.domain.user.UserResponse;
 import footBall.domain.user.UserService;
-import footBall.domain.user.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -118,5 +116,19 @@ public class AttendeeController {
     public ResponseEntity<String> getAttendStatus(@PathVariable Long fbUserId){
         log.info(String.valueOf(fbUserId));
         return ResponseEntity.status(HttpStatus.OK).body(attendeeService.getAttendStatus(fbUserId));
+    }
+
+    // 로그인된 유저의 멤버여부 가져오기
+    @ResponseBody
+    @GetMapping("/weeklyAttendee/fbUsers/memberYn/{fbUserId}")
+    public ResponseEntity<String> getMemberYn(@PathVariable Long fbUserId){
+        return ResponseEntity.status(HttpStatus.OK).body(attendeeService.getMemberYn(fbUserId));
+    }
+
+    // 로그인된 유저의 어빌리티 가져오기
+    @ResponseBody
+    @GetMapping("/weeklyAttendee/members/abilityAvg/{fbUserId}")
+    public ResponseEntity<Double> getAbilityAvg(@PathVariable Long fbUserId){
+        return ResponseEntity.status(HttpStatus.OK).body(attendeeService.getAbilityAvg(fbUserId));
     }
 }

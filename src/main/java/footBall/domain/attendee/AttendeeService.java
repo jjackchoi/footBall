@@ -36,4 +36,9 @@ public interface AttendeeService {
     // 투표한 해당 유저의 참석여부 값 가져오기
     String getAttendStatus(Long fbUserId);
 
+    // 로그인된 유저의 멤버여부 가져오기
+    String getMemberYn(Long fbUserId);
+
+    // 로그인된 유저의 어빌리티 가져오기
+    Double getAbilityAvg(Long fbUserId);
 }

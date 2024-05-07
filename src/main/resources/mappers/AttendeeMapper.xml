@@ -141,4 +141,19 @@
             WHERE vote_date = #{sunday}
         )
     </select>
+
+    <!--로그인된 유저의 멤버여부 가져오기-->
+    <select id="getMemberYn" parameterType="long" resultType="string">
+        SELECT fb_user_member_yn
+        FROM fb_user
+        WHERE fb_user_id = #{fbUserId};
+    </select>
+
+    <!--로그인된 유저의 어빌리티 가져오기-->
+    <select id="getAbilityAvg" parameterType="long" resultType="double">
+        SELECT member_ability_avg
+        FROM member
+        WHERE fb_user_id = #{fbUserId};
+    </select>
+
 </mapper>

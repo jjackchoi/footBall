@@ -146,26 +146,28 @@ select * from attend
 where FB_USER_ID  = 25;
 
 /*투표영역 버튼에서 다른버튼을 클릭했을 시*/
-UPDATE attend 
-SET attend_status = "Y"
+UPDATE attend
+SET 
+	attend_status = 'N',
+	ATTEND_MOD_DATE = now()
 WHERE 1=1
-AND fb_user_id = 26
+AND fb_user_id = 12
 AND vote_id = (
-	SELECT vote_id
-	FROM vote
- 	WHERE vote_date = '2024-03-17 00:00:00.000'
+    SELECT vote_id
+    FROM vote
+    WHERE vote_date = '2024-05-12 00:00:00.000'
 );
 
 /*미참여에 있는 사람이 투표영역 버튼을 눌렀을 때*/
 INSERT INTO attend(
-	vote_id, fb_user_id , attend_status 
+	vote_id, fb_user_id , attend_status, attend_status 
 )VALUES (
 	(
 		SELECT vote_id
 		FROM vote
 	 	WHERE vote_date = '2024-03-31 00:00:00.000'
  	)
- 	, 16, 'N'
+ 	, 16, 'N', now()
 );
 
 /*화면 로드 시 사용자의 참석여부에 따른 라디오버튼 고정*/
@@ -196,3 +198,41 @@ vote_id = (
 SELECT vote_date
 FROM vote
 WHERE vote_id = 9;
+
+/*투표한 인원 가져오기*/
+SELECT fu.fb_user_id , fu.fb_user_name, a.attend_status
+FROM fb_user fu
+LEFT JOIN (
+    SELECT *
+    FROM attend
+    WHERE vote_id = (
+        SELECT vote_id
+        FROM vote
+        WHERE vote_date = '2024-05-12 00:00:00.000'
+    )
+) a
+ON fu.fb_user_id = a.fb_user_id
+WHERE 1=1
+AND a.fb_user_id IS NOT NULL
+AND fu.fb_user_del_yn = 'N'
+AND fu.fb_user_member_yn = 'Y'
+ORDER BY a.attend_mod_date desc;
+
+/*미투표 인원 가져오기*/
+SELECT fu.fb_user_id , fu.fb_user_name 
+FROM fb_user fu
+LEFT JOIN (
+    SELECT *
+    FROM attend
+    WHERE vote_id = (
+        SELECT vote_id
+        FROM vote
+        WHERE vote_date = '2024-05-12 00:00:00.000'
+    )
+) a
+ON fu.fb_user_id = a.fb_user_id
+WHERE 1=1
+AND a.fb_user_id IS NOT NULL
+AND fu.fb_user_del_yn = 'N'
+AND fu.fb_user_member_yn = 'Y'
+ORDER BY a.attend_id;

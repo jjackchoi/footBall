@@ -79,7 +79,7 @@
             let sessionAuth = [[ ${session.userAuth} ]];
             let sunday = getSunday();
             renderVoted();
-            renderNonpart();
+            renderNonVoted();
             renderVoteButton(sunday, sessionAuth);
             fixRadioBtn();
         }
@@ -119,23 +119,19 @@
                 async: false,
                 success : function (response) {
                     // 화면단에 담을 변수 초기화
-                    let attended = '';
-                    let nonAttended = '';
-                    let pended = '';
+                    let attended = [];
+                    let nonAttended = [];
+                    let pended = [];
                     // 변수에 담기
                     response.forEach(votedUser => {
                         if(votedUser.attendStatus == 'Y'){
-                            attended += votedUser.fbUserName + ', ';
+                            attended.push(votedUser.fbUserName);
                         }else if(votedUser.attendStatus == 'N'){
-                            nonAttended += votedUser.fbUserName + ', ';
+                            nonAttended.push(votedUser.fbUserName);
                         }else if(votedUser.attendStatus == 'P'){
-                            pended += votedUser.fbUserName + ', ';
+                            pended.push(votedUser.fbUserName);
                         }
                     })
-                    // 끝자리 ',' 없애기
-                    attended = attended.replace(/,\s*$/, '');
-                    nonAttended = nonAttended.replace(/,\s*$/, '');
-                    pended = pended.replace(/,\s*$/, '');
                     // 화면에 렌더링
                     document.querySelector('#attend').innerHTML = attended;
                     document.querySelector('#nonAttend').innerHTML = nonAttended;
@@ -148,7 +144,7 @@
         }
 
         // 미참여인원 렌더링
-        function renderNonpart(){
+        function renderNonVoted(){
             $.ajax({
                 url: '/weeklyAttendee/nonVotedUsers',
                 type: 'GET',
@@ -156,13 +152,11 @@
                 async: false,
                 success: function(response){
                     // 화면에 담을 변수 초기화
-                    let nonUser = '';
+                    let nonUser = [];
                     // 변수에 담기
                     response.forEach(user => {
-                        nonUser += user.fbUserName + ', ';
+                        nonUser.push(user.fbUserName);
                     })
-                    // 끝자리 ',' 없애기
-                    nonUser = nonUser.replace(/,\s*$/, '');
                     // 화면에 렌더링
                     document.getElementById('nonPart').innerHTML = nonUser;
                 }
@@ -250,7 +244,7 @@
 
             // 투표 인원 렌더링 및 체크박스 초기화
             renderVoted();
-            renderNonpart();
+            renderNonVoted();
             document.querySelector('input[name="attendance"]').checked = false;
         }
 
@@ -373,15 +367,15 @@
                     url: `/weeklyAttendee/${urlString}`,
                     type: "POST",
                     contentType: "application/json",
-                    data: JSON.stringify(
-                        { fbUserId: sessionId,
-                          attendStatus: selectedValue }
-                    ),
+                    data: JSON.stringify({
+                        fbUserId: sessionId,
+                        attendStatus: selectedValue
+                    }),
                     async : false,
                     success: function(response) {
                         console.log(response);
                         renderVoted();
-                        renderNonpart();
+                        renderNonVoted();
                         if(urlString == 'attendees'){
                             votedUserIdList.push(sessionId);
                         }

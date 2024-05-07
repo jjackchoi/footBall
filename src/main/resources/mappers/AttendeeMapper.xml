@@ -19,55 +19,44 @@
 
     <!--미참여 인원 조회하기-->
     <select id="findNonattendanceUser" resultType="footBall.domain.user.UserResponse" parameterType="java.time.LocalDateTime">
-        SELECT *
-        FROM fb_user
-        WHERE 1=1
-        AND fb_user_id IN (
-            SELECT fu.fb_user_id
-            FROM fb_user fu
-            LEFT JOIN (
-                SELECT *
-                FROM attend
-                WHERE vote_id = (
-                    SELECT vote_id
-                    FROM vote
-                    WHERE vote_date = #{sunday}
-                )
-            ) a
-            ON fu.fb_user_id = a.fb_user_id
-            WHERE a.fb_user_id IS NULL
-            OR fu.fb_user_id IS NULL
-        )
-        AND fb_user_del_yn = 'N'
-        ORDER BY fb_user_id DESC
-    </select>
-
-    <!--투표 인원 조회하기-->
-    <select id="findVotedUser" parameterType="java.time.LocalDateTime" resultType="footBall.domain.user.UserResponse">
-        SELECT fu.fb_user_id ,fu.fb_user_email ,fu.fb_user_pswd ,fu.fb_user_nickname
-            ,fu.fb_user_name ,fu.fb_user_birth ,fu.fb_user_phone ,fu.fb_user_address
-            ,fu.fb_user_auth ,fu.fb_user_del_yn ,fu.fb_user_reg_date ,fu.fb_user_mod_date
-            ,a.attend_status
+        SELECT fu.fb_user_name
         FROM fb_user fu
-        LEFT JOIN attend a
-        ON fu.fb_user_id = a.fb_user_id
-        WHERE 1=1
-        AND fu.fb_user_id IN(
-            SELECT fb_user_id
+        LEFT JOIN (
+            SELECT *
             FROM attend
             WHERE vote_id = (
                 SELECT vote_id
                 FROM vote
                 WHERE vote_date = #{sunday}
             )
-        )
-        AND a.vote_id = (
-            SELECT vote_id
-            FROM vote
-            WHERE vote_date = #{sunday}
-        )
+        ) a
+        ON fu.fb_user_id = a.fb_user_id
+        WHERE 1=1
+        AND a.fb_user_id IS NULL
         AND fu.fb_user_del_yn = 'N'
-        ORDER BY fu.fb_user_id DESC;
+        AND fu.fb_user_member_yn = 'Y'
+        ORDER BY fu.fb_user_birth
+    </select>
+
+    <!--투표 인원 조회하기-->
+    <select id="findVotedUser" parameterType="java.time.LocalDateTime" resultType="footBall.domain.user.UserResponse">
+        SELECT fu.fb_user_id , fu.fb_user_name, a.attend_status
+        FROM fb_user fu
+        LEFT JOIN (
+            SELECT *
+            FROM attend
+            WHERE vote_id = (
+                SELECT vote_id
+                FROM vote
+                WHERE vote_date = #{sunday}
+            )
+        ) a
+        ON fu.fb_user_id = a.fb_user_id
+        WHERE 1=1
+        AND a.fb_user_id IS NOT NULL
+        AND fu.fb_user_del_yn = 'N'
+        AND fu.fb_user_member_yn = 'Y'
+        ORDER BY a.attend_mod_date desc
     </select>
 
     <!--투표 대상 날짜 생성-->
@@ -114,7 +103,9 @@
     <!--투표 값 업데이트-->
     <update id="updateVote" parameterType="java.util.Map">
         UPDATE attend
-        SET attend_status = #{attendStatus}
+        SET
+            attend_status = #{attendStatus},
+            attend_mod_date = now()
         WHERE 1=1
         AND fb_user_id = #{fbUserId}
         AND vote_id = (
@@ -127,14 +118,14 @@
     <!--미참여 인원 투표-->
     <insert id="createVote" parameterType="java.util.Map">
         INSERT INTO attend(
-            vote_id, fb_user_id , attend_status
+            vote_id, fb_user_id , attend_status, attend_mod_date
         )VALUES (
             (
                 SELECT vote_id
                 FROM vote
                 WHERE vote_date = #{sunday}
             )
-            , #{fbUserId}, #{attendStatus}
+            , #{fbUserId}, #{attendStatus}, now()
         )
     </insert>
 

@@ -131,8 +131,11 @@
                         }
                     })
                     // 화면에 렌더링
+                    document.querySelector('#attendBtn').nextElementSibling.innerHTML = `참석(${attended.length}명)`;
                     document.querySelector('#attend').innerHTML = attended;
+                    document.querySelector('#nonAttendBtn').nextElementSibling.innerHTML = `불참(${nonAttended.length}명)`;
                     document.querySelector('#nonAttend').innerHTML = nonAttended;
+                    document.querySelector('#pendingBtn').nextElementSibling.innerHTML = `미정(${pended.length}명)`;
                     document.querySelector('#pending').innerHTML = pended;
                 },
                 error : function (request, status, error) {
@@ -156,6 +159,8 @@
                         nonUser.push(user.fbUserName);
                     })
                     // 화면에 렌더링
+                    document.getElementById('nonPart').previousElementSibling
+                        .querySelector('span').innerHTML = `미참여(${nonUser.length}명)`;
                     document.getElementById('nonPart').innerHTML = nonUser;
                 }
             })

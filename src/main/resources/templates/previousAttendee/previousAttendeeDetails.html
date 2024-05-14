@@ -85,8 +85,14 @@
 
             // 렌더링
             document.querySelector('#attend').innerHTML = attendedList;
+            document.querySelector('#attend').
+                previousElementSibling.querySelector('span').innerHTML = `참석(${attendedList.length}명)`;
             document.querySelector('#nonAttend').innerHTML = nonAttendedList;
+            document.querySelector('#nonAttend').
+                previousElementSibling.querySelector('span').innerHTML = `불참(${nonAttendedList.length}명)`;
             document.querySelector('#pending').innerHTML = PendedList;
+            document.querySelector('#pending').
+                previousElementSibling.querySelector('span').innerHTML = `미정(${PendedList.length}명)`;
 
         }
     </script>

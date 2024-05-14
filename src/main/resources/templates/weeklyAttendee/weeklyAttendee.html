@@ -351,9 +351,14 @@
 
                 // 로그인을 미수행 시 멈춤
                 if(sessionId == null || sessionId == ''){
-                    alert('로그인을 해주세요!');
-                    this.checked = false;
-                    return;
+                    if(confirm('로그인을 하셔야 투표를 진행하실 수 있습니다. \n지금 로그인하시겠습니까?')) {
+                        this.checked = false;
+                        window.location.href = '/login'; // 로그인 페이지로 이동
+                        return;
+                    }else {
+                        this.checked = false;
+                        return;
+                    }
                 }
 
                 // 세션의 id로 해당 유저의 멤버여부 판별 및 어빌리티 유무 확인

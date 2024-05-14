@@ -15,21 +15,23 @@
     </sql>
 
     <!--댓글 작성-->
-    <insert id="fbcCreate" parameterType="footBall.domain.freeBoardComment.FbcRequest">
-        INSERT INTO free_board_comment
-        (FREE_BOARD_ID
-        ,FBC_AUTHOR
-        ,FBC_TEXT
-        ,FBC_REG_DATE
-        ,FBC_MOD_DATE
-        ,FBC_DEL_YN)
+    <insert id="createComment" parameterType="footBall.domain.freeBoardComment.FbcRequest">
+        INSERT INTO free_board_comment (
+             free_board_id
+            ,fbc_author
+            ,fbc_text
+            ,fbc_reg_date
+            ,fbc_mod_date
+            ,fbc_del_yn
+        )
         VALUES (
-        #{freeBoardId}
-        ,#{fbcAuthor}
-        ,#{fbcText}
-        ,now()
-        ,now()
-        ,'N');
+             #{freeBoardId}
+            ,#{fbcAuthor}
+            ,#{fbcText}
+            ,now()
+            ,now()
+            ,'N'
+        );
     </insert>
 
     <!--댓글 조회<리스트>-->
@@ -40,7 +42,7 @@
     </select>
 
     <!--댓글 삭제-->
-    <delete id="fbcdeleteList" parameterType="int">
+    <delete id="deleteComments" parameterType="int">
         DELETE FROM free_board_comment
         WHERE FREE_BOARD_ID = #{freeBoardId}
 

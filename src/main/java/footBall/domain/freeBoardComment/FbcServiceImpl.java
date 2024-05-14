@@ -13,19 +13,19 @@ public class FbcServiceImpl implements FbcService {
     
     // 댓글 작성
     @Override
-    public int insert(FbcRequest dto) {
-        return sqlSession.insert("FbcMapper.fbcCreate",dto);
+    public int createComment(FbcRequest dto) {
+        return sqlSession.insert("FbcMapper.createComment",dto);
     }
 
     // 댓글 삭제
     @Override
-    public void deleteList(int id) {
-        sqlSession.delete("FbcMapper.fbcdeleteList",id);
+    public void deleteComments(int id) {
+        sqlSession.delete("FbcMapper.deleteComments",id);
     }
 
     // 댓글 조회
     @Override
-    public List<FbcResponse> findList(int id) {
+    public List<FbcResponse> findCommentsById(int id) {
         return sqlSession.selectList("FbcMapper.findList",id);
     }
 }

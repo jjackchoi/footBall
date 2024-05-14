@@ -24,8 +24,8 @@ public class FeeController {
 
     @GetMapping("/fee")
     public String payment(Model model){
-        List<UserResponse> allUser = userService.getAllUser();
-        model.addAttribute("posts",allUser);
+        List<UserResponse> allMember = userService.getAllMember();
+        model.addAttribute("posts",allMember);
         return "fee/fee";
     }
 

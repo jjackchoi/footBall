@@ -2,6 +2,7 @@ package footBall.domain.teamBuilder;
 
 import footBall.domain.attendee.AttendeeService;
 import footBall.domain.user.UserResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -25,10 +26,19 @@ public class TeamBuilderController {
 
     // 팀 구성 페이지
     @GetMapping("/teamBuilder")
-    public String index(Model model){
-        List<UserResponse> attendees = teamBuilderService.getAttendee(); // 투표에서 참석한 인원 불러오기
-        model.addAttribute("attendees", attendees);
-        return "teamBuilder/teamBuilder";
+    public String index(Model model, HttpSession session){
+        // 세션의 유저 권한 불러오기
+        String userAuth = (String)session.getAttribute("userAuth");
+
+        // 관리자만 접속
+        if (userAuth.equals("Y")){
+            List<UserResponse> attendees = teamBuilderService.getAttendee(); // 투표에서 참석한 인원 불러오기
+            model.addAttribute("attendees", attendees);
+            return "teamBuilder/teamBuilder";
+        }else {
+            return "redirect:/";
+        }
+
     }
 
     // 팀 섞기

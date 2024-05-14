@@ -1,58 +1,89 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/basic">
 
+<th:block layout:fragment="add-css">
+    <link rel="stylesheet" th:href="@{/css/freeBoardStyles.css}">
+</th:block>
+
 <th:block layout:fragment="title">
-    <title>자유게시판</title>
+    <title th:text="${post.freeBoardTitle}+' - 자유게시판 상세보기'"></title>
 </th:block>
 
 <th:block layout:fragment="content">
-            <h1 class="mt-4">게시물 상세보기</h1>
-            <div class="card mb-4">
-                <div class="card-header">
-                    <i class="fas fa-table me-1"></i>
-                    게시물 상세정보
-                </div>
-                <div class="card-body">
-                    <form>
-                    <div th:if="${post}">
 
-                        <h2 th:text="${post.freeBoardTitle}"></h2>
-                        <p></p>
-                        <div th:utext="${post.getFreeBoardText()}"></div>
-                        <p></p>
-                        <p>
-                            작성자: <span th:text="${post.getFreeBoardAuthor()}"></span><br/>
-                            작성일자: <span th:text="${#temporals.format(post.freeBoardRegDate, 'yyyy-MM-dd HH시 mm분')}"></span>
-                        </p>
-                    </div>
-                    <div th:unless="${post}">
-                        <p>게시물이 존재하지 않습니다.</p>
-                    </div>
-                    <div th:if="${post.getFreeBoardAuthor()} == ${session.userNickname}">
-                        <button type="button" class="btn btn-primary mt-2" data-toggle="modal" onclick="openModal()">수정</button>
-                        <button type="button" class="btn btn-danger mt-2" id="deleteBtn">삭제</button>
-                    </div>
-                    </form>
+    <!-- 제목 -->
+    <div class="mt-4 mb-4 d-flex align-items-center">
+        <i class="fas fa-table me-1 fa-2x me-1"></i>
+        <h2 class="mb-0">자유게시판 상세보기</h2>
+    </div>
+
+    <!--내용-->
+    <div class="border-top border-success border-2">
+        <div class="card mb-4 mt-4" th:if="${post}">
+            <div class="card-header">
+                <strong th:text="${post.freeBoardTitle}"></strong>
+                <div>
+                    <span th:text="${post.getFreeBoardAuthor()}"></span>
+                    <span class="divider" th:text="${#temporals.format(post.freeBoardRegDate, 'yyyy-MM-dd HH시 mm분')}"></span>
                 </div>
             </div>
-    <div id="commentList" class="container-fluid px-4">
-        <ul th:if="${comments}" th:each="comment : ${comments}">
+            <div class="card-body">
+                <form>
+                    <div class="writing_view_box">
+                        <p th:utext="${post.freeBoardText}"></p>
+                    </div>
+                    <div class="d-flex align-items-end justify-content-between">
+                        <div>
+                            <a th:href="@{/freeBoard}" class="btn btn-primary mt-2">목록</a>
+                        </div>
+                        <div class="d-flex align-items-end justify-content-end"
+                             th:if="${post.getFreeBoardAuthor()} == ${session.userNickname}">
+                            <button type="button" class="btn btn-primary mt-2 ms-2"
+                                    data-toggle="modal" onclick="openModal()">수정</button>
+                            <button type="button" class="btn btn-danger mt-2 ms-2" id="deleteBtn">삭제</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!--댓글 갯수-->
+    <div class="comment_count">
+        <label for="commentText" class="mb-1">
+            댓글 <span style="color: red;" th:text="${#lists.size(comments)}"></span>개
+        </label>
+    </div>
+
+    <!--댓글 출력-->
+    <div th:if="${comments}" id="commentList"
+         class="comment_list container-fluid px-0 pt-2 border-top border-success border-2">
+        <ul th:each="comment : ${comments}" class="list-unstyled">
             <li>
-                <strong th:text="${comment.fbcAuthor}"></strong>:
+                <strong th:text="${comment.fbcAuthor}"></strong>
                 <span th:text="${comment.fbcText}"></span>
+                <span th:text="${#temporals.format(comment.fbcRegDate, 'yyyy-MM-dd HH시 mm분')}"
+                      style="color: #999;" class="float-end"></span>
             </li>
         </ul>
-        <p th:unless="${comments}">댓글이 없습니다.</p>
     </div>
+    <div th:if="${#lists.size(comments) == 0}">
+        <p>댓글이 없습니다.</p>
+    </div>
+
     <!-- 댓글 작성 폼 -->
-    <form id="commentForm" class="container-fluid px-4" action="/freeBoard/fbcCreate" method="post">
-        <i class="fas fa-table me-1 "></i>
-        <input type="hidden" id="freeBoardId" name="freeBoardId" th:value="${post.freeBoardId}" >
-        <input type="hidden" id="fbcAuthor" name="fbcAuthor" th:value="${session.userNickname}" >
-        <label for="commentText">댓글 작성</label>
-        <textarea id="commentText" name="fbcText" rows="4" class="form-control" onkeydown="handleKeyPress(event)"></textarea>
-        <button type="button" class="btn btn-primary mt-2" onclick="dataSubmit()">댓글 작성</button>
-    </form>
+    <div class="container-fluid px-0 mb-4 border-top border-success border-2">
+        <div class="pt-4">
+            <form id="commentForm" action="/freeBoard/createFbc" method="post">
+                <input type="hidden" id="freeBoardId" name="freeBoardId" th:value="${post.freeBoardId}" >
+                <input type="hidden" id="fbcAuthor" name="fbcAuthor" th:value="${session.userNickname}" >
+                <textarea id="commentText" name="fbcText" rows="4" class="form-control" onkeydown="handleKeyPress(event)"></textarea>
+                <div class="d-flex align-items-end justify-content-end">
+                    <button type="button" class="btn btn-primary mt-2" onclick="dataSubmit()">댓글 작성</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <th:block layout:fragment="modal">
         <!-- 글 작성 팝업 모달 -->
@@ -88,17 +119,27 @@
 
 <th:block layout:fragment="script">
     <script th:inline="javascript">
-        var userId = /*[[${session.userId}]]*/ null; // 세션의 userId 값을 가져옴
+        const userId = /*[[${session.userId}]]*/ null; // 세션의 userId 값을 가져옴
 
+        // 댓글 생성
         function dataSubmit() {
-            var commentText = document.getElementById("commentText").value;
-            if (commentText.trim() === "") {
+            // 로그인 여부 체크
+            if(userId === "" || userId === null) {
+                if(confirm('로그인을 하셔야 댓글을 작성하실 수 있습니다. \n지금 로그인하시겠습니까?')) {
+                    window.location.href = '/login';
+                    return;
+                }else {
+                    return;
+                }
+            }
+            // 빈 값인지 확인
+            const commentText = document.getElementById("commentText").value;
+            if(commentText.trim() === "") {
                  alert("댓글을 입력해주세요.");
                  return; // 함수 실행 종료
             }
-            var form = document.getElementById("commentForm");
-
-            // 폼을 제출합니다.
+            // 폼으로 댓글 넘기기
+            let form = document.getElementById("commentForm");
             form.submit();
         }
 
@@ -108,6 +149,7 @@
             }
         }
 
+        // 모달창 열기
         function openModal() {
             // 세션의 userId 값이 null이면 알림 창 띄우기, 그렇지 않으면 모달 열기
             if (userId === null) {
@@ -117,11 +159,12 @@
             }
         }
 
+        // 모달창 닫기
         function closeModal() {
              $('#writePostModal').modal('hide');
         }
 
-        <!-- 글 수정 완료 시 실행되는 스크립트 -->
+        // 게시글 수정
         function submitPostForm() {
             var freeBoardId = $('#freeBoardId').val();
             var freeBoardTitle = $('#freeBoardTitle').val();
@@ -135,10 +178,9 @@
                 return;
             }
 
-            // 글 수정 완료 후 서버로 데이터 전송 (Ajax를 사용하여 비동기 처리)
             $.ajax({
                 type: 'POST',
-                url: '/freeBoard/save', // 실제로 데이터를 저장하는 엔드포인트로 변경해야 합니다.
+                url: '/freeBoard/save',
                 data: {freeBoardTitle: freeBoardTitle, freeBoardText: freeBoardText,freeBoardId:freeBoardId},
                 success: function () {
                     // 작성 완료 후 팝업 닫기
@@ -152,6 +194,7 @@
             });
         }
 
+        // 게시글 삭제
         document.querySelector('#deleteBtn').addEventListener('click', function(){
             const boardId = [[ ${post.freeBoardId} ]];
 

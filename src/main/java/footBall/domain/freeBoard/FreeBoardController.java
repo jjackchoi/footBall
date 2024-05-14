@@ -32,13 +32,15 @@ public class FreeBoardController {
             if(cri.getKeyword() != null){
                 Criteria criteria = new Criteria(cri.getPageNum(),cri.getAmount(),cri.getKeyword());
                 List<FreeBoardResponse> list = freeBoardService.searchBoard(criteria);
-                model.addAttribute("posts",list);
+                List<FreeBoardResponse> posts = freeBoardService.getCommentsCount(list);
+                model.addAttribute("posts", posts);
                 model.addAttribute("maker", new PageDto(criteria, freeBoardService.allSeachCount(cri.getKeyword())));
                 model.addAttribute("keyword", cri.getKeyword());
             }else {
                 Criteria criteria = new Criteria(cri.getPageNum(),cri.getAmount());
                 List<FreeBoardResponse> list = freeBoardService.findAll(criteria);
-                model.addAttribute("posts",list);
+                List<FreeBoardResponse> posts = freeBoardService.getCommentsCount(list);
+                model.addAttribute("posts",posts);
                 model.addAttribute("maker", new PageDto(criteria, freeBoardService.allCount()));
             }
 
@@ -73,25 +75,16 @@ public class FreeBoardController {
 
     }
 
-    // 글 단 건조회
-    @GetMapping("/freeBoard/details/{id}")
-    public String boardOne(@PathVariable int id, Model model){
-        FreeBoardResponse param = freeBoardService.findOne(id);
-        List<FbcResponse> comment = fbcService.findList(id);
-        model.addAttribute("post",param);
-        model.addAttribute("comments",comment);
-        return "freeBoard/freeBoardDetails";
-    }
     // 글 삭제
     @PostMapping("/freeBoard/delete")
     public String deleteOne(int freeBoardId){
-        List<FbcResponse> list = fbcService.findList(freeBoardId);
-        if(list.size() == 0) { // 댓글 없을 시 바로 삭제
+        List<FbcResponse> comments = fbcService.findCommentsById(freeBoardId);
+        if(comments.size() == 0) { // 댓글 없을 시 바로 삭제
             freeBoardService.deleteOne(freeBoardId);
             return "redirect:/freeBoard";
         }
-        // 댓글데이터 있을시에 삭제하고 넘어감(종속되어있어서 fk)
-        fbcService.deleteList(freeBoardId);
+        // 댓글데이터 있을시에 삭제하고 넘어감
+        fbcService.deleteComments(freeBoardId);
         freeBoardService.deleteOne(freeBoardId);
         return "redirect:/freeBoard";
     }

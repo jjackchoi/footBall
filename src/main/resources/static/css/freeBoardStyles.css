@@ -1,0 +1,41 @@
+@charset "UTF-8";
+/*!
+* Start Bootstrap - SB Admin v7.0.4 (https://startbootstrap.com/template/sb-admin)
+* Copyright 2013-2021 Start Bootstrap
+* Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-sb-admin/blob/master/LICENSE)
+*/
+/*!
+ * Bootstrap v5.1.3 (https://getbootstrap.com/)
+ * Copyright 2011-2021 The Bootstrap Authors
+ * Copyright 2011-2021 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
+ */
+.divider::before {
+    content: ""; /* 수직선 문자 추가 */
+    display: inline-block;
+    width: 1px; /* 선의 너비 */
+    height: 12px; /* 선의 높이 */
+    background: #ccc; /* 선의 색상 */
+    margin: 0 10px 0 6px; /* 텍스트와 선 사이의 간격 조절 */
+}
+.writing_view_box {
+    min-height: 300px;
+}
+.comment_count {
+    height: 38px;
+    line-height: 38px;
+    font-weight: bold;
+}
+td a {
+    text-decoration: none; /* 밑줄 제거 */
+    color: black; /* 링크 색상을 검은색으로 설정 */
+}
+
+td a:hover {
+    text-decoration: underline; /* 마우스를 가져다 대면 밑줄 표시 */
+    color: black;
+}
+
+tbody tr:hover {
+    background-color: #f5f5f5; /* 어두운 배경색 */
+}

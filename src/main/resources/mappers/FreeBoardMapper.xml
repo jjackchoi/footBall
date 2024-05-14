@@ -89,7 +89,10 @@
 
     <!--검색창을 이용한 조회-->
     <select id="findKeyword" parameterType="String" resultType="footBall.domain.freeBoard.FreeBoardResponse">
-        SELECT * FROM free_board
+        SELECT
+            <include refid="boardColumns" />
+        FROM
+            free_board
         WHERE (
             free_board_title LIKE CONCAT('%', #{freeBoardTitle}, '%')
             OR free_board_text LIKE CONCAT('%', #{freeBoardTitle}, '%')
@@ -107,33 +110,48 @@
     </select>
 
     <select id="findPaginatedData" resultType="footBall.domain.freeBoard.FreeBoardResponse" parameterType="map">
-        SELECT *
-        FROM free_board
-        WHERE free_board_del_yn = 'N'
-        ORDER BY free_board_id DESC
-        LIMIT #{offset}, #{pageSize}
+        SELECT
+            <include refid="boardColumns" />
+        FROM
+            free_board
+        WHERE
+            free_board_del_yn = 'N'
+        ORDER BY
+            free_board_id DESC
+        LIMIT
+            #{offset}, #{pageSize}
     </select>
 
     <select id="searchBoard" resultType="footBall.domain.freeBoard.FreeBoardResponse">
-        SELECT * FROM free_board
+        SELECT
+            <include refid="boardColumns" />
+        FROM
+            free_board
         WHERE (
-        free_board_title LIKE CONCAT('%', #{keyword}, '%')
-        OR free_board_text LIKE CONCAT('%', #{keyword}, '%')
-        OR FREE_BOARD_AUTHOR LIKE CONCAT('%', #{keyword}, '%')
+            free_board_title LIKE CONCAT('%', #{keyword}, '%')
+            OR free_board_text LIKE CONCAT('%', #{keyword}, '%')
+            OR FREE_BOARD_AUTHOR LIKE CONCAT('%', #{keyword}, '%')
         )
-        AND free_board_del_yn = 'N'
-        ORDER BY free_board_id DESC
-        limit #{startOffset},#{amount}
+        AND
+            free_board_del_yn = 'N'
+        ORDER BY
+            free_board_id DESC
+        limit
+            #{startOffset},#{amount}
     </select>
 
     <select id="allSearchCount" resultType="int">
-        SELECT count(*) FROM free_board
+        SELECT
+            count(*)
+        FROM
+            free_board
         WHERE (
-        free_board_title LIKE CONCAT('%', #{keyword}, '%')
-        OR free_board_text LIKE CONCAT('%', #{keyword}, '%')
-        OR FREE_BOARD_AUTHOR LIKE CONCAT('%', #{keyword}, '%')
+            free_board_title LIKE CONCAT('%', #{keyword}, '%')
+            OR free_board_text LIKE CONCAT('%', #{keyword}, '%')
+            OR FREE_BOARD_AUTHOR LIKE CONCAT('%', #{keyword}, '%')
         )
-        AND free_board_del_yn = 'N'
+        AND
+            free_board_del_yn = 'N'
     </select>
 
 </mapper>

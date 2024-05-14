@@ -1,14 +1,15 @@
 package footBall.domain.freeBoard;
 
 import footBall.common.co.Criteria;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
+@Slf4j
 public class FreeBoardServiceImpl implements FreeBoardService{
     @Autowired
     SqlSession sqlSession;
@@ -58,6 +59,17 @@ public class FreeBoardServiceImpl implements FreeBoardService{
     @Override
     public int allSeachCount(String cri) {
         return sqlSession.selectOne("FreeBoardMapper.allSearchCount",cri);
+    }
+
+    // 댓글 갯수 가져오기
+    @Override
+    public List<FreeBoardResponse> getCommentsCount(List<FreeBoardResponse> list) {
+        // 자유게시판의 id로 각 게시판의 댓글 수 세팅
+        for (int i = 0; i < list.size(); i++){
+            List<FreeBoardResponse> comments = sqlSession.selectList("FbcMapper.findList", list.get(i).getFreeBoardId());
+            list.get(i).setFbcCommentsCount(comments.size()); // 댓글 수 세팅
+        }
+        return list;
     }
 
 

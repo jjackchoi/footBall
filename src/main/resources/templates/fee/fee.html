@@ -71,6 +71,15 @@
         function fixCheckbox(){
             let sessionId = /*[[ ${session.userId} ]]*/ null;
             let sessionAuth = /*[[ ${session.userAuth} ]]*/ null;
+            let sessionMemberYn = /*[[ ${session.userMemberYn} ]]*/ null;
+
+            // 멤버여부 확인
+            if(sessionMemberYn !== 'Y') {
+                alert('멤버만 확인하실 수 있습니다.');
+                window.location.href = '/';
+                return;
+            }
+
             if(sessionId !== null){
                 $.ajax({
                     url: `/fee/check`,
@@ -90,6 +99,10 @@
                                     document.querySelector(`input[type='checkbox'][data-userId='${fee.fbUserId}'][data-feeMonth='${fee.feeMonth}']`).disabled = false;
                                 }
                             }else if(sessionAuth == 'N'){ // 사용자일 경우
+                                if(sessionMemberYn == 'N') {
+                                    alert('멤버만 확인하실 수 있습니다.');
+                                    window.location.href = '/';
+                                }
                                 document.querySelector(`#monthPaymentSpan[data-userId='${fee.fbUserId}'][data-feeMonth='${fee.feeMonth}']`).classList.remove("d-none");
                                 if(fee.feeAnnualPaymentYn == 'Y'){
                                     document.querySelector(`#bulkPaymentSpan[data-userId='${fee.fbUserId}']`).classList.remove("d-none");

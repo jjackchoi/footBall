@@ -42,7 +42,7 @@
             <div class="sb-sidenav-menu" style="border-right: 1px solid rgba(0, 128, 0, 0.2); background-color: rgba(0, 0, 0, 0.03);" >
                 <div class="nav" th:if = "${session.userAuth} == 'Y'" >
                     <div class="sb-sidenav-menu-heading">멤버 관리(관리자)</div>
-                    <a class="nav-link" th:href="@{/member/authority}">
+                    <a class="nav-link active" th:href="@{/member/authority}">
                         <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                         멤버 승인
                     </a>
@@ -90,10 +90,6 @@
                     <a class="nav-link" th:href="@{/teamBuilder}" th:if="${session.userAuth == 'Y'}">
                         <div class="sb-nav-link-icon"><i class="fas fa-futbol"></i></div>
                         팀 구성(관리자)
-                    </a>
-                    <a class="nav-link" th:href="@{/teamBuilder}" th:unless="${session.userAuth == 'Y'}">
-                        <div class="sb-nav-link-icon"><i class="fas fa-futbol"></i></div>
-                        팀 구성
                     </a>
                     <a class="nav-link" th:href="@{/previousAttendee}">
                         <div class="sb-nav-link-icon"><i class="fas fa-futbol"></i></div>
@@ -144,12 +140,6 @@
                 <!--END MAIN CONTENT-->
             </div>
         </main>
-<!--        <footer class="py-4 bg-light mt-auto">-->
-<!--            <div class="container-fluid px-4">-->
-<!--                <div class="d-flex align-items-center justify-content-between small">-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </footer>-->
         <th:block layout:fragment="modal"></th:block>
     </div>
 
@@ -160,6 +150,6 @@
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
 <script th:src="@{/js/datatables-simple-demo.js}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.10.7/dayjs.min.js"></script>
-<th:block layout:fragment="script"><</th:block>
+<th:block layout:fragment="script"></th:block>
 </body>
 </html>

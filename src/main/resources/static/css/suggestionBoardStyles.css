@@ -1,0 +1,50 @@
+@charset "UTF-8";
+/*!
+* Start Bootstrap - SB Admin v7.0.4 (https://startbootstrap.com/template/sb-admin)
+* Copyright 2013-2021 Start Bootstrap
+* Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-sb-admin/blob/master/LICENSE)
+*/
+/*!
+ * Bootstrap v5.1.3 (https://getbootstrap.com/)
+ * Copyright 2011-2021 The Bootstrap Authors
+ * Copyright 2011-2021 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
+ */
+.suggestionTitle{
+    appearance: none;
+    font-family: inherit;
+    font-size: inherit;
+    border: 0px;
+    cursor: pointer;
+    background: none;
+    line-height: 1.5;
+    padding: 0;
+}
+.suggestionText{
+    display: none;
+}
+.answerForm-none{
+    display: none;
+}
+.answer-none{
+    display: none;
+}
+.input-wrapper {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.checkbox-wrapper {
+    display: flex;
+    margin-left: auto; /* 요소를 오른쪽으로 이동 */
+}
+
+.checkbox-wrapper input[type="checkbox"] {
+    margin-left: 5px;
+}
+
+.checkbox-wrapper label {
+    margin-left: 5px;
+    width: 50px;
+}

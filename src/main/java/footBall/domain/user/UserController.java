@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.IOUtils;
-import org.bouncycastle.math.raw.Mod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -109,7 +108,6 @@ public class UserController {
     @PostMapping("/login")
     public String loginDo(UserRequest dto, HttpSession session, RedirectAttributes redirectAttributes){
         // 1. 로그인 입력 값으로 회원 id 조회
-        log.info(dto.toString());
         int id = userService.login(dto);
         if(id == 0){ // 로그인 실패 시
             redirectAttributes.addAttribute("errorMsg", "이메일 혹은 비밀번호를 확인해주세요.");
@@ -122,6 +120,7 @@ public class UserController {
         session.setAttribute("userEmail", userInfo.getFbUserEmail());
         session.setAttribute("userNickname", userInfo.getFbUserNickname());
         session.setAttribute("userAuth", userInfo.getFbUserAuth());
+        session.setAttribute("userMemberYn", userInfo.getFbUserMemberYn());
         session.setMaxInactiveInterval(60 * 30);
         return "redirect:/";
     }

@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/basic">
 
+<th:block layout:fragment="add-css">
+    <link rel="stylesheet" th:href="@{/css/freeBoardStyles.css}">
+</th:block>
+
 <th:block layout:fragment="title">
     <title>자유게시판</title>
 </th:block>
@@ -33,24 +37,26 @@
         <div style="height: 450px;">
             <table class="table">
                 <thead>
-                <tr>
-                    <th style="width: 15%;">글작성자</th>
-                    <th style="width: 15%;">글제목</th>
-                    <th style="width: 50%;">글내용</th>
-                    <th style="width: 20%;">작성일자</th>
-                </tr>
+                    <tr>
+                        <th style="width: 10%; text-align: center;">번호</th>
+                        <th style="width: 50%; text-align: center;">제목</th>
+                        <th style="width: 20%; text-align: center;">작성자</th>
+                        <th style="width: 20%; text-align: center;">작성일</th>
+                    </tr>
                 </thead>
                 <tbody>
-                <tr th:each="post : ${posts}">
-                    <td th:text="${post.getFreeBoardAuthor()}"></td>
-                    <td>
-                        <a th:href="@{'/freeBoard/details/' + ${post.freeBoardId}}">
-                            <span th:text="${post.freeBoardTitle}"></span>
-                        </a>
-                    </td>
-                    <td th:text="${post.getFreeBoardText()}"></td>
-                    <td th:if="${post.freeBoardRegDate != null}" th:text="${#temporals.format(post.freeBoardRegDate, 'yyyy-MM-dd HH시 mm분')}"></td>
-                </tr>
+                    <tr th:each="post : ${posts}">
+                        <td th:text="${post.freeBoardId}" style="text-align: center;"></td>
+                        <td>
+                            <a th:href="@{'/freeBoard/details/' + ${post.freeBoardId}}">
+                                <span th:text="${post.freeBoardTitle}"></span>
+                                <span th:if="${post.fbcCommentsCount > 0}" th:text="'['+${post.fbcCommentsCount}+']'"></span>
+                            </a>
+                        </td>
+                        <td th:text="${post.freeBoardAuthor}" style="text-align: center;"></td>
+                        <td th:if="${post.freeBoardRegDate != null}" style="text-align: center;"
+                            th:text="${#temporals.format(post.freeBoardRegDate, 'yyyy-MM-dd HH시 mm분')}"></td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -111,8 +117,10 @@
 
         function openModal() {
             // 세션의 userId 값이 null이면 알림 창 띄우기, 그렇지 않으면 모달 열기
-            if (userId === null) {
-                alert('로그인이 필요합니다!');
+            if (userId === null || userId === '') {
+                if(confirm('로그인을 하셔야 글 작성이 가능합니다. \n로그인을 하시겠습니까?')) {
+                    window.location.href = '/login';
+                }
             } else {
                 $('#writePostModal').modal('show');
             }

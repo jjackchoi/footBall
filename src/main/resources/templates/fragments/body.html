@@ -39,90 +39,142 @@
 <div id="layoutSidenav">
     <div id="layoutSidenav_nav">
         <nav class="sb-sidenav accordion" id="sidenavAccordion" style="background-color: #fff;">
-            <div class="sb-sidenav-menu" style="border-right: 1px solid rgba(0, 128, 0, 0.2); background-color: rgba(0, 0, 0, 0.03);" >
-                <div class="nav" th:if = "${session.userAuth} == 'Y'" >
-                    <div class="sb-sidenav-menu-heading">멤버 관리(관리자)</div>
-                    <a class="nav-link active" th:href="@{/member/authority}">
-                        <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
-                        멤버 승인
-                    </a>
-                    <a class="nav-link" th:href="@{/member/abilitySetup}">
-                        <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
-                        멤버 어빌리티 설정
-                    </a>
+            <!--관리자 전용 메뉴-->
+            <div class="sb-sidenav-menu" style="border-right: 1px solid rgba(0, 128, 0, 0.2); background-color: rgba(0, 0, 0, 0.03);">
+                <div class="toggle-div" th:if="${session.userAuth} == 'Y'">
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" checked>
+                                <label class="form-check-label ms-1" for="flexSwitchCheckDefault">관리자 전용 메뉴입니다.</label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="nav">
-                    <div class="sb-sidenav-menu-heading">소개</div>
-                    <a class="nav-link" th:href="@{/introduction/club}">
-                        <div class="sb-nav-link-icon"><i class="fas fa-flag"></i></div>
-                        드림FC 소개
-                    </a>
-                    <a class="nav-link" th:href="@{/introduction/member}" th:if="${session.userAuth} == 'Y'">
-                        <div class="sb-nav-link-icon"><i class="fas fa-flag"></i></div>
-                        멤버 소개(관리자)
-                    </a>
-                    <a class="nav-link" th:href="@{/introduction/member}" th:unless="${session.userAuth} == 'Y'">
-                        <div class="sb-nav-link-icon"><i class="fas fa-flag"></i></div>
-                        멤버 소개
-                    </a>
+                <div class="admin-menu" th:if="${session.userAuth} == 'Y'">
+                    <div class="nav" th:if="${session.userAuth} == 'Y'">
+                        <div class="sb-sidenav-menu-heading">멤버 관리</div>
+                        <a class="nav-link" th:href="@{/member/authority}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+                            멤버 승인
+                        </a>
+                        <a class="nav-link" th:href="@{/member/abilitySetup}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+                            멤버 어빌리티 설정
+                        </a>
+                        <a class="nav-link" th:href="@{/introduction/member}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+                            멤버 소개
+                        </a>
+                    </div>
+                    <div class="nav" th:if = "${session.userAuth} != 'Y'">
+                        <div class="sb-sidenav-menu-heading">소개</div>
+                        <a class="nav-link" th:href="@{/introduction/club}" th:if="${session.userAuth} != 'Y'">
+                            <div class="sb-nav-link-icon"><i class="fas fa-flag"></i></div>
+                            드림FC 소개
+                        </a>
+                        <a class="nav-link" th:href="@{/introduction/member}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-flag"></i></div>
+                            멤버 소개
+                        </a>
+                    </div>
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading" th:if="${session.userAuth == 'Y'}">공지사항 관리</div>
+                        <div class="sb-sidenav-menu-heading" th:unless="${session.userAuth == 'Y'}">공지사항</div>
+                        <a class="nav-link" th:href="@{/notice}" >
+                            <div class="sb-nav-link-icon"><i class="fas fa-bullhorn"></i></div>
+                            공지사항
+                        </a>
+                    </div>
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading" th:if="${session.userAuth == 'Y'}">팀 구성 관리</div>
+                        <div class="sb-sidenav-menu-heading" th:unless="${session.userAuth == 'Y'}">팀 구성</div>
+                        <a class="nav-link" th:href="@{/weeklyAttendee}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-futbol"></i></div>
+                            금주의 참석인원
+                        </a>
+                        <a class="nav-link" th:href="@{/teamBuilder}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-futbol"></i></div>
+                            팀 구성
+                        </a>
+                        <a class="nav-link" th:href="@{/previousAttendee}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-futbol"></i></div>
+                            지나간 참석자 명단
+                        </a>
+                    </div>
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading" th:if="${session.userAuth == 'Y'}">회비 관리</div>
+                        <div class="sb-sidenav-menu-heading" th:unless="${session.userAuth == 'Y'}">회비</div>
+                        <a class="nav-link" th:href="@{/fee}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-coins"></i></div>
+                            회비 납부 현황
+                        </a>
+                    </div>
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading" th:if="${session.userAuth == 'Y'}">건의게시판 관리</div>
+                        <div class="sb-sidenav-menu-heading" th:unless="${session.userAuth == 'Y'}">게시판</div>
+                        <a class="nav-link" th:href="@{'/freeBoard'}" th:if="${session.userAuth != 'Y'}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                            자유게시판
+                        </a>
+                        <a class="nav-link" th:href="@{/suggestionBoard}" th:if="${session.userAuth == 'Y'}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                            건의게시판
+                        </a>
+                    </div>
                 </div>
-                <div class="nav">
-                    <div class="sb-sidenav-menu-heading">공지사항</div>
-                    <a class="nav-link" th:href="@{/notice}" th:if="${session.userAuth == 'Y'}">
-                        <div class="sb-nav-link-icon"><i class="fas fa-bullhorn"></i></div>
-                        공지사항(관리자)
-                    </a>
-                    <a class="nav-link" th:href="@{/notice}" th:unless="${session.userAuth == 'Y'}">
-                        <div class="sb-nav-link-icon"><i class="fas fa-bullhorn"></i></div>
-                        공지사항
-                    </a>
-                </div>
-                <div class="nav">
-                    <div class="sb-sidenav-menu-heading">팀 구성</div>
-                    <a class="nav-link" th:href="@{/weeklyAttendee}" th:if="${session.userAuth == 'Y'}">
-                        <div class="sb-nav-link-icon"><i class="fas fa-futbol"></i></div>
-                        금주의 참석인원<br>(관리자)
-                    </a>
-                    <a class="nav-link" th:href="@{/weeklyAttendee}" th:unless="${session.userAuth == 'Y'}">
-                        <div class="sb-nav-link-icon"><i class="fas fa-futbol"></i></div>
-                        금주의 참석인원
-                    </a>
-                    <a class="nav-link" th:href="@{/teamBuilder}" th:if="${session.userAuth == 'Y'}">
-                        <div class="sb-nav-link-icon"><i class="fas fa-futbol"></i></div>
-                        팀 구성(관리자)
-                    </a>
-                    <a class="nav-link" th:href="@{/previousAttendee}">
-                        <div class="sb-nav-link-icon"><i class="fas fa-futbol"></i></div>
-                        지나간 참석자 명단
-                    </a>
-                </div>
-                <div class="nav">
-                    <div class="sb-sidenav-menu-heading">회비</div>
-                    <a class="nav-link" th:href="@{/fee}" th:if="${session.userAuth == 'Y'}">
-                        <div class="sb-nav-link-icon"><i class="fas fa-coins"></i></div>
-                        회비 납부 현황<br>(관리자)
-                    </a>
-                    <a class="nav-link" th:href="@{/fee}" th:unless="${session.userAuth == 'Y'}">
-                        <div class="sb-nav-link-icon"><i class="fas fa-coins"></i></div>
-                        회비 납부 현황
-                    </a>
-                </div>
-                <div class="nav">
-                    <div class="sb-sidenav-menu-heading">게시판</div>
-                    <a class="nav-link" th:href="@{'/freeBoard'}">
-                        <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                        자유게시판
-                    </a>
-                    <a class="nav-link" th:href="@{/suggestionBoard}" th:if="${session.userAuth == 'Y'}">
-                        <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                        건의게시판(관리자)
-                    </a>
-                    <a class="nav-link" th:href="@{/suggestionBoard}" th:unless="${session.userAuth == 'Y'}">
-                        <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                        건의게시판
-                    </a>
+                <!--사용자 메뉴-->
+                <div class="user-menu">
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading">소개</div>
+                        <a class="nav-link" th:href="@{/introduction/club}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-flag"></i></div>
+                            드림FC 소개
+                        </a>
+                        <a class="nav-link" th:href="@{/introduction/member}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-flag"></i></div>
+                            멤버 소개
+                        </a>
+                    </div>
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading">공지사항</div>
+                        <a class="nav-link" th:href="@{/notice}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-bullhorn"></i></div>
+                            공지사항
+                        </a>
+                    </div>
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading">팀 구성</div>
+                        <a class="nav-link" th:href="@{/weeklyAttendee}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-futbol"></i></div>
+                            금주의 참석인원
+                        </a>
+                        <a class="nav-link" th:href="@{/previousAttendee}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-futbol"></i></div>
+                            지나간 참석자 명단
+                        </a>
+                    </div>
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading">회비</div>
+                        <a class="nav-link" th:href="@{/fee}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-coins"></i></div>
+                            회비 납부 현황
+                        </a>
+                    </div>
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading">게시판</div>
+                        <a class="nav-link" th:href="@{'/freeBoard'}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                            자유게시판
+                        </a>
+                        <a class="nav-link" th:href="@{/suggestionBoard}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                            건의게시판
+                        </a>
+                    </div>
                 </div>
             </div>
+            <!--푸터-->
             <div class="sb-sidenav-footer" style="border: 1px solid rgba(0, 128, 0, 0.2);">
                 <div class="small"></div>
                 Copyright © 드림FC
@@ -130,11 +182,11 @@
         </nav>
     </div>
 
-    <div id="layoutSidenav_content">
+    <div id="layoutSidenav_content" style="top: 0; padding-top: 100px;">
         <th:block layout:fragment="layoutSidenav_content">
         </th:block>
         <main>
-            <div class="container-fluid px-4" style="max-width: 1080px; margin: 50px auto">
+            <div class="container-fluid px-4" style="max-width: 1080px; margin: 50px auto 0 auto">
                 <!--MAIN-->
                 <th:block layout:fragment="content"></th:block>
                 <!--END MAIN CONTENT-->
@@ -150,6 +202,66 @@
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
 <script th:src="@{/js/datatables-simple-demo.js}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.10.7/dayjs.min.js"></script>
+<script th:inline="javascript">
+
+    // 요소 변수화
+    const userMenu = document.querySelector('.user-menu');
+    const adminMenu = document.querySelector('.admin-menu');
+    const menuSwitch = document.querySelector('#flexSwitchCheckDefault');
+    const label = document.querySelector('label[for="flexSwitchCheckDefault"]');
+    const adminYn = /*[[ ${session.userAuth} ]]*/ null;
+
+    // 페이지 로드 시 localStorage에서 스위치 상태를 불러오기
+    if(adminYn === 'Y'){
+        document.addEventListener('DOMContentLoaded', (event) => { // 로드되고 난 후
+            const switchState = localStorage.getItem('menuSwitchState');
+            if (switchState === 'admin') {
+                menuSwitch.checked = true;
+                label.textContent = '관리자 전용 메뉴입니다.';
+                adminMenu.classList.remove('d-none');
+                userMenu.classList.add('d-none');
+            } else {
+                menuSwitch.checked = false;
+                label.textContent = '사용자 메뉴입니다.';
+                adminMenu.classList.add('d-none');
+                userMenu.classList.remove('d-none');
+            }
+        });
+    }
+
+
+    // 스위치 클릭 시 사용자 메뉴로 전환
+    if(adminYn === 'Y'){
+        menuSwitch.addEventListener('change', function() {
+            if(this.checked) {
+                label.textContent = '관리자 전용 메뉴입니다.';
+                adminMenu.classList.remove('d-none');
+                userMenu.classList.add('d-none');
+                localStorage.setItem('menuSwitchState', 'admin');
+            }else {
+                label.textContent = '사용자 메뉴입니다.';
+                adminMenu.classList.add('d-none');
+                userMenu.classList.remove('d-none');
+                localStorage.setItem('menuSwitchState', 'user');
+            }
+        })
+    }
+
+    // 현재 URL 가져오기
+    const currentPath = window.location.pathname;
+
+    // 모든 nav-link 요소 가져오기
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    // 각 nav-link 요소에 대해 현재 경로와 일치하는지 확인
+    navLinks.forEach(link => {
+        if (currentPath.startsWith(link.getAttribute('href'))) {
+            link.classList.add('active');
+            // active 클래스가 추가된 요소로 스크롤
+            link.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    });
+</script>
 <th:block layout:fragment="script"></th:block>
 </body>
 </html>

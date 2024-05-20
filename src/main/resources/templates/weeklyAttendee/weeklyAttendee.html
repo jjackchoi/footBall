@@ -7,9 +7,7 @@
 
 <th:block layout:fragment="add-css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-    </style>
-
+    <link rel="stylesheet" th:href="@{/css/weeklyAttendeeStyles.css}">
 </th:block>
 
 <th:block layout:fragment="content">
@@ -17,7 +15,7 @@
         <i class="fas fa-futbol fa-2x me-1"></i>
         <h2 class="mb-0">금주의 참석인원</h2>
     </div>
-    <div class="card mb-4 mt-4" style="width: 700px;">
+    <div class="card mb-4 mt-4">
         <div class="card-header">
             <i class="fas fa-vote-yea me-1"></i>
             참석인원 투표
@@ -37,7 +35,7 @@
                             <input type="radio" name="attendance" id="attendBtn" value="Y">
                             <span class="fw-bold ms-2">참석</span>
                         </div>
-                        <div class="ms-2 me-auto d-flex align-items-center" id="attend">
+                        <div class="ms-2 me-auto d-flex align-items-center attendee-names" id="attend">
                             Content for list item
                         </div>
                     </li>
@@ -46,7 +44,7 @@
                             <input type="radio" name="attendance" id="nonAttendBtn" value="N">
                             <span class="fw-bold ms-2">불참</span>
                         </div>
-                        <div class="ms-2 me-auto d-flex align-items-center" id="nonAttend">
+                        <div class="ms-2 me-auto d-flex align-items-center attendee-names" id="nonAttend">
                             Content for list item
                         </div>
                     </li>
@@ -55,7 +53,7 @@
                             <input type="radio" name="attendance" id="pendingBtn" value="P">
                             <span class="fw-bold ms-2">미정</span>
                         </div>
-                        <div class="ms-2 me-auto d-flex align-items-center" id="pending">
+                        <div class="ms-2 me-auto d-flex align-items-center attendee-names" id="pending">
                             Content for list item
                         </div>
                     </li>
@@ -63,7 +61,7 @@
                         <div class="ms-2 me-auto d-flex align-items-center">
                             <span class="fw-bold">미참여</span>
                         </div>
-                        <div class="ms-2 me-auto d-flex align-items-center" id="nonPart">
+                        <div class="ms-2 me-auto d-flex align-items-center attendee-names" id="nonPart">
 
                         </div>
                     </li>
@@ -130,13 +128,17 @@
                             pended.push(votedUser.fbUserName);
                         }
                     })
+                    // 쉼표와 띄어쓰기로 구분된 문자열 생성
+                    let attendedString = attended.join(', ');
+                    let nonAttendedString = nonAttended.join(', ');
+                    let pendedString = pended.join(', ');
                     // 화면에 렌더링
                     document.querySelector('#attendBtn').nextElementSibling.innerHTML = `참석(${attended.length}명)`;
-                    document.querySelector('#attend').innerHTML = attended;
+                    document.querySelector('#attend').innerHTML = attendedString;
                     document.querySelector('#nonAttendBtn').nextElementSibling.innerHTML = `불참(${nonAttended.length}명)`;
-                    document.querySelector('#nonAttend').innerHTML = nonAttended;
+                    document.querySelector('#nonAttend').innerHTML = nonAttendedString;
                     document.querySelector('#pendingBtn').nextElementSibling.innerHTML = `미정(${pended.length}명)`;
-                    document.querySelector('#pending').innerHTML = pended;
+                    document.querySelector('#pending').innerHTML = pendedString;
                 },
                 error : function (request, status, error) {
                     console.log(error)
@@ -158,10 +160,12 @@
                     response.forEach(user => {
                         nonUser.push(user.fbUserName);
                     })
+                    // 쉼표와 띄어쓰기로 구분된 문자열 생성
+                    let nonUserString = nonUser.join(', ');
                     // 화면에 렌더링
                     document.getElementById('nonPart').previousElementSibling
                         .querySelector('span').innerHTML = `미참여(${nonUser.length}명)`;
-                    document.getElementById('nonPart').innerHTML = nonUser;
+                    document.getElementById('nonPart').innerHTML = nonUserString;
                 }
             })
 

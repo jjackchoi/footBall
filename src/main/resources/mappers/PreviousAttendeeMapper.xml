@@ -22,6 +22,7 @@
         <![CDATA[
             SELECT * FROM vote
             WHERE vote_date < #{sunday}
+            ORDER BY vote_date DESC
         ]]>
     </select>
 

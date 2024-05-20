@@ -1,0 +1,17 @@
+@charset "UTF-8";
+
+.card {
+    width: 100%; /* 기본적으로 100% 너비 */
+    max-width: 700px; /* 최대 너비를 700px로 설정 */
+}
+
+.attendee-names {
+    font-size: 16px; /* 기본 폰트 크기 설정 */
+    word-break: keep-all; /* 단어 기준으로 줄바꿈 */
+}
+
+@media (max-width: 576px) {
+    .attendee-names {
+        font-size: 10px; /* 작은 화면에서 폰트 크기 줄이기 */
+    }
+}

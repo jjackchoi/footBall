@@ -11844,14 +11844,8 @@ body {
     }
   }
 }
-/*
 
-.container-fluid {
-  @media (max-width: 990px) {
-    position: fixed;
-    z-index: 10;
-    background-color: white;
-    bottom: 0;
-    margin: 0 !important;
-  }
-}*/
+.nav-link.active {
+    color: #fff;
+    background-color: #228B22;
+}

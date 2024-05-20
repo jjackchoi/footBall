@@ -7,8 +7,7 @@
 
 <th:block layout:fragment="add-css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-    </style>
+    <link rel="stylesheet" th:href="@{/css/feeStyles.css}">
 </th:block>
 
 <th:block layout:fragment="content">
@@ -22,41 +21,43 @@
             2024년 회비에 대한 납부 현황입니다.
         </div>
         <div class="card-body">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th class="text-center">회원</th>
-                        <th class="text-center">일괄납부</th>
-                        <th class="text-center" th:each="i : ${#numbers.sequence(1, 12)}" th:text="|${i}월|"></th>
-                    </tr>
-                </thead>
-                <tbody class="postList">
-                    <!--관리자-->
-                    <tr th:if="${session.userAuth} == 'Y'" th:each="post, rowStat : ${posts}">
-                        <td class="text-center" th:text="${post.getFbUserName()}"></td>
-                        <td class="text-center">
-                            <input type="checkbox" onclick="handleBulkPayment(this)"
-                                   th:attr="data-userId=${post.fbUserId}" name="bulkPayment">
-                        </td>
-                        <td class="text-center" th:each="i, colStat : ${#numbers.sequence(1, 12)}">
-                            <input type="checkbox" th:attr="data-userId=${post.getFbUserId()},
-                            data-feeMonth=${0 * 12 + colStat.index + 1}" onchange="handleCheckboxChange(this)" />
-                        </td>
-                    </tr>
-                    <!--사용자-->
-                    <tr th:if="${session.userAuth} == 'N'" th:each="post, rowStat : ${posts}">
-                        <td class="text-center" th:text="${post.getFbUserName()}"></td>
-                        <td class="text-center">
-                            <span id="bulkPaymentSpan" class="d-none"
-                                  th:attr="data-userId=${post.getFbUserId()}" th:text="${'O'}"></span>
-                        </td>
-                        <td class="text-center" th:each="i, colStat : ${#numbers.sequence(1, 12)}">
-                            <span id="monthPaymentSpan" class="d-none"
-                                  th:attr="data-userId=${post.getFbUserId()}, data-feeMonth=${0 * 12 + colStat.index + 1}" th:text="${'O'}"></span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="table-wrapper">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="text-center">회원</th>
+                            <th class="text-center">일괄납부</th>
+                            <th class="text-center" th:each="i : ${#numbers.sequence(1, 12)}" th:text="|${i}월|"></th>
+                        </tr>
+                    </thead>
+                    <tbody class="postList">
+                        <!--관리자-->
+                        <tr th:if="${session.userAuth} == 'Y'" th:each="post, rowStat : ${posts}">
+                            <td class="text-center" th:text="${post.getFbUserName()}"></td>
+                            <td class="text-center">
+                                <input type="checkbox" onclick="handleBulkPayment(this)"
+                                       th:attr="data-userId=${post.fbUserId}" name="bulkPayment">
+                            </td>
+                            <td class="text-center" th:each="i, colStat : ${#numbers.sequence(1, 12)}">
+                                <input type="checkbox" th:attr="data-userId=${post.getFbUserId()},
+                                data-feeMonth=${0 * 12 + colStat.index + 1}" onchange="handleCheckboxChange(this)" />
+                            </td>
+                        </tr>
+                        <!--사용자-->
+                        <tr th:if="${session.userAuth} == 'N'" th:each="post, rowStat : ${posts}">
+                            <td class="text-center" th:text="${post.getFbUserName()}"></td>
+                            <td class="text-center">
+                                <span id="bulkPaymentSpan" class="d-none"
+                                      th:attr="data-userId=${post.getFbUserId()}" th:text="${'O'}"></span>
+                            </td>
+                            <td class="text-center" th:each="i, colStat : ${#numbers.sequence(1, 12)}">
+                                <span id="monthPaymentSpan" class="d-none"
+                                      th:attr="data-userId=${post.getFbUserId()}, data-feeMonth=${0 * 12 + colStat.index + 1}" th:text="${'O'}"></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </th:block>
@@ -90,22 +91,36 @@
                         console.log(response);
                         response.forEach(fee => {
                             if(sessionAuth == 'Y'){ // 관리자일 경우
-                                document.querySelector(`input[type='checkbox'][data-userId='${fee.fbUserId}'][data-feeMonth='${fee.feeMonth}']`).checked = true;
-                                if(fee.feeAnnualPaymentYn == 'Y'){
-                                    document.querySelector(`input[type='checkbox'][data-userId='${fee.fbUserId}'][name="bulkPayment"]`).checked = true;
-                                    document.querySelector(`input[type='checkbox'][data-userId='${fee.fbUserId}'][data-feeMonth='${fee.feeMonth}']`).disabled = true;
-                                }else {
-                                    document.querySelector(`input[type='checkbox'][data-userId='${fee.fbUserId}'][name="bulkPayment"]`).checked = false;
-                                    document.querySelector(`input[type='checkbox'][data-userId='${fee.fbUserId}'][data-feeMonth='${fee.feeMonth}']`).disabled = false;
+                                const monthCheckbox = document.querySelector(`input[type='checkbox'][data-userId='${fee.fbUserId}'][data-feeMonth='${fee.feeMonth}']`);
+                                if (monthCheckbox) {
+                                    monthCheckbox.checked = true;
                                 }
-                            }else if(sessionAuth == 'N'){ // 사용자일 경우
-                                if(sessionMemberYn == 'N') {
-                                    alert('멤버만 확인하실 수 있습니다.');
-                                    window.location.href = '/';
+                                const bulkPaymentCheckbox = document.querySelector(`input[type='checkbox'][data-userId='${fee.fbUserId}'][name="bulkPayment"]`);
+                                if (fee.feeAnnualPaymentYn == 'Y') {
+                                    if (bulkPaymentCheckbox) {
+                                        bulkPaymentCheckbox.checked = true;
+                                    }
+                                    if (monthCheckbox) {
+                                        monthCheckbox.disabled = true;
+                                    }
+                                } else {
+                                    if (bulkPaymentCheckbox) {
+                                        bulkPaymentCheckbox.checked = false;
+                                    }
+                                    if (monthCheckbox) {
+                                        monthCheckbox.disabled = false;
+                                    }
                                 }
-                                document.querySelector(`#monthPaymentSpan[data-userId='${fee.fbUserId}'][data-feeMonth='${fee.feeMonth}']`).classList.remove("d-none");
-                                if(fee.feeAnnualPaymentYn == 'Y'){
-                                    document.querySelector(`#bulkPaymentSpan[data-userId='${fee.fbUserId}']`).classList.remove("d-none");
+                            } else if(sessionAuth == 'N'){ // 사용자일 경우
+                                const monthPaymentSpan = document.querySelector(`#monthPaymentSpan[data-userId='${fee.fbUserId}'][data-feeMonth='${fee.feeMonth}']`);
+                                if (monthPaymentSpan) {
+                                    monthPaymentSpan.classList.remove("d-none");
+                                }
+                                if (fee.feeAnnualPaymentYn == 'Y') {
+                                    const bulkPaymentSpan = document.querySelector(`#bulkPaymentSpan[data-userId='${fee.fbUserId}']`);
+                                    if (bulkPaymentSpan) {
+                                        bulkPaymentSpan.classList.remove("d-none");
+                                    }
                                 }
                             }
                         })
@@ -132,7 +147,7 @@
             // Ajax를 사용하여 서버로 데이터 전송
             $.ajax({
                 type: 'POST',
-                url: '/fee/check', // 여기에 컨트롤러의 엔드포인트 주소를 적어주세요
+                url: '/fee/check',
                 contentType: 'application/json',
                 data: JSON.stringify({
                     fbUserId: fbUserId,

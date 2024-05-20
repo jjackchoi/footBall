@@ -357,7 +357,7 @@
 
             // 현재 비밀번호 유효성 검사
             if (!validatePassword(currentUserPswd.value)) {
-                document.getElementById('currentPswd-error').textContent = "정보 수정을 위해 현재 비밀번호를 입력해주십시오.(최소 8자 이상, 영문과 특수 문자를 포함)";
+                document.getElementById('currentPswd-error').textContent = "현재 비밀번호를 정확히 입력해주십시오.";
                 return;
             }else {
                 document.getElementById('currentPswd-error').textContent = "";

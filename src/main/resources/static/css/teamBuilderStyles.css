@@ -25,3 +25,41 @@
     background-color: white;
     z-index: 10;
 }
+
+@media (max-width: 576px) {
+    .text-center {
+        font-size: 10px;
+    }
+    .list-group {
+        font-size: 9px; /* 작은 화면에서 폰트 크기 줄이기 */
+    }
+    .card-body {
+        max-height: 50vh;
+        overflow-y: auto;
+    }
+    .team-section {
+        max-height: 30vh;
+    }
+
+    /* 여기서부터 팀 구성 */
+    .text-end {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between; /* 버튼 사이에 공간 분배 */
+    }
+
+    .text-end .btn,
+    .text-end .btn-check {
+        flex: 0 1 calc(25% - 10px); /* 한 줄에 4개 버튼 배치 */
+        margin: 5px 0; /* 상하 간격 조정 */
+        font-size: 10px; /* 폰트 크기를 줄여서 버튼 크기 조절 */
+        text-align: center; /* 버튼 내부 텍스트 중앙 정렬 */
+    }
+}
+
+.text-end {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 10px; /* 버튼 사이의 간격 조정 */
+}

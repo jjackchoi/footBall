@@ -1,0 +1,65 @@
+@charset "UTF-8";
+
+.card {
+    width: 100%; /* 기본적으로 100% 너비 */
+    max-width: 700px; /* 최대 너비를 700px로 설정 */
+}
+
+.card-body {
+    max-height: 50vh;
+    overflow-y: auto;
+}
+
+.attendee-names {
+    font-size: 16px; /* 기본 폰트 크기 설정 */
+    word-break: keep-all; /* 단어 기준으로 줄바꿈 */
+}
+
+.table-wrapper {
+    overflow-x: auto; /* 테이블이 화면을 넘을 경우 가로 스크롤 허용 */
+}
+
+@media (max-width: 576px) {
+    .card-body {
+        max-height: 50vh;
+        overflow-y: auto;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    .table thead {
+        display: none; /* 작은 화면에서 테이블 헤더 숨기기 */
+    }
+
+    .table, .table tbody, .table tr, .table td {
+        display: block; /* 테이블을 블록 요소로 변경 */
+        width: 100%; /* 블록 요소의 너비를 100%로 설정 */
+    }
+
+    .table tr {
+        margin-bottom: 15px; /* 행 사이에 간격 추가 */
+    }
+
+    .table td {
+        text-align: right; /* 텍스트를 오른쪽 정렬 */
+        padding-left: 50%; /* 좌측에 공간 추가 */
+        position: relative; /* 상대 위치 설정 */
+    }
+
+    .table td::before {
+        content: attr(data-label); /* 데이터 레이블 추가 */
+        position: absolute; /* 절대 위치 설정 */
+        left: 15px; /* 좌측에서 15px 떨어진 위치 */
+        width: calc(50% - 30px); /* 넓이 계산 */
+        white-space: nowrap; /* 텍스트 줄 바꿈 방지 */
+        text-align: left; /* 텍스트 왼쪽 정렬 */
+        font-weight: bold; /* 굵은 폰트 */
+    }
+
+    .attendee-names {
+        font-size: 10px; /* 작은 화면에서 폰트 크기 줄이기 */
+    }
+
+}

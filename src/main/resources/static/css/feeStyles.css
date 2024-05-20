@@ -1,0 +1,21 @@
+@charset "UTF-8";
+
+.table-wrapper {
+    max-height: 55vh; /* Adjust as needed */
+    overflow-y: auto;
+    margin-top: 20px;
+}
+
+.table thead th {
+    position: sticky;
+    top: 0;
+    background-color: #fff;
+    z-index: 1;
+}
+
+@media (max-width: 576px) {
+
+    table th, table td {
+        white-space: nowrap; /* 텍스트가 한 줄로 유지되도록 설정 */
+    }
+}

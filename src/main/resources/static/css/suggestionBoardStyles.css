@@ -10,41 +10,109 @@
  * Copyright 2011-2021 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
-.suggestionTitle{
-    appearance: none;
-    font-family: inherit;
-    font-size: inherit;
-    border: 0px;
-    cursor: pointer;
-    background: none;
-    line-height: 1.5;
-    padding: 0;
-}
-.suggestionText{
-    display: none;
-}
-.answerForm-none{
-    display: none;
-}
-.answer-none{
-    display: none;
-}
-.input-wrapper {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-}
+    .suggestionTitle{
+        appearance: none;
+        font-family: inherit;
+        font-size: inherit;
+        text-align: left;            /* 텍스트 왼쪽 정렬 */
+        border: 0px;
+        cursor: pointer;
+        background: none;
+        line-height: 1.5;
+        padding: 0;
+    }
+    .suggestionText-none{
+        display: none;
+    }
+    .answerForm-none{
+        display: none;
+    }
+    .answer-none{
+        display: none;
+    }
+    .input-wrapper {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
 
-.checkbox-wrapper {
-    display: flex;
-    margin-left: auto; /* 요소를 오른쪽으로 이동 */
-}
+    .checkbox-wrapper {
+        display: flex;
+        margin-left: auto; /* 요소를 오른쪽으로 이동 */
+    }
 
-.checkbox-wrapper input[type="checkbox"] {
-    margin-left: 5px;
-}
+    .checkbox-wrapper input[type="checkbox"] {
+        margin-left: 5px;
+    }
 
-.checkbox-wrapper label {
-    margin-left: 5px;
-    width: 50px;
-}
+    .checkbox-wrapper label {
+        margin-left: 5px;
+        width: 50px;
+    }
+
+    .solY { /* 해결 */
+        font-weight: bold;
+        color: #198754; /* 초록 */
+    }
+
+    .solN { /* 미해결 */
+        color: #999; /* 더 연한 색상 */
+    }
+
+    .border-bottom-black { /* 요소의 바텀 선 찐하게 */
+        border-bottom: 0.5px solid #6666;
+    }
+
+    .border-bottom-none { /* 요소의 바텀 선 없애기 */
+        border-bottom: 2px solid #f8f9fa;
+    }
+
+    @media (max-width: 576px) {
+        thead, th:nth-child(1), td:nth-child(1) {
+            display: none;
+        }
+
+        .mobile-row {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .mobile-row td {
+            border: none;
+            display: block;
+            width: 100%;
+        }
+        .mobile-author {
+            color: #999; /* 더 연한 색상 */
+            margin-top: 5px;
+        }
+        .date {
+            color: #999;
+            font-size: 12px;
+            text-align: end;
+        }
+        .table {
+            width: 100%;
+            table-layout: fixed; /* 고정된 테이블 레이아웃 */
+        }
+        .table th, .table td {
+            word-wrap: break-word; /* 긴 단어를 줄바꿈 */
+            white-space: normal;   /* 셀 내용이 줄바꿈되도록 설정 */
+        }
+        .button-td {
+            text-align: end;
+            font-size: 14px;
+        }
+        .suggestionTitle {
+            font-size: 14px;
+        }
+        .suggestionText {
+            font-size: 14px;
+        }
+        .solY { /* 해결 */
+            font-size: 15px;
+        }
+        .solN { /* 미해결 */
+            font-size: 15px;
+        }
+    }

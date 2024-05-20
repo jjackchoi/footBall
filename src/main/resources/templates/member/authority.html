@@ -7,7 +7,7 @@
 
 <th:block layout:fragment="add-css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" th:href="@{/css/abliltySetupStyles.css}">
+    <link rel="stylesheet" th:href="@{/css/memberStyles.css}">
     <style>
     </style>
 </th:block>
@@ -19,7 +19,7 @@
             <h2 class="mb-0">멤버 승인</h2>
         </div>
     </div>
-    <div class="right" style="text-align: right">
+    <div class="button-group mt-4">
         <a th:href="@{/member/authority}" class="btn btn-primary">
             전체회원 보기
         </a>
@@ -45,7 +45,7 @@
             <i class="fas fa-table me-1"></i>
             멤버를 승인하실 경우 체크박스를 체크해 주세요.
         </div>
-        <div class="table-wrapper" style="max-height: 550px;">
+        <div class="table-wrapper">
             <table class="table">
                 <thead>
                     <tr>

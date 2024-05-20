@@ -1,6 +1,6 @@
 package footBall.domain.previousAttendee;
 
-import footBall.domain.attendee.AttendeeServiceImpl;
+import footBall.domain.attendee.AttendeeService;
 import footBall.domain.attendee.VoteDto;
 import footBall.domain.teamBuilder.TeamBuilderService;
 import footBall.domain.teamBuilder.TeamDto;
@@ -20,8 +20,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PreviousAttendeeController {
 
-    private final AttendeeServiceImpl attendeeService;
-    private final PreviousAttendeeServiceImpl previousAttendeeService;
+    private final AttendeeService attendeeService;
+    private final PreviousAttendeeService previousAttendeeService;
     private final TeamBuilderService teamBuilderService;
 
     // 지나간 참석자 명단 메인 페이지

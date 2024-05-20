@@ -40,8 +40,8 @@
                             onclick="assembleTeam(this);">팀 삭제</button>
                 </div>
                 <div class="mt-4 mb-2 d-flex align-items-center">
-                    <div class="align-items-center centered-flex">
-                        <strong class="text-center" th:text="'참석인원(' + ${#lists.size(attendees)} + '명)'">참석 인원</strong>
+                    <div class="align-items-center centered-flex team-section">
+                        <strong class="text-center" th:utext="'참석인원<br>(' + ${#lists.size(attendees)} + '명)'">참석 인원</strong>
                         <ul class="list-group no-markers">
                             <li th:each="attendee: ${attendees}" class="list-group text-center"
                                 th:text="${attendee.fbUserName} +
@@ -49,25 +49,25 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="align-items-center centered-flex d-none" id="teamA" data-value="A팀">
+                    <div class="align-items-center centered-flex d-none team-section" id="teamA" data-value="A팀">
                         <strong class="text-center">A팀</strong>
                         <ul class="list-group no-markers">
                             <li class="list-group text-center"></li>
                         </ul>
                     </div>
-                    <div class="align-items-center centered-flex d-none" id="teamB" data-value="B팀">
+                    <div class="align-items-center centered-flex d-none team-section" id="teamB" data-value="B팀">
                         <strong class="text-center">B팀</strong>
                         <ul class="list-group no-markers">
                             <li></li>
                         </ul>
                     </div>
-                    <div class="align-items-center centered-flex d-none" id="teamC" data-value="C팀">
+                    <div class="align-items-center centered-flex d-none team-section" id="teamC" data-value="C팀">
                         <strong class="text-center">C팀</strong>
                         <ul class="list-group no-markers">
                             <li></li>
                         </ul>
                     </div>
-                    <div class="align-items-center centered-flex d-none" id="teamD" data-value="D팀">
+                    <div class="align-items-center centered-flex d-none team-section" id="teamD" data-value="D팀">
                         <strong class="text-center">D팀</strong>
                         <ul class="list-group no-markers">
                             <li></li>
@@ -176,7 +176,7 @@
                 async: false,
                 dataType: 'json',
                 success: function(response){
-                    teamStrong.innerHTML = `${teamName}(${response.length}명)`;
+                    teamStrong.innerHTML = `${teamName}<br> (${response.length}명)`;
                     response.forEach(member => {
                         const li = document.createElement('li'); // li 속성 하나씩 추가
                         li.className = 'list-group text-center';

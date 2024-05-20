@@ -5,6 +5,10 @@
     <title>멤버 소개</title>
 </th:block>
 
+<th:block layout:fragment="add-css">
+    <link rel="stylesheet" th:href="@{/css/introductionStyles.css}">
+</th:block>
+
 <th:block layout:fragment="content">
     <!-- 제목 -->
     <div class="mt-4 mb-2 d-flex align-items-center">
@@ -12,37 +16,35 @@
         <h2 class="mb-0">멤버 소개</h2>
     </div>
     <div class="card mb-4 mt-4" style="border: none;">
-        <ol class="list-group">
-            <!--멤버 정보 기입 버튼-->
-            <div class="ms-2 align-items-center mb-2" th:if="${session.userAuth == 'Y'}" id="insertMemInfo">
-                <input type="button" class="btn btn-primary" style="float: right;" value="멤버 정보 기입"
-                       data-toggle="modal" onclick="openModal()"/>
-            </div>
-            <!--멤버 리스트-->
-            <dvi>
-                <ul class="member-list">
-                    <li th:each="member, iterStat : ${members}" class="member-item">
-                        <!--프로필 사진 없을 때-->
-                        <div th:if="${#strings.isEmpty(member.fbUserImg)}" class="img">
-                            <img th:src="'/assets/img/userImg/user_icon.jpg'">
-                        </div>
-                        <!--프로필 사진 있을 때-->
-                        <div th:unless="${#strings.isEmpty(member.fbUserImg)}" class="img">
-                            <img th:src="@{/myPage/profileImg/} + ${member.fbUserId}">
-                        </div>
-                        <div class="member-details">
-                            <label class="d-flex">
-                                <input type="checkbox" th:if="${session.userAuth == 'Y'}" th:value="${member.fbUserId}"
-                                       onclick="handleCheckboxClick(this);" class="memCheckbox me-1"/>
-                                <span><h2 th:text="${member.fbUserName}"></h2></span>
-                            </label>
-                            <p>주포지션 : <span th:text="${member.fbUserMainPosition}"></span></p>
-                            <p>특기 : <span th:text="${member.fbUserSpecialty}"></span></p>
-                        </div>
-                    </li>
-                </ul>
-            </dvi>
-        </ol>
+        <!--멤버 정보 기입 버튼-->
+        <div class="ms-2 align-items-center mb-2" th:if="${session.userAuth == 'Y'}" id="insertMemInfo">
+            <input type="button" class="btn btn-primary" style="float: right;" value="멤버 정보 기입"
+                   data-toggle="modal" onclick="openModal()"/>
+        </div>
+        <!--멤버 리스트-->
+        <div class="member-list-container">
+            <ul class="member-list">
+                <li th:each="member, iterStat : ${members}" class="member-item">
+                    <!--프로필 사진 없을 때-->
+                    <div th:if="${#strings.isEmpty(member.fbUserImg)}" class="img">
+                        <img th:src="'/assets/img/userImg/user_icon.jpg'">
+                    </div>
+                    <!--프로필 사진 있을 때-->
+                    <div th:unless="${#strings.isEmpty(member.fbUserImg)}" class="img">
+                        <img th:src="@{/myPage/profileImg/} + ${member.fbUserId}">
+                    </div>
+                    <div class="member-details">
+                        <label class="d-flex">
+                            <input type="checkbox" th:if="${session.userAuth == 'Y'}" th:value="${member.fbUserId}"
+                                   onclick="handleCheckboxClick(this);" class="memCheckbox me-1"/>
+                            <span><h2 th:text="${member.fbUserName}"></h2></span>
+                        </label>
+                        <p>주포지션 : <span th:text="${member.fbUserMainPosition}"></span></p>
+                        <p>특기 : <span th:text="${member.fbUserSpecialty}"></span></p>
+                    </div>
+                </li>
+            </ul>
+        </div>
     </div>
 </th:block>
 <th:block layout:fragment="modal">

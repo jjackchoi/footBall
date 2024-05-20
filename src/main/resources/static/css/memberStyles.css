@@ -1,0 +1,66 @@
+@charset "UTF-8";
+
+th {
+    text-align: center;
+}
+
+td {
+    text-align: center;
+}
+
+td input[type="text"] {
+    width: 38px;
+    display: block;
+    margin: 0 auto;
+}
+
+td > .select-ability {
+    width: 38px;
+    display: block;
+    margin: 0 auto;
+}
+
+.table-wrapper {
+    overflow-y: auto;
+    overflow-x: auto;
+    max-height: 50vh;
+}
+
+.table thead th {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 10;
+}
+table th, table td {
+    white-space: nowrap; /* 텍스트가 한 줄로 유지되도록 설정 */
+}
+
+@media (max-width: 576px) {
+    table {
+        width: 100%; /* 테이블이 화면 크기에 맞춰지도록 설정 */
+    }
+
+    table th, table td {
+        white-space: nowrap; /* 텍스트가 한 줄로 유지되도록 설정 */
+    }
+}
+
+.button-group {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap; /* 버튼들이 한 줄로 안 나오면 자동으로 줄 바꿈 */
+}
+
+.button-group .btn {
+    margin: 5px; /* 버튼 간격을 조정하여 여유 공간 추가 */
+}
+
+/* 작은 화면에서는 버튼을 작게 설정 */
+@media (max-width: 576px) {
+    .button-group .btn {
+        flex: 1 1 auto; /* 버튼이 한 줄에 맞춰지도록 유연하게 크기 조절 */
+        margin: 2px; /* 작은 화면에서는 버튼 간격을 더 좁게 */
+        font-size: 12px; /* 폰트 크기를 줄여서 버튼 크기 조절 */
+    }
+}

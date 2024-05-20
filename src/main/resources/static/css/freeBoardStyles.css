@@ -39,3 +39,56 @@ td a:hover {
 tbody tr:hover {
     background-color: #f5f5f5; /* 어두운 배경색 */
 }
+
+.contents{
+     height: 60vh;
+     overflow-y: auto;
+}
+
+@media (max-width: 576px) {
+    .table th:nth-child(1),
+    .table td:nth-child(1) {
+        display: none;
+    }
+    .table th:nth-child(2),
+    .table th:nth-child(3),
+    .table td:nth-child(3),
+    .table th:nth-child(4),
+    .table td:nth-child(4) {
+        display: none;
+    }
+    .mobile-row {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .mobile-row td {
+        width: 100%;
+    }
+    .mobile-title {
+        font-weight: bold;
+    }
+    .mobile-details {
+        display: block;
+        color: #999;
+        font-size: 13px;
+    }
+    .fixed-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background-color: white;
+        z-index: 1000;
+        padding: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .content-wrapper {
+        margin-top: 150px; /* 고정된 헤더 높이만큼 여백 추가 */
+    }
+}
+@media (min-width: 577px) {
+    .mobile-details {
+        display: none;
+    }
+}

@@ -7,6 +7,7 @@
 
 <th:block layout:fragment="add-css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/previousAttendeeStyles.css}">
 </th:block>
 
 <th:block layout:fragment="content">
@@ -14,7 +15,7 @@
         <i class="fas fa-futbol fa-2x me-1"></i>
         <h2 class="mb-0">지나간 참석자 명단</h2>
     </div>
-    <div class="card mb-4 mt-4" style="width: 700px;">
+    <div class="card mb-4 mt-4">
         <div class="card-header">
             <i class="fas fa-table me-1"></i>
             <span class="fw-bold" th:text="${#temporals.format(voteDate, 'yyyy-MM-dd')}"></span>
@@ -27,7 +28,7 @@
                         <div class="ms-2 me-auto d-flex align-items-center">
                             <span class="fw-bold">참석</span>
                         </div>
-                        <div class="ms-2 me-auto d-flex align-items-center" id="attend">
+                        <div class="ms-2 me-auto d-flex align-items-center attendee-names" id="attend">
                             Content for list item
                         </div>
                     </li>
@@ -35,15 +36,15 @@
                         <div class="ms-2 me-auto d-flex align-items-center">
                             <span class="fw-bold">불참</span>
                         </div>
-                        <div class="ms-2 me-auto d-flex align-items-center" id="nonAttend">
+                        <div class="ms-2 me-auto d-flex align-items-center attendee-names" id="nonAttend">
                             Content for list item
                         </div>
                     </li>
                     <li class="list-group-item justify-content-between align-items-start">
-                        <div class="ms-2 me-auto d-flex align-items-center">
+                        <div class="ms-2 me-auto d-flex align-items-center ">
                             <span class="fw-bold">미정</span>
                         </div>
-                        <div class="ms-2 me-auto d-flex align-items-center" id="pending">
+                        <div class="ms-2 me-auto d-flex align-items-center attendee-names" id="pending">
                             Content for list item
                         </div>
                     </li>
@@ -83,14 +84,19 @@
                 }
             })
 
+            // 쉼표와 띄어쓰기로 구분된 문자열 생성
+            let attendedString = attendedList.join(', ');
+            let nonAttendedString = nonAttendedList.join(', ');
+            let pendedString = PendedList.join(', ');
+
             // 렌더링
-            document.querySelector('#attend').innerHTML = attendedList;
+            document.querySelector('#attend').innerHTML = attendedString;
             document.querySelector('#attend').
                 previousElementSibling.querySelector('span').innerHTML = `참석(${attendedList.length}명)`;
-            document.querySelector('#nonAttend').innerHTML = nonAttendedList;
+            document.querySelector('#nonAttend').innerHTML = nonAttendedString;
             document.querySelector('#nonAttend').
                 previousElementSibling.querySelector('span').innerHTML = `불참(${nonAttendedList.length}명)`;
-            document.querySelector('#pending').innerHTML = PendedList;
+            document.querySelector('#pending').innerHTML = pendedString;
             document.querySelector('#pending').
                 previousElementSibling.querySelector('span').innerHTML = `미정(${PendedList.length}명)`;
 

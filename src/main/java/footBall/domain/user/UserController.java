@@ -277,7 +277,6 @@ public class UserController {
 
         // 프로필 사진의 경로를 이용하여 프로필 사진에 대한 파일을 읽음
         InputStream inputStream = new FileInputStream(user.getFbUserImg());
-        log.info(user.getFbUserImg());
 
         // IOUtils.toByteArray로 프로필 사진 파일을 바이트 배열로 변환
         byte[] imgByteArray = IOUtils.toByteArray(inputStream);

@@ -8,6 +8,7 @@
     display: grid;
     grid-template-columns: repeat(5, 1fr); /* 기본적으로 5열 */
     gap: 1rem;
+    padding: 0;
 }
 
 /* 모바일 화면에서는 2열로 변경 */
@@ -31,18 +32,52 @@
 
 .member-item .img {
     width: 100%;
-    max-width: 100px; /* 원하는 최대 너비 설정 */
+    max-width: 130px; /* 원하는 최대 너비 설정 */
     height: auto;
     margin-bottom: 1rem;
 }
 
 .member-item .img img {
     width: 100%;
-    height: 100px;
+    height: 130px;
     border-radius: 50%;
 }
 
 .member-details {
+    width: 100%;
     margin-top: 0.5rem;
 }
 
+.member-details p{
+    margin-bottom: 0;
+}
+.member-details .h2-label{
+    align-items: center;
+    justify-content: center;
+}
+/*주포지션 div*/
+.flex-container1 {
+    min-height: 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: start; /* 첫 번째 줄 왼쪽 정렬 */
+}
+
+.flex-container1 .position-value1 {
+    width: 100%; /* 전체 너비를 차지하도록 설정 */
+    text-align: start; /* 텍스트 오른쪽 정렬 */
+    font-weight: bold;
+}
+/*특기 div*/
+.flex-container2 {
+    min-height: 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: end; /* 첫 번째 줄 왼쪽 정렬 */
+}
+
+.flex-container2 .position-value2 {
+    width: 100%; /* 전체 너비를 차지하도록 설정 */
+    text-align: end; /* 텍스트 오른쪽 정렬 */
+    font-weight: bold;
+}

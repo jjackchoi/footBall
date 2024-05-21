@@ -17,7 +17,7 @@
     </div>
     <div class="card mb-4 mt-4" style="border: none;">
         <!--멤버 정보 기입 버튼-->
-        <div class="ms-2 align-items-center mb-2" th:if="${session.userAuth == 'Y'}" id="insertMemInfo">
+        <div class="ms-2 align-items-center mb-3" th:if="${session.userAuth == 'Y'}" id="insertMemInfo">
             <input type="button" class="btn btn-primary" style="float: right;" value="멤버 정보 기입"
                    data-toggle="modal" onclick="openModal()"/>
         </div>
@@ -34,13 +34,19 @@
                         <img th:src="@{/myPage/profileImg/} + ${member.fbUserId}">
                     </div>
                     <div class="member-details">
-                        <label class="d-flex">
+                        <label class="d-flex h2-label">
                             <input type="checkbox" th:if="${session.userAuth == 'Y'}" th:value="${member.fbUserId}"
                                    onclick="handleCheckboxClick(this);" class="memCheckbox me-1"/>
                             <span><h2 th:text="${member.fbUserName}"></h2></span>
                         </label>
-                        <p>주포지션 : <span th:text="${member.fbUserMainPosition}"></span></p>
-                        <p>특기 : <span th:text="${member.fbUserSpecialty}"></span></p>
+                        <p class="flex-container1 px-3">
+                            <span>주포지션</span>
+                            <span class="position-value1 px-2" th:text="${member.fbUserMainPosition}"></span>
+                        </p>
+                        <p class="flex-container1 px-3">
+                            <span>특기</span>
+                            <span class="position-value1 px-2" th:text="${member.fbUserSpecialty}"></span>
+                        </p>
                     </div>
                 </li>
             </ul>
